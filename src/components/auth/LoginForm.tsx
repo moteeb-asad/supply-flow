@@ -1,13 +1,24 @@
 "use client";
 
-import { FormEvent } from "react";
+import { loginAction } from "@/src/actions/auth.actions";
+import { useFormState, useFormStatus } from "react-dom";
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      className="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-base shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+      type="submit"
+      disabled={pending}
+    >
+      <span>{pending ? "Signing in..." : "Sign In"}</span>
+      <span className="material-symbols-outlined text-xl">login</span>
+    </button>
+  );
+}
 
 export default function LoginForm() {
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // TODO: Implement login logic
-    console.log("Login submitted");
-  };
+  const [state, formAction] = useFormState(loginAction, undefined);
 
   return (
     <div className="w-full lg:w-1/2 flex flex-col justify-between p-8 lg:p-16 bg-white">
@@ -32,7 +43,16 @@ export default function LoginForm() {
           </p>
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        {state?.error && (
+          <div className="mb-6 p-4 bg-danger/10 border border-danger/20 rounded-xl flex gap-3 items-start">
+            <span className="material-symbols-outlined text-danger text-xl">
+              error
+            </span>
+            <p className="text-sm text-danger font-medium">{state.error}</p>
+          </div>
+        )}
+
+        <form className="space-y-6" action={formAction}>
           <div>
             <label
               className="block text-sm font-semibold text-gray-700 mb-2"
@@ -48,6 +68,7 @@ export default function LoginForm() {
                 autoComplete="email"
                 className="block w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm outline-none"
                 id="email"
+                name="email"
                 placeholder="name@company.com"
                 required
                 type="email"
@@ -78,6 +99,7 @@ export default function LoginForm() {
                 autoComplete="current-password"
                 className="block w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm outline-none"
                 id="password"
+                name="password"
                 placeholder="••••••••"
                 required
                 type="password"
@@ -100,13 +122,7 @@ export default function LoginForm() {
             </label>
           </div>
 
-          <button
-            className="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-base shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
-            type="submit"
-          >
-            <span>Sign In</span>
-            <span className="material-symbols-outlined text-xl">login</span>
-          </button>
+          <SubmitButton />
         </form>
       </div>
 

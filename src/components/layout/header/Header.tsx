@@ -1,5 +1,22 @@
 "use client";
 
+import { logoutAction } from "@/src/actions/auth.actions";
+import { useFormStatus } from "react-dom";
+
+function LogoutButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      className="p-2 text-[#4e6797] hover:bg-gray-100 rounded-lg disabled:opacity-50"
+      type="submit"
+      disabled={pending}
+      title="Logout"
+    >
+      <span className="material-symbols-outlined">logout</span>
+    </button>
+  );
+}
+
 export default function Header() {
   return (
     <header className="h-16 flex items-center justify-between px-8 border-b border-[#e7ebf3] bg-white shrink-0">
@@ -31,6 +48,9 @@ export default function Header() {
         <button className="p-2 text-[#4e6797] hover:bg-gray-100 rounded-lg">
           <span className="material-symbols-outlined">help</span>
         </button>
+        <form action={logoutAction}>
+          <LogoutButton />
+        </form>
       </div>
     </header>
   );

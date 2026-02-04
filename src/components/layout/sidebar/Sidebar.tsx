@@ -1,8 +1,8 @@
-"use client";
-
 import SidebarNav from "./SidebarNav";
+import { getCurrentUser } from "@/src/actions/auth.actions";
 
-export default function Sidebar() {
+export default async function Sidebar() {
+  const user = await getCurrentUser();
   return (
     <aside className="w-64 flex flex-col border-r border-[#e7ebf3] bg-white min-h-screen shrink-0">
       <div className="p-6">
@@ -33,8 +33,12 @@ export default function Sidebar() {
             }}
           />
           <div className="flex flex-col">
-            <p className="text-sm font-medium leading-none">Alex</p>
-            <p className="text-xs text-[#4e6797]">Logistics Lead</p>
+            <p className="text-sm font-medium leading-none truncate max-w-32">
+              {user?.email?.split("@")[0] || "User"}
+            </p>
+            <p className="text-xs text-[#4e6797] truncate max-w-32">
+              {user?.email}
+            </p>
           </div>
         </div>
       </div>
