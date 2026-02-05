@@ -1,8 +1,6 @@
-// src/lib/route-permissions.ts
-export type UserRole = "super_admin" | "ops_manager" | "store_keeper";
-
-export const routePermissions: Record<string, UserRole[]> = {
+export const routePermissions: Record<string, string[]> = {
+  "/dashboard": ["super_admin", "ops_manager", "store_keeper"],
   "/suppliers": ["super_admin", "ops_manager"],
-  "/inventory": ["super_admin", "ops_manager", "store_keeper"],
-  "/reports": ["super_admin"],
+  "/inventory/receive": ["store_keeper"],
+  "/reports": ["super_admin", "ops_manager"],
 };

@@ -1,28 +1,18 @@
 "use client";
 
 import { loginAction } from "@/src/actions/auth.actions";
-import { useFormState, useFormStatus } from "react-dom";
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      className="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-base shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-      type="submit"
-      disabled={pending}
-    >
-      <span>{pending ? "Signing in..." : "Sign In"}</span>
-      <span className="material-symbols-outlined text-xl">login</span>
-    </button>
-  );
-}
+import { Input } from "@/src/components/ui/Input";
+import { useActionState } from "react";
+import AuthShell from "@/src/components/auth/AuthShell";
+import AuthHeader from "@/src/components/auth/AuthHeader";
+import AuthFooter from "@/src/components/auth/AuthFooter";
+import SubmitButton from "./SubmitButton";
 
 export default function LoginForm() {
-  const [state, formAction] = useFormState(loginAction, undefined);
+  const [state, formAction] = useActionState(loginAction, undefined);
 
   return (
-    <div className="w-full lg:w-1/2 flex flex-col justify-between p-8 lg:p-16 bg-white">
-      {/* Mobile Logo */}
+    <AuthShell>
       <div className="flex items-center gap-3 lg:hidden mb-12">
         <div className="bg-primary size-10 rounded-lg flex items-center justify-center text-white">
           <span className="material-symbols-outlined">inventory_2</span>
@@ -32,16 +22,11 @@ export default function LoginForm() {
         </h1>
       </div>
 
-      {/* Login Form */}
       <div className="max-w-md w-full mx-auto my-auto">
-        <div className="mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome Back
-          </h2>
-          <p className="text-gray-500 font-medium">
-            Please enter your internal credentials to access the portal.
-          </p>
-        </div>
+        <AuthHeader
+          title="Welcome Back"
+          subtitle="Please enter your internal credentials to access the portal."
+        />
 
         {state?.error && (
           <div className="mb-6 p-4 bg-danger/10 border border-danger/20 rounded-xl flex gap-3 items-start">
@@ -64,9 +49,9 @@ export default function LoginForm() {
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
                 mail
               </span>
-              <input
+              <Input
                 autoComplete="email"
-                className="block w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm outline-none"
+                className="pl-10 pr-4 text-sm"
                 id="email"
                 name="email"
                 placeholder="name@company.com"
@@ -86,7 +71,7 @@ export default function LoginForm() {
               </label>
               <a
                 className="text-xs font-bold text-primary hover:underline"
-                href="#"
+                href="/forgot-password"
               >
                 Forgot password?
               </a>
@@ -95,9 +80,9 @@ export default function LoginForm() {
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
                 lock
               </span>
-              <input
+              <Input
                 autoComplete="current-password"
-                className="block w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm outline-none"
+                className="pl-10 pr-4 text-sm"
                 id="password"
                 name="password"
                 placeholder="••••••••"
@@ -122,35 +107,17 @@ export default function LoginForm() {
             </label>
           </div>
 
-          <SubmitButton />
+          <SubmitButton
+            text="Sign In"
+            loadingText="Signing in..."
+            icon={
+              <span className="material-symbols-outlined text-xl">login</span>
+            }
+          />
         </form>
       </div>
 
-      {/* Footer Info */}
-      <div className="max-w-md w-full mx-auto pt-12">
-        <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex gap-4">
-          <span className="material-symbols-outlined text-gray-400">
-            lock_person
-          </span>
-          <div>
-            <p className="text-xs leading-relaxed text-gray-500">
-              <strong>Invite-Only Portal:</strong> Access to SupplyFlow is
-              strictly for authorized personnel. If you are an employee or
-              supplier without access, please contact your{" "}
-              <a
-                className="text-primary font-semibold underline decoration-primary/30"
-                href="#"
-              >
-                System Administrator
-              </a>{" "}
-              for an invitation.
-            </p>
-          </div>
-        </div>
-        <p className="text-center text-[10px] text-gray-400 mt-8 uppercase tracking-widest font-bold">
-          © 2026 SupplyFlow Operations. All Rights Reserved.
-        </p>
-      </div>
-    </div>
+      <AuthFooter />
+    </AuthShell>
   );
 }

@@ -1,0 +1,91 @@
+"use client";
+
+import { requestPasswordResetAction } from "@/src/actions/auth.actions";
+import { Input } from "@/src/components/ui/Input";
+import { useActionState } from "react";
+import AuthShell from "@/src/components/auth/AuthShell";
+import AuthHeader from "@/src/components/auth/AuthHeader";
+import SubmitButton from "./SubmitButton";
+
+export default function ForgotPasswordForm() {
+  const [state, formAction] = useActionState(
+    requestPasswordResetAction,
+    undefined,
+  );
+
+  return (
+    <AuthShell>
+      <div className="max-w-md w-full mx-auto my-auto">
+        <AuthHeader
+          title="Reset Password"
+          subtitle="Enter your work email address and we’ll send you a reset link."
+        />
+
+        {state?.error && (
+          <div className="mb-6 p-4 bg-danger/10 border border-danger/20 rounded-xl flex gap-3 items-start">
+            <span className="material-symbols-outlined text-danger text-xl">
+              error
+            </span>
+            <p className="text-sm text-danger font-medium">{state.error}</p>
+          </div>
+        )}
+
+        {state?.success && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-100 rounded-xl flex gap-3 items-start">
+            <span className="material-symbols-outlined text-green-600 text-xl">
+              check_circle
+            </span>
+            <p className="text-sm text-green-700 font-medium">
+              {state.success}
+            </p>
+          </div>
+        )}
+
+        <form className="space-y-6" action={formAction}>
+          <div>
+            <label
+              className="block text-sm font-semibold text-gray-700 mb-2"
+              htmlFor="email"
+            >
+              Email Address
+            </label>
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+                mail
+              </span>
+              <Input
+                autoComplete="email"
+                className="pl-10 pr-4 text-sm"
+                id="email"
+                name="email"
+                placeholder="name@company.com"
+                required
+                type="email"
+              />
+            </div>
+          </div>
+
+          <SubmitButton
+            text="Send Reset Link"
+            loadingText="Sending..."
+            icon={
+              <span className="material-symbols-outlined text-xl">send</span>
+            }
+          />
+
+          <div className="text-center  mt-6">
+            <a
+              className="flex items-center justify-center text-xs font-bold text-primary"
+              href="/login"
+            >
+              <span className="material-symbols-outlined !text-[16px] mr-1">
+                arrow_back
+              </span>
+              <span className="hover:underline">Back to Sign In</span>
+            </a>
+          </div>
+        </form>
+      </div>
+    </AuthShell>
+  );
+}

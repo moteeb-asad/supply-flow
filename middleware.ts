@@ -1,5 +1,6 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { routePermissions } from "@/src/lib/route-permissions"; // 👈 import
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -20,9 +21,7 @@ export async function middleware(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) =>
             request.cookies.set(name, value),
           );
-          response = NextResponse.next({
-            request,
-          });
+          response = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options),
           );
@@ -35,18 +34,36 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isAuthRoute = request.nextUrl.pathname.startsWith("/login");
-  const isProtectedRoute =
-    !isAuthRoute && !request.nextUrl.pathname.startsWith("/api");
+  const pathname = request.nextUrl.pathname;
 
-  // Redirect to login if accessing protected route without auth
+  const isAuthRoute =
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/forgot-password") ||
+    pathname.startsWith("/reset-password");
+
+  const isProtectedRoute = !isAuthRoute && !pathname.startsWith("/api");
+
+  // 🔐 1️⃣ AUTH CHECK
   if (isProtectedRoute && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Redirect to dashboard if accessing login while authenticated
+  // 🔁 2️⃣ AUTH ROUTE GUARD
   if (isAuthRoute && user) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  // 🔐 3️⃣ ROLE CHECK (⬅️ WRITE YOUR CODE HERE)
+  if (user && isProtectedRoute) {
+    const role = user.user_metadata?.role;
+
+    for (const route in routePermissions) {
+      if (pathname.startsWith(route)) {
+        if (!role || !routePermissions[route].includes(role)) {
+          return NextResponse.redirect(new URL("/dashboard", request.url));
+        }
+      }
+    }
   }
 
   return response;
@@ -54,12 +71,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/((?!_next|favicon.ico|.*\\.(?:css|js|map|json|png|jpg|jpeg|svg|woff2)).*)",
   ],
 };
