@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# Scripts
+scripts/
+
 # production
 /build
 

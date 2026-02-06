@@ -3,6 +3,7 @@
 import { sidebarMenu } from "./menu.config";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { isActivePath } from "@/src/lib/navigation";
 
 const menuIcons: Record<string, string> = {
   Dashboard: "dashboard",
@@ -19,7 +20,7 @@ export default function SidebarNav() {
   return (
     <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
       {sidebarMenu.map((item) => {
-        const isActive = pathname === item.path;
+        const isActive = isActivePath(pathname, item.path);
         const iconName = menuIcons[item.label] ?? "dashboard";
 
         return (
@@ -35,7 +36,7 @@ export default function SidebarNav() {
             <span
               className="material-symbols-outlined"
               style={
-                isActive ? { fontVariationSettings: "'FILL' 1" } : undefined
+                isActive ? { fontVariationSettings: '"FILL" 1' } : undefined
               }
             >
               {iconName}
