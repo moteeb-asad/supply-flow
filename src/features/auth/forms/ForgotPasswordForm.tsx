@@ -1,11 +1,11 @@
 "use client";
 
-import { requestPasswordResetAction } from "@/src/actions/auth.actions";
+import { requestPasswordResetAction } from "@/src/features/auth/actions/auth.actions";
 import { Input } from "@/src/components/ui/Input";
 import { useActionState } from "react";
-import AuthShell from "@/src/components/auth/AuthShell";
-import AuthHeader from "@/src/components/auth/AuthHeader";
-import SubmitButton from "./SubmitButton";
+import AuthShell from "../components/AuthShell";
+import AuthHeader from "../components/AuthHeader";
+import SubmitButton from "../components/SubmitButton";
 
 export default function ForgotPasswordForm() {
   const [state, formAction] = useActionState(
