@@ -2,7 +2,7 @@
 
 import { createClient } from "@/src/db/supabaseClient";
 import { redirect } from "next/navigation";
-import { loginSchema } from "@/src/lib/validators/auth.schema";
+import { loginSchema } from "@/src/features/auth/validators/auth.schema";
 
 export async function loginAction(
   _prevState: { error?: string } | undefined,

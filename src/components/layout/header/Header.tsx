@@ -1,6 +1,6 @@
 "use client";
 
-import { logoutAction } from "@/src/actions/auth.actions";
+import { logoutAction } from "@/src/features/auth/actions/auth.actions";
 import { useFormStatus } from "react-dom";
 import { usePathname } from "next/navigation";
 import { getPageTitle } from "@/src/lib/page-titles";

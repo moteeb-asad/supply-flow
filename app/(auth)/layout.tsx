@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import LoginBranding from "@/src/components/auth/LoginBranding";
+import LoginBranding from "@/src/features/auth/components/LoginBranding";
 
 type AuthLayoutProps = {
   children: ReactNode;

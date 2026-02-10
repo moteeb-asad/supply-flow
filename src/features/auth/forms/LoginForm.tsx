@@ -1,12 +1,12 @@
 "use client";
 
-import { loginAction } from "@/src/actions/auth.actions";
+import { loginAction } from "../actions/auth.actions";
 import { Input } from "@/src/components/ui/Input";
 import { useActionState } from "react";
-import AuthShell from "@/src/components/auth/AuthShell";
-import AuthHeader from "@/src/components/auth/AuthHeader";
-import AuthFooter from "@/src/components/auth/AuthFooter";
-import SubmitButton from "./SubmitButton";
+import AuthShell from "../components/AuthShell";
+import AuthHeader from "../components/AuthHeader";
+import AuthFooter from "../components/AuthFooter";
+import SubmitButton from "../components/SubmitButton";
 
 export default function LoginForm() {
   const [state, formAction] = useActionState(loginAction, undefined);

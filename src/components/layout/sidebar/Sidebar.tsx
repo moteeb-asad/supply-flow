@@ -1,5 +1,5 @@
 import SidebarNav from "./SidebarNav";
-import { getCurrentUser } from "@/src/actions/auth.actions";
+import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
 import SettingsLink from "./SettingsLink";
 
 export default async function Sidebar() {
