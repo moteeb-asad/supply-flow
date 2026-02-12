@@ -1,15 +1,29 @@
 "use client";
 
-import { loginAction } from "../actions/auth.actions";
+import { loginAction } from "@/src/features/auth/actions/auth.actions";
 import { Input } from "@/src/components/ui/Input";
-import { useActionState } from "react";
-import AuthShell from "../components/AuthShell";
-import AuthHeader from "../components/AuthHeader";
-import AuthFooter from "../components/AuthFooter";
-import SubmitButton from "../components/SubmitButton";
+import { useActionState, startTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  loginSchema,
+  type LoginInput,
+} from "@/src/features/auth/validators/auth.schema";
+import AuthShell from "@/src/features/auth/components/AuthShell";
+import AuthHeader from "@/src/features/auth/components/AuthHeader";
+import AuthFooter from "@/src/features/auth/components/AuthFooter";
+import SubmitButton from "@/src/features/auth/components/SubmitButton";
 
 export default function LoginForm() {
   const [state, formAction] = useActionState(loginAction, undefined);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+  });
 
   return (
     <AuthShell>
@@ -28,16 +42,31 @@ export default function LoginForm() {
           subtitle="Please enter your internal credentials to access the portal."
         />
 
-        {state?.error && (
+        {(state?.error || errors.email || errors.password) && (
           <div className="mb-6 p-4 bg-danger/10 border border-danger/20 rounded-xl flex gap-3 items-start">
             <span className="material-symbols-outlined text-danger text-xl">
               error
             </span>
-            <p className="text-sm text-danger font-medium">{state.error}</p>
+            <div className="text-sm text-danger font-medium">
+              {state?.error ||
+                errors.email?.message ||
+                errors.password?.message}
+            </div>
           </div>
         )}
 
-        <form className="space-y-6" action={formAction}>
+        <form
+          className="space-y-6"
+          noValidate
+          onSubmit={handleSubmit((data) => {
+            startTransition(() => {
+              const formData = new FormData();
+              formData.append("email", data.email);
+              formData.append("password", data.password);
+              formAction(formData);
+            });
+          })}
+        >
           <div>
             <label
               className="block text-sm font-semibold text-gray-700 mb-2"
@@ -53,10 +82,9 @@ export default function LoginForm() {
                 autoComplete="email"
                 className="pl-10 pr-4 text-sm"
                 id="email"
-                name="email"
                 placeholder="name@company.com"
-                required
                 type="email"
+                {...register("email")}
               />
             </div>
           </div>
@@ -84,30 +112,15 @@ export default function LoginForm() {
                 autoComplete="current-password"
                 className="pl-10 pr-4 text-sm"
                 id="password"
-                name="password"
                 placeholder="••••••••"
-                required
                 type="password"
+                {...register("password")}
               />
             </div>
           </div>
 
-          <div className="flex items-center">
-            <input
-              className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-            />
-            <label
-              className="ml-2 block text-sm text-gray-600"
-              htmlFor="remember-me"
-            >
-              Remember this device for 30 days
-            </label>
-          </div>
-
           <SubmitButton
+            className="cursor-pointer"
             text="Sign In"
             loadingText="Signing in..."
             icon={
