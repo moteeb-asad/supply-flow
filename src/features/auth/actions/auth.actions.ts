@@ -2,7 +2,10 @@
 
 import { createClient } from "@/src/db/supabaseClient";
 import { redirect } from "next/navigation";
-import { loginSchema } from "@/src/features/auth/validators/auth.schema";
+import {
+  loginSchema,
+  resetPasswordSchema,
+} from "@/src/features/auth/validators/auth.schema";
 
 export async function loginAction(
   _prevState: { error?: string } | undefined,
@@ -63,8 +66,15 @@ export async function requestPasswordResetAction(
 
   const supabase = await createClient();
 
+  // Use absolute URL with protocol and host
+  const redirectUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (typeof window !== "undefined"
+      ? window.location.origin
+      : "http://localhost:3000");
+
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password`,
+    redirectTo: `${redirectUrl}/reset-password`,
   });
 
   if (error) {
@@ -81,25 +91,40 @@ export async function resetPasswordAction(
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
 
-  if (!password || !confirmPassword) {
-    return { error: "Both password fields are required." };
-  }
+  // Use Zod schema for server-side validation too
+  const validation = resetPasswordSchema.safeParse({
+    password,
+    confirmPassword,
+  });
 
-  if (password !== confirmPassword) {
-    return { error: "Passwords do not match." };
-  }
-
-  // Optional but recommended: password rules
-  if (password.length < 8) {
-    return { error: "Password must be at least 8 characters long." };
+  if (!validation.success) {
+    const firstError = validation.error.issues[0];
+    return { error: firstError.message };
   }
 
   const supabase = await createClient();
 
+  // Check if user is authenticated (has valid session from recovery token)
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    console.error("Session error:", userError);
+    return {
+      error:
+        "Invalid or expired reset link. Please request a new password reset.",
+    };
+  }
+
   const { error } = await supabase.auth.updateUser({ password });
 
   if (error) {
-    return { error: "Unable to update password. Please try again." };
+    console.error("Password update error:", error);
+    return {
+      error: error.message || "Unable to update password. Please try again.",
+    };
   }
 
   return { success: "Password updated successfully. You can sign in now." };

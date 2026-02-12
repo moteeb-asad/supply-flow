@@ -2,10 +2,16 @@
 
 import { requestPasswordResetAction } from "@/src/features/auth/actions/auth.actions";
 import { Input } from "@/src/components/ui/Input";
-import { useActionState } from "react";
-import AuthShell from "../components/AuthShell";
-import AuthHeader from "../components/AuthHeader";
-import SubmitButton from "../components/SubmitButton";
+import { useActionState, startTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  forgotPasswordSchema,
+  type ForgotPasswordInput,
+} from "@/src/features/auth/validators/auth.schema";
+import AuthShell from "@/src/features/auth/components/AuthShell";
+import AuthHeader from "@/src/features/auth/components/AuthHeader";
+import SubmitButton from "@/src/features/auth/components/SubmitButton";
 
 export default function ForgotPasswordForm() {
   const [state, formAction] = useActionState(
@@ -13,20 +19,30 @@ export default function ForgotPasswordForm() {
     undefined,
   );
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ForgotPasswordInput>({
+    resolver: zodResolver(forgotPasswordSchema),
+  });
+
   return (
     <AuthShell>
       <div className="max-w-md w-full mx-auto my-auto">
         <AuthHeader
-          title="Reset Password"
+          title="Forgot Password?"
           subtitle="Enter your work email address and we’ll send you a reset link."
         />
 
-        {state?.error && (
+        {(state?.error || errors.email) && (
           <div className="mb-6 p-4 bg-danger/10 border border-danger/20 rounded-xl flex gap-3 items-start">
             <span className="material-symbols-outlined text-danger text-xl">
               error
             </span>
-            <p className="text-sm text-danger font-medium">{state.error}</p>
+            <p className="text-sm text-danger font-medium">
+              {state?.error || errors.email?.message}
+            </p>
           </div>
         )}
 
@@ -41,7 +57,17 @@ export default function ForgotPasswordForm() {
           </div>
         )}
 
-        <form className="space-y-6" action={formAction}>
+        <form
+          className="space-y-6"
+          noValidate
+          onSubmit={handleSubmit((data) => {
+            startTransition(() => {
+              const formData = new FormData();
+              formData.append("email", data.email);
+              formAction(formData);
+            });
+          })}
+        >
           <div>
             <label
               className="block text-sm font-semibold text-gray-700 mb-2"
@@ -57,15 +83,15 @@ export default function ForgotPasswordForm() {
                 autoComplete="email"
                 className="pl-10 pr-4 text-sm"
                 id="email"
-                name="email"
                 placeholder="name@company.com"
-                required
                 type="email"
+                {...register("email")}
               />
             </div>
           </div>
 
           <SubmitButton
+            className="cursor-pointer"
             text="Send Reset Link"
             loadingText="Sending..."
             icon={
