@@ -1,4 +1,3 @@
-import DeactivateAccount from "@/src/features/settings/account/components/DeactivateAccount";
 import ProfileCard from "@/src/features/settings/account/components/ProfileCard";
 import SecuritySection from "@/src/features/settings/account/components/SecuritySection";
 
@@ -10,8 +9,6 @@ export default function AccountSettingsPage() {
         <ProfileCard />
         {/* <SecuritySection /> */}
         <SecuritySection />
-        {/* <DeactivateAccount /> */}
-        <DeactivateAccount />
       </div>
     </div>
   );

@@ -40,3 +40,9 @@ body {
   --tw-bg-opacity: 1;
   background-color: rgb(17 22 33 / var(--tw-bg-opacity, 1));
 }
+
+.modal-overlay {
+  background-color: rgba(14, 18, 27, 0.4);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
