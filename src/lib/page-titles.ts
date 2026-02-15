@@ -5,7 +5,10 @@ export const pageTitles: Record<string, string> = {
   "/inventory/receive": "SKU Receiving",
   "/reports": "Reports & Analytics",
   "/settings": "Settings",
-  "/settings/users": "User Management",
+  "/settings/user-management": "User Management",
+  "/settings/user-management/users": "User Management",
+  "/settings/user-management/invitations": "User Management",
+  "/settings/user-management/permissions": "User Management",
   "/settings/account": "Account Information",
 };
 

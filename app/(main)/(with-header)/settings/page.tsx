@@ -1,9 +1,27 @@
 import Link from "next/link";
+import { createClient } from "@/src/db/supabaseClient";
+import { redirect } from "next/navigation";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  // Get user role from user metadata
+  const userRole = user.user_metadata?.role as string | undefined;
+  const isSuperAdmin = userRole === "super_admin";
+
+  // Determine grid layout based on visible cards
+  const gridCols = isSuperAdmin ? "md:grid-cols-2" : "md:grid-cols-3";
+
   return (
     <>
-      <div className="flex-1 overflow-y-auto p-8 bg-white">
+      <div className="flex-1 overflow-y-auto p-8">
         <div className="max-w-5xl mx-auto">
           <div className="mb-8">
             <h3 className="text-lg font-semibold mb-2">
@@ -13,33 +31,35 @@ export default function SettingsPage() {
               Manage your organization and personal account preferences.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-xl border border-[#e7ebf3] shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                  <span
-                    className="material-symbols-outlined text-2xl"
-                    style={{ fontVariationSettings: '"FILL" 1' }}
-                  >
-                    group
-                  </span>
+          <div className={`grid grid-cols-1 ${gridCols} gap-6`}>
+            {isSuperAdmin && (
+              <div className="bg-white p-6 rounded-xl border border-[#e7ebf3] shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                    <span
+                      className="material-symbols-outlined text-2xl"
+                      style={{ fontVariationSettings: '"FILL" 1' }}
+                    >
+                      group
+                    </span>
+                  </div>
                 </div>
+                <h4 className="text-lg font-bold mb-2">User Management</h4>
+                <p className="text-sm text-[#4e6797] mb-6 leading-relaxed">
+                  Manage staff, roles, invitations, and permissions. Control
+                  access levels for your warehouse and management team.
+                </p>
+                <Link
+                  href="/settings/user-management"
+                  className="w-full flex items-center justify-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-bold shadow-sm hover:bg-primary/90 transition-colors"
+                >
+                  <span>Configure</span>
+                  <span className="material-symbols-outlined text-lg">
+                    chevron_right
+                  </span>
+                </Link>
               </div>
-              <h4 className="text-lg font-bold mb-2">User Management</h4>
-              <p className="text-sm text-[#4e6797] mb-6 leading-relaxed">
-                Manage staff, roles, invitations, and permissions. Control
-                access levels for your warehouse and management team.
-              </p>
-              <Link
-                href="/settings/users"
-                className="w-full flex items-center justify-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-bold shadow-sm hover:bg-primary/90 transition-colors"
-              >
-                <span>Configure</span>
-                <span className="material-symbols-outlined text-lg">
-                  chevron_right
-                </span>
-              </Link>
-            </div>
+            )}
             <div className="bg-white p-6 rounded-xl border border-[#e7ebf3] shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
