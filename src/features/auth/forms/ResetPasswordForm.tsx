@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { resetPasswordAction } from "@/src/features/auth/actions/auth.actions";
 import { Input } from "@/src/components/ui/Input";
-import { useActionState, startTransition, useEffect, useState } from "react";
+import { useActionState, startTransition, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -18,22 +18,20 @@ export default function ResetPasswordForm() {
   const [state, formAction] = useActionState(resetPasswordAction, undefined);
   const searchParams = useSearchParams();
   const mode = searchParams.get("type"); // "invite" | "recovery" | null
-  const [isLoading, setIsLoading] = useState(true);
-  const [tokenError, setTokenError] = useState<string | null>(null);
 
   const isInvite = mode === "invite";
 
   // Check for recovery token in URL hash
-  useEffect(() => {
+  const tokenError = useMemo(() => {
+    if (typeof window === "undefined") return null;
+
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const accessToken = hashParams.get("access_token");
     const type = hashParams.get("type");
 
-    if (type === "recovery" && !accessToken) {
-      setTokenError("Invalid or expired reset link. Please request a new one.");
-    }
-
-    setIsLoading(false);
+    return type === "recovery" && !accessToken
+      ? "Invalid or expired reset link. Please request a new one."
+      : null;
   }, []);
 
   const {
@@ -43,16 +41,6 @@ export default function ResetPasswordForm() {
   } = useForm<ResetPasswordInput>({
     resolver: zodResolver(resetPasswordSchema),
   });
-
-  if (isLoading) {
-    return (
-      <AuthShell>
-        <div className="max-w-md w-full mx-auto my-auto text-center">
-          <p className="text-gray-600">Verifying reset link...</p>
-        </div>
-      </AuthShell>
-    );
-  }
 
   return (
     <AuthShell>

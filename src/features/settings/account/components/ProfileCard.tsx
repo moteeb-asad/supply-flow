@@ -15,7 +15,7 @@ export default async function ProfileCard() {
     <div className="bg-white border border-[#e7ebf3] rounded-xl overflow-hidden shadow-sm">
       <div className="px-6 py-4 border-b border-[#e7ebf3] flex items-center justify-between">
         <h3 className="text-base font-bold">Profile Details</h3>
-        <button className="text-primary text-sm font-bold hover:underline">
+        <button className="text-primary text-sm font-bold hover:underline hidden">
           Edit Profile
         </button>
       </div>
@@ -66,7 +66,7 @@ export default async function ProfileCard() {
           </div>
         </div>
       </div>
-      <div className="px-6 py-4 bg-gray-50/50 border-t border-[#e7ebf3] flex justify-end">
+      <div className="px-6 py-4 bg-gray-50/50 border-t border-[#e7ebf3] flex justify-end hidden">
         <button className="bg-primary text-white px-6 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-primary/90 transition-colors">
           Save Changes
         </button>
