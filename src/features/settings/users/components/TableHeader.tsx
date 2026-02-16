@@ -1,16 +1,12 @@
 "use client";
 
-interface TableHeaderProps {
-  searchPlaceholder?: string;
-  showFilter?: boolean;
-  onSearch?: (value: string) => void;
-  onFilterClick?: () => void;
-}
+import { TableHeaderProps } from "../types";
 
 export default function TableHeader({
   showFilter = true,
   onSearch,
   onFilterClick,
+  searchPlaceholder,
 }: TableHeaderProps) {
   return (
     <div className="p-4 border-b border-[#e7ebf3] flex items-center justify-between">
@@ -20,7 +16,7 @@ export default function TableHeader({
         </span>
         <input
           className="w-full pl-10 pr-4 py-2 bg-background-light border-none rounded-lg focus:ring-2 focus:ring-primary text-sm"
-          placeholder="Search by name or email..."
+          placeholder={searchPlaceholder || "Search by name or email..."}
           type="text"
           onChange={(e) => onSearch?.(e.target.value)}
         />
@@ -41,4 +37,3 @@ export default function TableHeader({
     </div>
   );
 }
-

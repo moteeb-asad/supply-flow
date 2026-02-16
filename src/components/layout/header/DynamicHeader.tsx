@@ -1,21 +1,22 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getHeaderConfig } from "@/src/lib/header-config";
 import { Button } from "@/src/components/ui/Button";
 import { useState } from "react";
 
 export default function DynamicHeader() {
+  const router = useRouter();
   const pathname = usePathname();
   const config = getHeaderConfig(pathname);
   const [activeAction, setActiveAction] = useState<string | null>(null);
 
   const handleAction = (actionName: string) => {
     setActiveAction(actionName);
-    // Emit custom event that pages can listen to
-    window.dispatchEvent(
-      new CustomEvent("header-action", { detail: { action: actionName } }),
-    );
+
+    // Update URL to trigger modal in the page component
+    const currentPath = pathname;
+    router.push(`${currentPath}?modal=${actionName}`);
   };
 
   if (!config.showSearch && !config.actions?.length) {
@@ -49,7 +50,7 @@ export default function DynamicHeader() {
             onClick={() => handleAction(action.action)}
           >
             {action.icon && (
-              <span className="material-symbols-outlined text-lg">
+              <span className="material-symbols-outlined !text-lg">
                 {action.icon}
               </span>
             )}

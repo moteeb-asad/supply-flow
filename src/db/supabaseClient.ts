@@ -1,6 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+/**
+ * Server-side Supabase client for Server Components, Server Actions, and Route Handlers
+ * Do NOT import this in Client Components - use supabaseBrowserClient.ts instead
+ */
 export async function createClient() {
   const cookieStore = await cookies();
 
@@ -25,15 +29,5 @@ export async function createClient() {
         },
       },
     },
-  );
-}
-
-// Browser client for client components
-import { createBrowserClient } from "@supabase/ssr";
-
-export function createBrowserSupabaseClient() {
-  return createBrowserClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
   );
 }

@@ -1,14 +1,6 @@
 "use client";
 
-interface TablePaginationProps {
-  currentPage: number;
-  totalPages: number;
-  from: number;
-  to: number;
-  total: number;
-  itemLabel?: string;
-  onPageChange?: (page: number) => void;
-}
+import { TablePaginationProps } from "../types";
 
 export default function TablePagination({
   currentPage,
@@ -54,17 +46,9 @@ export default function TablePagination({
   return (
     <div className="px-6 py-4 bg-gray-50/50 border-t border-[#e7ebf3] flex items-center justify-between">
       <p className="text-sm text-[#4e6797]">
-        Showing{" "}
-        <span className="font-medium text-[#0e121b]">
-          {from}
-        </span>{" "}
-        to{" "}
-        <span className="font-medium text-[#0e121b]">{to}</span>{" "}
-        of{" "}
-        <span className="font-medium text-[#0e121b]">
-          {total}
-        </span>{" "}
-        {itemLabel}
+        {"Showing "} <span className="font-medium text-[#0e121b]">{from}</span>{" "}
+        to <span className="font-medium text-[#0e121b]">{to}</span> of{" "}
+        <span className="font-medium text-[#0e121b]">{total}</span> {itemLabel}
       </p>
       <div className="flex items-center gap-2">
         <button
@@ -86,4 +70,3 @@ export default function TablePagination({
     </div>
   );
 }
-

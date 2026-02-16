@@ -69,7 +69,7 @@ export function MultiSelect({
       )}
       <div className="relative" ref={containerRef}>
         <div
-          className="w-full min-h-[42px] px-2 py-1.5 bg-gray-50 border border-[#e7ebf3] rounded-lg focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all flex flex-wrap gap-1.5 items-center cursor-pointer"
+          className="w-full min-h-[42px] px-2 py-1.5 bg-gray-50 mt-[6px] border border-[#e7ebf3] rounded-lg focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all flex flex-wrap gap-1.5 items-center cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
           {value.length > 0 ? (
@@ -88,7 +88,7 @@ export function MultiSelect({
                     if (option) removeOption(option.value);
                   }}
                 >
-                  <span className="material-symbols-outlined text-[14px]">
+                  <span className="material-symbols-outlined !text-[14px]">
                     close
                   </span>
                 </button>
@@ -128,7 +128,7 @@ export function MultiSelect({
                     }`}
                   >
                     {isSelected && (
-                      <span className="material-symbols-outlined text-[14px] text-white font-bold">
+                      <span className="material-symbols-outlined !text-[14px] text-white font-bold">
                         check
                       </span>
                     )}

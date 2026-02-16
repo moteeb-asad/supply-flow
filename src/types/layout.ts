@@ -1,4 +1,4 @@
-export type UserRole = "super_admin" | "ops_manager" | "store_keeper";
+export type UserRole = "super_admin" | "operations_manager" | "store_keeper";
 
 export interface SidebarProps {
   userRole: UserRole;
