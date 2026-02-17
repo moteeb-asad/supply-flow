@@ -2,7 +2,7 @@
 
 import { requestPasswordResetAction } from "@/src/features/auth/actions/auth.actions";
 import { Input } from "@/src/components/ui/Input";
-import { useActionState, startTransition } from "react";
+import { useActionState, useEffect, useState, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -18,6 +18,7 @@ export default function ForgotPasswordForm() {
     requestPasswordResetAction,
     undefined,
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -26,6 +27,12 @@ export default function ForgotPasswordForm() {
   } = useForm<ForgotPasswordInput>({
     resolver: zodResolver(forgotPasswordSchema),
   });
+
+  useEffect(() => {
+    if (state?.error || state?.success) {
+      setIsSubmitting(false);
+    }
+  }, [state]);
 
   return (
     <AuthShell>
@@ -61,9 +68,11 @@ export default function ForgotPasswordForm() {
           className="space-y-6"
           noValidate
           onSubmit={handleSubmit((data) => {
+            setIsSubmitting(true);
+            const formData = new FormData();
+            formData.append("email", data.email);
+
             startTransition(() => {
-              const formData = new FormData();
-              formData.append("email", data.email);
               formAction(formData);
             });
           })}
@@ -94,6 +103,7 @@ export default function ForgotPasswordForm() {
             className="cursor-pointer"
             text="Send Reset Link"
             loadingText="Sending..."
+            loading={isSubmitting}
             icon={
               <span className="material-symbols-outlined text-xl">send</span>
             }

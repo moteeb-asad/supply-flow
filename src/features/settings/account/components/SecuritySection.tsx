@@ -29,6 +29,7 @@ export default function SecuritySection() {
             type="button"
             variant="secondary"
             size="sm"
+            shadow="none"
             onClick={() => setIsModalOpen(true)}
           >
             Change Password

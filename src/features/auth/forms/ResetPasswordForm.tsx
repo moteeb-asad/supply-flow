@@ -2,7 +2,7 @@
 
 import { resetPasswordAction } from "@/src/features/auth/actions/auth.actions";
 import { Input } from "@/src/components/ui/Input";
-import { useActionState, startTransition, useEffect, useState } from "react";
+import { useActionState, useEffect, useState, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -16,26 +16,63 @@ import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
 
 export default function ResetPasswordForm() {
   const [state, formAction] = useActionState(resetPasswordAction, undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
   const [isInvite, setIsInvite] = useState(false);
   const [tokenError, setTokenError] = useState<string | null>(null);
 
   useEffect(() => {
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = hashParams.get("access_token");
-    const type = hashParams.get("type");
-
-    setIsInvite(type === "invite");
-    setTokenError(
-      type === "recovery" && !accessToken
-        ? "Invalid or expired reset link. Please request a new one."
-        : null,
-    );
-
     const checkSession = async () => {
-      const supabase = createBrowserSupabaseClient();
-      await supabase.auth.getSession();
-      setSessionReady(true);
+      try {
+        const hashParams = new URLSearchParams(
+          window.location.hash.substring(1),
+        );
+        const searchParams = new URLSearchParams(window.location.search);
+        const accessToken = hashParams.get("access_token");
+        const refreshToken = hashParams.get("refresh_token");
+        const type = hashParams.get("type");
+        const code = searchParams.get("code");
+
+        setIsInvite(type === "invite");
+
+        const supabase = createBrowserSupabaseClient();
+
+        if (accessToken && refreshToken) {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          if (error) {
+            console.error("Supabase setSession error:", error);
+            setTokenError(
+              "Invalid or expired reset link. Please request a new one.",
+            );
+          }
+        } else if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+          if (error) {
+            console.error("Supabase exchangeCodeForSession error:", error);
+            setTokenError(
+              "Invalid or expired reset link. Please request a new one.",
+            );
+          }
+        } else if (type === "recovery" || type === "invite") {
+          setTokenError(
+            "Invalid or expired reset link. Please request a new one.",
+          );
+        }
+
+        await supabase.auth.getSession();
+      } catch (error) {
+        console.error("Reset password session check failed:", error);
+        setTokenError(
+          "Unable to reach the authentication server. Check your Supabase URL and key.",
+        );
+      } finally {
+        setSessionReady(true);
+      }
     };
 
     checkSession();
@@ -48,6 +85,12 @@ export default function ResetPasswordForm() {
   } = useForm<ResetPasswordInput>({
     resolver: zodResolver(resetPasswordSchema),
   });
+
+  useEffect(() => {
+    if (state?.error || state?.success) {
+      setIsSubmitting(false);
+    }
+  }, [state]);
 
   return (
     <AuthShell>
@@ -91,7 +134,9 @@ export default function ResetPasswordForm() {
               check_circle
             </span>
             <p className="text-sm text-green-700 font-medium">
-              {state.success}
+              {isInvite
+                ? "Password created successfully. You can sign in now."
+                : state.success}
             </p>
           </div>
         )}
@@ -100,10 +145,12 @@ export default function ResetPasswordForm() {
           className="space-y-6"
           noValidate
           onSubmit={handleSubmit((data) => {
+            setIsSubmitting(true);
+            const formData = new FormData();
+            formData.append("password", data.password);
+            formData.append("confirmPassword", data.confirmPassword);
+
             startTransition(() => {
-              const formData = new FormData();
-              formData.append("password", data.password);
-              formData.append("confirmPassword", data.confirmPassword);
               formAction(formData);
             });
           })}
@@ -156,6 +203,7 @@ export default function ResetPasswordForm() {
             className="cursor-pointer"
             text={isInvite ? "Create Password" : "Update Password"}
             loadingText={isInvite ? "Creating..." : "Updating..."}
+            loading={isSubmitting}
             icon={
               <span className="material-symbols-outlined text-xl">
                 {isInvite ? "check_circle" : "lock_reset"}
@@ -163,19 +211,17 @@ export default function ResetPasswordForm() {
             }
           />
 
-          {!isInvite && (
-            <div className="text-center  mt-6">
-              <a
-                className="flex items-center justify-center text-xs font-bold text-primary"
-                href="/login"
-              >
-                <span className="material-symbols-outlined !text-[16px] mr-1">
-                  arrow_back
-                </span>
-                <span className="hover:underline">Back to Sign In</span>
-              </a>
-            </div>
-          )}
+          <div className="text-center  mt-6">
+            <a
+              className="flex items-center justify-center text-xs font-bold text-primary"
+              href="/login"
+            >
+              <span className="material-symbols-outlined !text-[16px] mr-1">
+                arrow_back
+              </span>
+              <span className="hover:underline">Back to Sign In</span>
+            </a>
+          </div>
         </form>
       </div>
     </AuthShell>

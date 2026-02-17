@@ -30,15 +30,18 @@ export async function inviteUserAction(
 
     // Use absolute URL with protocol and host
     const redirectUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ||
-      (typeof window !== "undefined"
-        ? window.location.origin
-        : "http://localhost:3000");
+      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
     // 1. Invite user via Supabase Auth
+    const primaryRole = roleNames[0];
+
     const { data: authData, error: inviteError } =
       await adminClient.auth.admin.inviteUserByEmail(email, {
         redirectTo: `${redirectUrl}/reset-password`,
+        data: {
+          full_name: fullName,
+          role: primaryRole,
+        },
       });
 
     if (inviteError || !authData.user) {
@@ -62,6 +65,14 @@ export async function inviteUserAction(
     }
 
     const userId = authData.user.id;
+
+    // Ensure display name is set on auth user metadata
+    await adminClient.auth.admin.updateUserById(userId, {
+      user_metadata: {
+        full_name: fullName,
+        role: primaryRole,
+      },
+    });
 
     // 2. Create profile entry first
     const { error: profileError } = await adminClient.from("profiles").insert({

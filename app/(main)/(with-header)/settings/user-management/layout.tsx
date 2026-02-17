@@ -31,12 +31,6 @@ export default function UsersLayout({
           >
             Invitations
           </Link>
-          <Link
-            href="/settings/user-management/permissions"
-            className={`${linkBase} ${pathname === "/settings/user-management/permissions" ? linkActive : linkInactive}`}
-          >
-            Permissions
-          </Link>
         </nav>
       </div>
 

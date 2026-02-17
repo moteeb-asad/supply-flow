@@ -8,7 +8,6 @@ export const pageTitles: Record<string, string> = {
   "/settings/user-management": "User Management",
   "/settings/user-management/users": "User Management",
   "/settings/user-management/invitations": "User Management",
-  "/settings/user-management/permissions": "User Management",
   "/settings/account": "Account Information",
 };
 

@@ -65,7 +65,7 @@ export function Button({
       )}
     >
       {loading ? (
-        "Please wait..."
+        (text ?? "Please wait...")
       ) : (
         <>
           {text ?? children}

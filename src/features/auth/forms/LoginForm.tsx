@@ -2,7 +2,7 @@
 
 import { loginAction } from "@/src/features/auth/actions/auth.actions";
 import { Input } from "@/src/components/ui/Input";
-import { useActionState, startTransition } from "react";
+import { useActionState, useEffect, useState, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -16,6 +16,7 @@ import SubmitButton from "@/src/features/auth/components/SubmitButton";
 
 export default function LoginForm() {
   const [state, formAction] = useActionState(loginAction, undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -24,6 +25,12 @@ export default function LoginForm() {
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
   });
+
+  useEffect(() => {
+    if (state?.error) {
+      setIsSubmitting(false);
+    }
+  }, [state]);
 
   return (
     <AuthShell>
@@ -59,10 +66,12 @@ export default function LoginForm() {
           className="space-y-6"
           noValidate
           onSubmit={handleSubmit((data) => {
+            setIsSubmitting(true);
+            const formData = new FormData();
+            formData.append("email", data.email);
+            formData.append("password", data.password);
+
             startTransition(() => {
-              const formData = new FormData();
-              formData.append("email", data.email);
-              formData.append("password", data.password);
               formAction(formData);
             });
           })}
@@ -123,6 +132,7 @@ export default function LoginForm() {
             className="cursor-pointer"
             text="Sign In"
             loadingText="Signing in..."
+            loading={isSubmitting}
             icon={
               <span className="material-symbols-outlined text-xl">login</span>
             }

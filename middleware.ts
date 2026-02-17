@@ -36,15 +36,22 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/login") ||
     pathname.startsWith("/forgot-password") ||
     pathname.startsWith("/reset-password");
+  const isResetPasswordRoute = pathname.startsWith("/reset-password");
 
   const isProtectedRoute = !isAuthRoute && !pathname.startsWith("/api");
 
   // Check if this is a password recovery flow
+  const typeParam = request.nextUrl.searchParams.get("type");
   const isPasswordRecovery =
     pathname === "/reset-password" &&
     (request.nextUrl.searchParams.has("token") ||
       request.nextUrl.searchParams.has("code") ||
-      request.nextUrl.hash.includes("type=recovery"));
+      request.nextUrl.searchParams.has("access_token") ||
+      request.nextUrl.searchParams.has("refresh_token") ||
+      typeParam === "recovery" ||
+      typeParam === "invite" ||
+      request.nextUrl.hash.includes("type=recovery") ||
+      request.nextUrl.hash.includes("type=invite"));
 
   // Handle PKCE code exchange for password recovery
   if (request.nextUrl.searchParams.has("code")) {
@@ -61,19 +68,31 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // 🔁 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
-  if (isAuthRoute && user && !isPasswordRecovery) {
+  const role = user?.user_metadata?.role;
+  const isKnownRole =
+    role === "super_admin" ||
+    role === "operations_manager" ||
+    role === "store_keeper";
+
+  // 🔐 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
+  if (
+    isAuthRoute &&
+    user &&
+    isKnownRole &&
+    !isPasswordRecovery &&
+    !isResetPasswordRoute
+  ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   // 🔐 3️⃣ ROLE CHECK (⬅️ WRITE YOUR CODE HERE)
   if (user && isProtectedRoute) {
-    const role = user.user_metadata?.role;
-
     for (const route in routePermissions) {
       if (pathname.startsWith(route)) {
         if (!role || !routePermissions[route].includes(role)) {
-          return NextResponse.redirect(new URL("/dashboard", request.url));
+          return NextResponse.redirect(
+            new URL("/login?unauthorized=1", request.url),
+          );
         }
       }
     }

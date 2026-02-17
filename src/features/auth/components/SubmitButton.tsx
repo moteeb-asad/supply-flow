@@ -2,28 +2,23 @@
 
 import { Button } from "@/src/components/ui/Button";
 import { useFormStatus } from "react-dom";
-import type { ReactNode } from "react";
-
-type SubmitButtonProps = {
-  text: string;
-  loadingText?: string;
-  icon?: ReactNode;
-  className?: string;
-};
+import { SubmitButtonProps } from "../types";
 
 export default function SubmitButton({
   text,
   loadingText = "Please wait...",
   icon,
   className,
+  loading,
 }: SubmitButtonProps) {
   const { pending } = useFormStatus();
+  const isLoading = loading ?? pending;
 
   return (
     <Button
-      loading={pending}
+      loading={isLoading}
       type="submit"
-      text={pending ? loadingText : text}
+      text={isLoading ? loadingText : text}
       icon={icon}
       className={className}
     />
