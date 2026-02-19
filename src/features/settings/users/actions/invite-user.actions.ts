@@ -11,12 +11,14 @@ export async function inviteUserAction(
   fullName: string,
   email: string,
   roleNames: string[],
+  primaryRoleName: string,
 ): Promise<InviteUserResult> {
   try {
     // Validate input
     const validation = inviteUserSchema.safeParse({
       fullName,
       email,
+      primaryRole: primaryRoleName,
       roles: roleNames,
     });
     if (!validation.success) {
@@ -33,14 +35,16 @@ export async function inviteUserAction(
       process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
     // 1. Invite user via Supabase Auth
-    const primaryRole = roleNames[0];
+    const primaryRole = primaryRoleName;
+    const roles = roleNames;
 
     const { data: authData, error: inviteError } =
       await adminClient.auth.admin.inviteUserByEmail(email, {
         redirectTo: `${redirectUrl}/reset-password`,
         data: {
           full_name: fullName,
-          role: primaryRole,
+          primary_role: primaryRole,
+          roles,
         },
       });
 
@@ -70,28 +74,12 @@ export async function inviteUserAction(
     await adminClient.auth.admin.updateUserById(userId, {
       user_metadata: {
         full_name: fullName,
-        role: primaryRole,
+        primary_role: primaryRole,
+        roles,
       },
     });
 
-    // 2. Create profile entry first
-    const { error: profileError } = await adminClient.from("profiles").insert({
-      id: userId,
-      email: email,
-      full_name: fullName,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    });
-
-    if (profileError) {
-      console.error("Profile creation error:", profileError);
-      return {
-        success: false,
-        error: `Failed to create user profile: ${profileError.message}`,
-      };
-    }
-
-    // 3. Get role IDs from role names
+    // 2. Get role IDs from role names
     const { data: rolesData, error: rolesError } = await adminClient
       .from("roles")
       .select("id, name")
@@ -102,6 +90,35 @@ export async function inviteUserAction(
       return {
         success: false,
         error: "Failed to fetch roles from database",
+      };
+    }
+
+    const primaryRoleId = rolesData.find(
+      (role) => role.name === primaryRole,
+    )?.id;
+
+    if (!primaryRoleId) {
+      return {
+        success: false,
+        error: "Primary role is not in selected roles",
+      };
+    }
+
+    // 3. Create profile entry first
+    const { error: profileError } = await adminClient.from("profiles").insert({
+      id: userId,
+      email: email,
+      full_name: fullName,
+      primary_role_id: primaryRoleId,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+
+    if (profileError) {
+      console.error("Profile creation error:", profileError);
+      return {
+        success: false,
+        error: `Failed to create user profile: ${profileError.message}`,
       };
     }
 

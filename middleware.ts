@@ -68,11 +68,22 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const role = user?.user_metadata?.role;
-  const isKnownRole =
-    role === "super_admin" ||
-    role === "operations_manager" ||
-    role === "store_keeper";
+  const primaryRole = user?.user_metadata?.primary_role as string | undefined;
+  const legacyRole = user?.user_metadata?.role as string | undefined;
+  const rolesMetadata = user?.user_metadata?.roles;
+  const roles = Array.isArray(rolesMetadata)
+    ? (rolesMetadata.filter((value) => typeof value === "string") as string[])
+    : primaryRole
+      ? [primaryRole]
+      : legacyRole
+        ? [legacyRole]
+        : [];
+  const isKnownRole = roles.some(
+    (value) =>
+      value === "super_admin" ||
+      value === "operations_manager" ||
+      value === "store_keeper",
+  );
 
   // 🔐 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
   if (
@@ -89,7 +100,9 @@ export async function middleware(request: NextRequest) {
   if (user && isProtectedRoute) {
     for (const route in routePermissions) {
       if (pathname.startsWith(route)) {
-        if (!role || !routePermissions[route].includes(role)) {
+        const allowedRoles = routePermissions[route];
+        const isAllowed = roles.some((value) => allowedRoles.includes(value));
+        if (!isAllowed) {
           return NextResponse.redirect(
             new URL("/login?unauthorized=1", request.url),
           );

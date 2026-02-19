@@ -12,9 +12,18 @@ export default async function SettingsPage() {
     redirect("/login");
   }
 
-  // Get user role from user metadata
-  const userRole = user.user_metadata?.role as string | undefined;
-  const isSuperAdmin = userRole === "super_admin";
+  // Get user roles from user metadata
+  const primaryRole = user.user_metadata?.primary_role as string | undefined;
+  const legacyRole = user.user_metadata?.role as string | undefined;
+  const rolesMetadata = user.user_metadata?.roles;
+  const roles = Array.isArray(rolesMetadata)
+    ? (rolesMetadata.filter((value) => typeof value === "string") as string[])
+    : primaryRole
+      ? [primaryRole]
+      : legacyRole
+        ? [legacyRole]
+        : [];
+  const isSuperAdmin = roles.includes("super_admin");
 
   // Determine grid layout based on visible cards
   const gridCols = isSuperAdmin ? "md:grid-cols-2" : "md:grid-cols-3";

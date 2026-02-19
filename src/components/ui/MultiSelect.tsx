@@ -14,6 +14,10 @@ type MultiSelectProps = {
   placeholder?: string;
   label?: string;
   id?: string;
+  single?: boolean;
+  primaryValue?: string;
+  onPrimaryChange?: (value: string) => void;
+  primaryLabel?: string;
 };
 
 export function MultiSelect({
@@ -23,6 +27,10 @@ export function MultiSelect({
   placeholder = "Select options...",
   label,
   id,
+  single = false,
+  primaryValue,
+  onPrimaryChange,
+  primaryLabel = "Primary",
 }: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,6 +51,16 @@ export function MultiSelect({
   }, []);
 
   const toggleOption = (optionValue: string) => {
+    if (single) {
+      if (value.includes(optionValue)) {
+        onChange([]);
+      } else {
+        onChange([optionValue]);
+        setIsOpen(false);
+      }
+      return;
+    }
+
     if (value.includes(optionValue)) {
       onChange(value.filter((v) => v !== optionValue));
     } else {
@@ -51,14 +69,19 @@ export function MultiSelect({
   };
 
   const removeOption = (optionValue: string) => {
+    if (single) {
+      onChange([]);
+      return;
+    }
+
     onChange(value.filter((v) => v !== optionValue));
   };
 
   const getSelectedLabels = () => {
-    return options
-      .filter((option) => value.includes(option.value))
-      .map((option) => option.label);
+    return options.filter((option) => value.includes(option.value));
   };
+
+  const showPrimaryToggle = Boolean(onPrimaryChange) && value.length > 0;
 
   return (
     <div className="space-y-1.5">
@@ -73,19 +96,37 @@ export function MultiSelect({
           onClick={() => setIsOpen(!isOpen)}
         >
           {value.length > 0 ? (
-            getSelectedLabels().map((label) => (
+            getSelectedLabels().map((option) => (
               <div
-                key={label}
+                key={option.value}
                 className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-0.5 rounded text-xs font-semibold border border-primary/20"
               >
-                <span>{label}</span>
+                <span>{option.label}</span>
+                {showPrimaryToggle && (
+                  <button
+                    type="button"
+                    className={`flex items-center gap-1 rounded px-1 py-0.5 text-[10px] font-semibold border transition-colors ${
+                      primaryValue === option.value
+                        ? "border-primary bg-primary text-white"
+                        : "border-primary/30 text-primary hover:bg-primary/10"
+                    }`}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onPrimaryChange?.(option.value);
+                    }}
+                  >
+                    <span className="material-symbols-outlined !text-[12px]">
+                      {primaryValue === option.value ? "star" : "star_outline"}
+                    </span>
+                    <span>{primaryLabel}</span>
+                  </button>
+                )}
                 <button
                   type="button"
                   className="flex items-center hover:text-primary/70"
                   onClick={(e) => {
                     e.stopPropagation();
-                    const option = options.find((o) => o.label === label);
-                    if (option) removeOption(option.value);
+                    removeOption(option.value);
                   }}
                 >
                   <span className="material-symbols-outlined !text-[14px]">

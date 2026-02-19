@@ -34,11 +34,13 @@ export default function InviteUserModal({
     defaultValues: {
       fullName: "",
       email: "",
+      primaryRole: "",
       roles: [],
     },
   });
 
   const selectedRoles = watch("roles");
+  const primaryRole = watch("primaryRole");
 
   // Reset form when modal closes
   useEffect(() => {
@@ -48,6 +50,21 @@ export default function InviteUserModal({
       reset();
     }
   }, [isOpen, reset]);
+
+  const handleRolesChange = (newRoles: string[]) => {
+    setValue("roles", newRoles);
+
+    // If no roles selected, clear primary
+    if (newRoles.length === 0) {
+      setValue("primaryRole", "");
+      return;
+    }
+
+    // If current primary is not in new roles, set first role as primary
+    if (!newRoles.includes(primaryRole)) {
+      setValue("primaryRole", newRoles[0]);
+    }
+  };
 
   const closeModal = () => {
     onClose();
@@ -63,6 +80,7 @@ export default function InviteUserModal({
         data.fullName,
         data.email,
         data.roles,
+        data.primaryRole,
       );
 
       if (!result.success) {
@@ -178,12 +196,20 @@ export default function InviteUserModal({
                   label="Select Role(s)"
                   options={ROLE_OPTIONS}
                   value={selectedRoles}
-                  onChange={(value) => setValue("roles", value)}
+                  onChange={handleRolesChange}
                   placeholder="Add roles..."
+                  primaryValue={primaryRole}
+                  onPrimaryChange={(value) => setValue("primaryRole", value)}
+                  primaryLabel="Primary"
                 />
                 {errors.roles && (
                   <p className="text-xs text-red-600 mt-1">
                     {errors.roles.message}
+                  </p>
+                )}
+                {errors.primaryRole && (
+                  <p className="text-xs text-red-600 mt-1">
+                    {errors.primaryRole.message}
                   </p>
                 )}
               </div>
