@@ -1,10 +1,13 @@
-import UsersTable from "@/src/features/settings/users/components/UsersTable";
+import UserManagementContainer from "@/src/features/settings/users/components/UserManagementContainer";
 import { getUsersAction } from "@/src/features/settings/users/actions/get-users.actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function UsersPage() {
-  const { users } = await getUsersAction();
+  const { users, total = 0 } = await getUsersAction({
+    page: 1,
+    itemsPerPage: 10,
+  });
 
-  return <UsersTable users={users} />;
+  return <UserManagementContainer initialUsers={users} initialTotal={total} />;
 }

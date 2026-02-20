@@ -12,10 +12,14 @@ export interface TableHeaderProps {
 
 export interface TablePaginationProps {
   currentPage: number;
-  totalPages: number;
-  from: number;
-  to: number;
   total: number;
+  itemsPerPage: number;
   itemLabel?: string;
   onPageChange?: (page: number) => void;
+}
+
+export interface TableFiltersProps {
+  onClose?: () => void;
+  onApply?: () => void;
+  onClear?: () => void;
 }

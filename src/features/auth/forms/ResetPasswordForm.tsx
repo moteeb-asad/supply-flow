@@ -30,7 +30,9 @@ export default function ResetPasswordForm() {
         const searchParams = new URLSearchParams(window.location.search);
         const accessToken = hashParams.get("access_token");
         const refreshToken = hashParams.get("refresh_token");
-        const type = hashParams.get("type");
+        const hashType = hashParams.get("type");
+        const queryType = searchParams.get("type");
+        const type = hashType || queryType;
         const code = searchParams.get("code");
 
         setIsInvite(type === "invite");
@@ -49,22 +51,28 @@ export default function ResetPasswordForm() {
               "Invalid or expired reset link. Please request a new one.",
             );
           }
-        } else if (code) {
-          const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-          if (error) {
-            console.error("Supabase exchangeCodeForSession error:", error);
-            setTokenError(
-              "Invalid or expired reset link. Please request a new one.",
-            );
-          }
-        } else if (type === "recovery" || type === "invite") {
+        } else if (!code && (type === "recovery" || type === "invite")) {
           setTokenError(
             "Invalid or expired reset link. Please request a new one.",
           );
         }
 
-        await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (
+          !session &&
+          (accessToken ||
+            refreshToken ||
+            code ||
+            type === "recovery" ||
+            type === "invite")
+        ) {
+          setTokenError(
+            "Invalid or expired reset link. Please request a new one.",
+          );
+        }
       } catch (error) {
         console.error("Reset password session check failed:", error);
         setTokenError(

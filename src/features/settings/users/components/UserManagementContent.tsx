@@ -1,16 +1,18 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import UsersTable from "@/src/features/settings/users/components/UsersTable";
+import UserManagementContainer from "@/src/features/settings/users/components/UserManagementContainer";
 import InviteUserModal from "@/src/features/settings/users/components/InviteUserModal";
 import { User } from "../types/user.types";
 
 interface UserManagementContentProps {
   users: User[];
+  total: number;
 }
 
 export default function UserManagementContent({
   users,
+  total,
 }: UserManagementContentProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -23,7 +25,7 @@ export default function UserManagementContent({
 
   return (
     <>
-      <UsersTable users={users} />
+      <UserManagementContainer initialUsers={users} initialTotal={total} />
       <InviteUserModal isOpen={isInviteModalOpen} onClose={handleCloseModal} />
     </>
   );

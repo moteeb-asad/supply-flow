@@ -3,17 +3,13 @@
 import { usePathname, useRouter } from "next/navigation";
 import { getHeaderConfig } from "@/src/lib/header-config";
 import { Button } from "@/src/components/ui/Button";
-import { useState } from "react";
 
 export default function DynamicHeader() {
   const router = useRouter();
   const pathname = usePathname();
   const config = getHeaderConfig(pathname);
-  const [activeAction, setActiveAction] = useState<string | null>(null);
 
   const handleAction = (actionName: string) => {
-    setActiveAction(actionName);
-
     // Update URL to trigger modal in the page component
     const currentPath = pathname;
     router.push(`${currentPath}?modal=${actionName}`);

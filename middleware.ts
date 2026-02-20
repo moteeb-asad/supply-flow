@@ -54,9 +54,18 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.hash.includes("type=invite"));
 
   // Handle PKCE code exchange for password recovery
-  if (request.nextUrl.searchParams.has("code")) {
+  if (
+    pathname === "/reset-password" &&
+    request.nextUrl.searchParams.has("code")
+  ) {
     const code = request.nextUrl.searchParams.get("code")!;
-    await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) {
+      console.error(
+        "exchangeCodeForSession failed in middleware:",
+        error.message,
+      );
+    }
   }
 
   const {

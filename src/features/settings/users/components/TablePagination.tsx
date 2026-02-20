@@ -4,13 +4,18 @@ import { TablePaginationProps } from "../types";
 
 export default function TablePagination({
   currentPage,
-  totalPages,
-  from,
-  to,
   total,
+  itemsPerPage,
   itemLabel = "items",
   onPageChange,
 }: TablePaginationProps) {
+  // Calculate pagination values
+  const totalPages = Math.ceil(total / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const from = total > 0 ? startIndex + 1 : 0;
+  const to = Math.min(endIndex, total);
+
   const handlePrevious = () => {
     if (currentPage > 1) {
       onPageChange?.(currentPage - 1);

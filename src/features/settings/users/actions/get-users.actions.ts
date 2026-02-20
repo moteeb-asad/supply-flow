@@ -2,9 +2,10 @@
 
 import { createClient } from "@/src/db/supabaseClient";
 import { createAdminClient } from "@/src/db/supabaseAdmin";
+import type { UserRole } from "@/src/types/auth";
 
 /**
- * Server Action: Get all users for user management
+ * Server Action: Get users with server-side pagination
  *
  * SECURITY:
  * - Only super_admin users can access this
@@ -12,7 +13,13 @@ import { createAdminClient } from "@/src/db/supabaseAdmin";
  * - adminClient is only used AFTER authorization is verified
  * - This is an admin-only feature, not for regular users
  */
-export async function getUsersAction() {
+export async function getUsersAction({
+  page = 1,
+  itemsPerPage = 10,
+}: {
+  page?: number;
+  itemsPerPage?: number;
+} = {}) {
   try {
     const supabase = await createClient();
 
@@ -27,6 +34,7 @@ export async function getUsersAction() {
         success: false,
         error: "Unauthorized. Please log in.",
         users: [],
+        total: 0,
       };
     }
 
@@ -42,6 +50,7 @@ export async function getUsersAction() {
         success: false,
         error: "Access denied. Super admin role required.",
         users: [],
+        total: 0,
       };
     }
 
@@ -52,7 +61,15 @@ export async function getUsersAction() {
     // - Using RLS would create infinite recursion
     const adminClient = createAdminClient();
 
-    const { data: profiles, error: profilesError } = await adminClient
+    // Calculate pagination range
+    const from = (page - 1) * itemsPerPage;
+    const to = from + itemsPerPage - 1;
+
+    const {
+      data: profiles,
+      error: profilesError,
+      count,
+    } = await adminClient
       .from("profiles")
       .select(
         `
@@ -65,16 +82,23 @@ export async function getUsersAction() {
         primary_role_id,
         primary_role:roles!profiles_primary_role_id_fkey(id, name)
       `,
+        { count: "exact" },
       )
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .range(from, to);
 
     if (profilesError) {
       console.error("Profile fetch error:", profilesError);
-      return { success: false, error: profilesError.message, users: [] };
+      return {
+        success: false,
+        error: profilesError.message,
+        users: [],
+        total: 0,
+      };
     }
 
     if (!profiles || profiles.length === 0) {
-      return { success: true, users: [] };
+      return { success: true, users: [], total: count || 0 };
     }
 
     // Fetch user_roles for all users (additional roles beyond primary_role)
@@ -93,18 +117,24 @@ export async function getUsersAction() {
 
     // Create a map of user roles by user_id
     const userRolesMap = new Map<string, string[]>();
-    userRoles?.forEach((ur: any) => {
+    userRoles?.forEach((ur) => {
       if (!userRolesMap.has(ur.user_id)) {
         userRolesMap.set(ur.user_id, []);
       }
-      if (ur.role?.name) {
-        userRolesMap.get(ur.user_id)?.push(ur.role.name);
+      // Type assertion: role is the joined roles table record
+      const role = ur.role as unknown as { id: string; name: string } | null;
+      if (role?.name) {
+        userRolesMap.get(ur.user_id)?.push(role.name);
       }
     });
 
     // Map profiles to user objects
-    const users = profiles.map((profile: any) => {
+    const users = profiles.map((profile) => {
       const roles = userRolesMap.get(profile.id) || [];
+      const primaryRole = profile.primary_role as unknown as {
+        id: string;
+        name: string;
+      } | null;
 
       return {
         id: profile.id,
@@ -114,18 +144,19 @@ export async function getUsersAction() {
         last_sign_in_at: profile.last_login_at,
         created_at: profile.created_at,
         primary_role_id: profile.primary_role_id,
-        primary_role_label: profile.primary_role?.name || "",
+        primary_role_label: (primaryRole?.name as UserRole) || null,
         roles: roles,
       };
     });
 
-    return { success: true, users };
+    return { success: true, users, total: count || 0 };
   } catch (err) {
     console.error("getUsersAction error:", err);
     return {
       success: false,
       error: err instanceof Error ? err.message : "Failed to fetch users",
       users: [],
+      total: 0,
     };
   }
 }

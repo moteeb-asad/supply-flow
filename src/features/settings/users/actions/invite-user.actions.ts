@@ -104,15 +104,20 @@ export async function inviteUserAction(
       };
     }
 
-    // 3. Create profile entry first
-    const { error: profileError } = await adminClient.from("profiles").insert({
-      id: userId,
-      email: email,
-      full_name: fullName,
-      primary_role_id: primaryRoleId,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    });
+    // 3. Create or update profile entry
+    // Note: auth.users triggers may already create a profile row, so use upsert.
+    const { error: profileError } = await adminClient.from("profiles").upsert(
+      {
+        id: userId,
+        email: email,
+        full_name: fullName,
+        primary_role_id: primaryRoleId,
+        updated_at: new Date().toISOString(),
+      },
+      {
+        onConflict: "id",
+      },
+    );
 
     if (profileError) {
       console.error("Profile creation error:", profileError);
@@ -131,7 +136,10 @@ export async function inviteUserAction(
 
     const { error: userRolesError } = await adminClient
       .from("user_roles")
-      .insert(userRoles);
+      .upsert(userRoles, {
+        onConflict: "user_id,role_id",
+        ignoreDuplicates: true,
+      });
 
     if (userRolesError) {
       console.error("User roles assignment error:", userRolesError);

@@ -1,11 +1,23 @@
 "use client";
 
+import { useState } from "react";
 import TableHeader from "@/src/features/settings/users/components/TableHeader";
 import TablePagination from "@/src/features/settings/users/components/TablePagination";
+import TableFilters from "@/src/features/settings/users/components/TableFilters";
 import { UsersTableProps } from "../types/user.types";
 import { formatDistanceToNow } from "date-fns";
+import { formatRole } from "@/src/lib/utils";
 
-export default function UsersTable({ users = [] }: UsersTableProps) {
+export default function UsersTable({
+  users = [],
+  total,
+  currentPage,
+  itemsPerPage,
+  isPending = false,
+  onPageChange,
+}: UsersTableProps) {
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -20,10 +32,16 @@ export default function UsersTable({ users = [] }: UsersTableProps) {
     return formatDistanceToNow(new Date(lastSignIn), { addSuffix: true });
   };
 
+  const showPagination = total > itemsPerPage;
+
   return (
-    <div className="flex-1 overflow-y-auto p-8">
-      <div className="bg-white border border-[#e7ebf3] rounded-xl overflow-hidden shadow-sm">
-        <TableHeader />
+    <div className="flex-1 overflow-y-auto p-8 relative">
+      <div
+        className={`relative bg-white border border-[#e7ebf3] rounded-xl overflow-hidden shadow-sm transition-opacity ${
+          isFilterOpen ? "opacity-40" : ""
+        } ${isPending ? "opacity-60 pointer-events-none" : ""}`}
+      >
+        <TableHeader onFilterClick={() => setIsFilterOpen((prev) => !prev)} />
 
         <table className="w-full text-left border-collapse">
           <thead>
@@ -87,7 +105,7 @@ export default function UsersTable({ users = [] }: UsersTableProps) {
                   </td>
                   <td className="px-6 py-4">
                     <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase">
-                      {user.primary_role_label}
+                      {formatRole(user.primary_role_label)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-[#4e6797]">
@@ -119,15 +137,18 @@ export default function UsersTable({ users = [] }: UsersTableProps) {
           </tbody>
         </table>
 
-        <TablePagination
-          currentPage={1}
-          totalPages={Math.ceil(users.length / 10)}
-          from={users.length > 0 ? 1 : 0}
-          to={users.length}
-          total={users.length}
-          itemLabel="users"
-        />
+        {showPagination && (
+          <TablePagination
+            currentPage={currentPage}
+            total={total}
+            itemsPerPage={itemsPerPage}
+            itemLabel="users"
+            onPageChange={onPageChange}
+          />
+        )}
       </div>
+
+      {isFilterOpen && <TableFilters onClose={() => setIsFilterOpen(false)} />}
     </div>
   );
 }

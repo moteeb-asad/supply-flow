@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/forms";
 
 :root {
   --background: #ffffff;
@@ -29,6 +30,22 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), Inter, sans-serif;
+}
+
+[type='checkbox']:checked, [type='radio']:checked {
+  border-color: transparent;
+  background-color: currentColor;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.toggle-checkbox:checked {
+  @apply right-0 border-primary bg-primary;
+}
+
+.toggle-checkbox:checked+.toggle-label {
+  @apply bg-primary/20;
 }
 
 .watermark-pattern {

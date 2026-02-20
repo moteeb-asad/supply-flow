@@ -5,11 +5,14 @@ import { Suspense } from "react";
 export const dynamic = "force-dynamic";
 
 export default async function UserManagementPage() {
-  const { users } = await getUsersAction();
+  const { users, total = 0 } = await getUsersAction({
+    page: 1,
+    itemsPerPage: 10,
+  });
 
   return (
     <Suspense fallback={null}>
-      <UserManagementContent users={users} />
+      <UserManagementContent users={users} total={total} />
     </Suspense>
   );
 }

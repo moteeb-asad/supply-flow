@@ -259,11 +259,9 @@ export default function InvitationsTable() {
 
         <TablePagination
           currentPage={1}
-          totalPages={5}
-          from={1}
-          to={5}
           total={24}
-          itemLabel="users"
+          itemsPerPage={10}
+          itemLabel="invitations"
         />
       </div>
     </div>

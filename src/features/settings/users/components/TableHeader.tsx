@@ -24,7 +24,7 @@ export default function TableHeader({
       {showFilter && (
         <div className="flex items-center gap-2">
           <button
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#4e6797] border border-[#e7ebf3] rounded-lg hover:bg-gray-50"
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#4e6797] border border-[#e7ebf3] rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
             onClick={onFilterClick}
           >
             <span className="material-symbols-outlined text-lg">
