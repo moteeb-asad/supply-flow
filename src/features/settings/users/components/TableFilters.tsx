@@ -1,41 +1,35 @@
 "use client";
 
-import { useState } from "react";
 import { TableFiltersProps } from "../types";
 
 export default function TableFilters({
+  value,
+  onChange,
   onClose,
   onApply,
   onClear,
 }: TableFiltersProps) {
-  const [roles, setRoles] = useState<string[]>([
-    "super_admin",
-    "operations_manager",
-    "store_keeper",
-  ]);
-  const [lastLoginRange, setLastLoginRange] = useState("Last 7 days");
+  const { roles, lastLoginRange } = value;
 
   const toggleRole = (role: string) => {
-    setRoles((prev) =>
-      prev.includes(role)
-        ? prev.filter((item) => item !== role)
-        : [...prev, role],
-    );
+    const newRoles = roles.includes(role)
+      ? roles.filter((item) => item !== role)
+      : [...roles, role];
+    onChange({ ...value, roles: newRoles });
   };
 
   const handleClear = () => {
-    setRoles([]);
-    setLastLoginRange("Last 7 days");
+    onChange({ roles: [], lastLoginRange: "Last 7 days" });
     onClear?.();
   };
 
   const handleApply = () => {
-    onApply?.();
+    onApply?.(value);
     onClose?.();
   };
 
   return (
-    <div className="fixed top-54 right-12 z-50 w-80 bg-white rounded-xl shadow-2xl border border-[#e7ebf3] flex flex-col overflow-hidden max-h-[calc(100vh-150px)] overflow-y-auto">
+    <div className="absolute top-25 right-12 z-50 w-80 bg-white rounded-xl shadow-2xl border border-[#e7ebf3] flex flex-col overflow-hidden max-h-[calc(100vh-150px)] overflow-y-auto">
       <div className="p-5 space-y-6">
         <div>
           <h3 className="text-xs font-bold text-[#4e6797] uppercase tracking-wider mb-3">
@@ -84,13 +78,14 @@ export default function TableFilters({
           <div className="space-y-3">
             <select
               value={lastLoginRange}
-              onChange={(event) => setLastLoginRange(event.target.value)}
+              onChange={(event) =>
+                onChange({ ...value, lastLoginRange: event.target.value })
+              }
               className="w-full bg-background-light border-none rounded-lg focus:ring-2 focus:ring-primary text-sm py-2 px-3"
             >
               <option>Last 7 days</option>
               <option>Last 30 days</option>
               <option>Last 3 months</option>
-              <option>Custom Range</option>
             </select>
           </div>
         </div>

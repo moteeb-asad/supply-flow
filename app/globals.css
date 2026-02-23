@@ -63,3 +63,21 @@ body {
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
 }
+
+.animate-progress {
+  animation: progress-loading 3s ease-out forwards;
+}
+
+@keyframes progress-loading {
+  0% {
+    width: 0%;
+  }
+
+  50% {
+    width: 70%;
+  }
+
+  100% {
+    width: 95%;
+  }
+}

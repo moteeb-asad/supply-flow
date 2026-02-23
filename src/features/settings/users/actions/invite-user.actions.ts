@@ -149,6 +149,24 @@ export async function inviteUserAction(
       };
     }
 
+    // 5. Insert invitation record
+    const { error: invitationError } = await adminClient
+      .from("invitations")
+      .insert({
+        email,
+        role_id: primaryRoleId,
+        invited_by: process.env.ADMIN_USER_ID || null, // You may want to get the current admin's user id from session
+        sent_at: new Date().toISOString(),
+        status: "pending",
+      });
+    if (invitationError) {
+      console.error("Invitation table insert error:", invitationError);
+      return {
+        success: false,
+        error: `Failed to record invitation: ${invitationError.message}`,
+      };
+    }
+
     return {
       success: true,
       message: `Invitation sent to ${email}`,

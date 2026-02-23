@@ -5,6 +5,7 @@ import TableHeader from "@/src/features/settings/users/components/TableHeader";
 import TablePagination from "@/src/features/settings/users/components/TablePagination";
 import TableFilters from "@/src/features/settings/users/components/TableFilters";
 import { UsersTableProps } from "../types/user.types";
+import type { UserTableFilters } from "../types";
 import { formatDistanceToNow } from "date-fns";
 import { formatRole } from "@/src/lib/utils";
 
@@ -15,8 +16,25 @@ export default function UsersTable({
   itemsPerPage,
   isPending = false,
   onPageChange,
-}: UsersTableProps) {
+  filters,
+  onApplyFilters,
+  setFilters,
+  onClearFilters,
+}: UsersTableProps & {
+  filters: UserTableFilters;
+  onApplyFilters: (filters: UserTableFilters) => void;
+  setFilters: (filters: UserTableFilters) => void;
+  onClearFilters: () => void;
+}) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  // Filter users client-side by name/email (for demo; replace with server call for real app)
+  const filteredUsers = users.filter(
+    (user) =>
+      user.full_name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase()),
+  );
 
   const getInitials = (name: string) => {
     return name
@@ -35,15 +53,20 @@ export default function UsersTable({
   const showPagination = total > itemsPerPage;
 
   return (
-    <div className="flex-1 overflow-y-auto p-8 relative">
+    <div className="flex-1 overflow-y-auto p-8 relative min-h-[500px]">
       <div
-        className={`relative bg-white border border-[#e7ebf3] rounded-xl overflow-hidden shadow-sm transition-opacity ${
-          isFilterOpen ? "opacity-40" : ""
-        } ${isPending ? "opacity-60 pointer-events-none" : ""}`}
+        className={`relative bg-white border border-[#e7ebf3] rounded-xl overflow-hidden shadow-sm transition-opacity  ${isPending ? "opacity-60 pointer-events-none" : ""}`}
       >
-        <TableHeader onFilterClick={() => setIsFilterOpen((prev) => !prev)} />
+        <TableHeader
+          onFilterClick={() => setIsFilterOpen((prev) => !prev)}
+          isFilterOpen={isFilterOpen}
+          filters={filters}
+          onSearch={setSearch}
+        />
 
-        <table className="w-full text-left border-collapse">
+        <table
+          className={`w-full text-left border-collapse ${isFilterOpen ? "opacity-40" : ""} `}
+        >
           <thead>
             <tr className="bg-background-light/50">
               <th className="px-6 py-4 text-xs font-bold text-[#4e6797] uppercase tracking-wider">
@@ -64,7 +87,7 @@ export default function UsersTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-[#e7ebf3]">
-            {users.length === 0 ? (
+            {filteredUsers.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center gap-2">
@@ -76,7 +99,7 @@ export default function UsersTable({
                 </td>
               </tr>
             ) : (
-              users.map((user) => (
+              filteredUsers.map((user) => (
                 <tr
                   key={user.id}
                   className="hover:bg-gray-50/50 transition-colors"
@@ -148,7 +171,18 @@ export default function UsersTable({
         )}
       </div>
 
-      {isFilterOpen && <TableFilters onClose={() => setIsFilterOpen(false)} />}
+      {isFilterOpen && (
+        <TableFilters
+          value={filters}
+          onChange={setFilters}
+          onApply={onApplyFilters}
+          onClose={() => setIsFilterOpen(false)}
+          onClear={() => {
+            onClearFilters();
+            setIsFilterOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

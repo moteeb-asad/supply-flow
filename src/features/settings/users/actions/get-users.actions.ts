@@ -16,9 +16,13 @@ import type { UserRole } from "@/src/types/auth";
 export async function getUsersAction({
   page = 1,
   itemsPerPage = 10,
+  roles,
+  lastLoginRange,
 }: {
   page?: number;
   itemsPerPage?: number;
+  roles?: string[];
+  lastLoginRange?: string;
 } = {}) {
   try {
     const supabase = await createClient();
@@ -65,11 +69,7 @@ export async function getUsersAction({
     const from = (page - 1) * itemsPerPage;
     const to = from + itemsPerPage - 1;
 
-    const {
-      data: profiles,
-      error: profilesError,
-      count,
-    } = await adminClient
+    let query = adminClient
       .from("profiles")
       .select(
         `
@@ -84,8 +84,46 @@ export async function getUsersAction({
       `,
         { count: "exact" },
       )
-      .order("created_at", { ascending: false })
-      .range(from, to);
+      .order("created_at", { ascending: false });
+
+    // Filter by roles (primary_role)
+    if (roles && roles.length > 0) {
+      // Map role names to IDs using admin client
+      const { data: allRoles, error: rolesError } = await adminClient
+        .from("roles")
+        .select("id, name");
+      if (rolesError) {
+        console.error("Role fetch error:", rolesError);
+        return {
+          success: false,
+          error: rolesError.message,
+          users: [],
+          total: 0,
+        };
+      }
+      const roleIdMap: Record<string, string> = {};
+      allRoles?.forEach((role: { id: string; name: string }) => {
+        roleIdMap[role.name] = role.id;
+      });
+      const roleIds = roles.map((name) => roleIdMap[name]).filter(Boolean);
+      if (roleIds.length > 0) {
+        query = query.in("primary_role_id", roleIds);
+      }
+    }
+
+    // Filter by lastLoginRange
+    if (lastLoginRange && lastLoginRange !== "Last 7 days") {
+      // Example: implement logic for lastLoginRange
+      // You may want to parse and calculate the date range here
+      // For now, just as a placeholder:
+      // if (lastLoginRange === "Last 30 days") ...
+    }
+
+    const {
+      data: profiles,
+      error: profilesError,
+      count,
+    } = await query.range(from, to);
 
     if (profilesError) {
       console.error("Profile fetch error:", profilesError);

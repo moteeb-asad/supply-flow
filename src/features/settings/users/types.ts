@@ -8,6 +8,7 @@ export interface TableHeaderProps {
   showFilter?: boolean;
   onSearch?: (value: string) => void;
   onFilterClick?: () => void;
+  isFilterOpen?: boolean;
 }
 
 export interface TablePaginationProps {
@@ -18,8 +19,15 @@ export interface TablePaginationProps {
   onPageChange?: (page: number) => void;
 }
 
+export interface UserTableFilters {
+  roles: string[];
+  lastLoginRange: string;
+}
+
 export interface TableFiltersProps {
+  value: UserTableFilters;
+  onChange: (filters: UserTableFilters) => void;
   onClose?: () => void;
-  onApply?: () => void;
+  onApply?: (filters: UserTableFilters) => void;
   onClear?: () => void;
 }
