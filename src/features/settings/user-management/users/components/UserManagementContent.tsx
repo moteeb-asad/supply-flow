@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import UserManagementContainer from "@/src/features/settings/users/components/UserManagementContainer";
-import InviteUserModal from "@/src/features/settings/users/components/InviteUserModal";
+import UserManagementContainer from "../../UserManagementContainer";
 import { User } from "../types/user.types";
+import InviteUserModal from "../../shared/components/InviteUserModal";
 
 interface UserManagementContentProps {
   users: User[];

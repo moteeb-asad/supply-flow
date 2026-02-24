@@ -9,8 +9,8 @@ import { MultiSelect } from "@/src/components/ui/MultiSelect";
 import {
   inviteUserSchema,
   type InviteUserInput,
-} from "../validators/invite-user.schema";
-import { ROLE_OPTIONS } from "../constants/roles";
+} from "../../users/validators/invite-user.schema";
+import { ROLE_OPTIONS } from "../../users/constants/roles";
 import { inviteUserAction } from "../actions/invite-user.actions";
 import { InviteUserModalProps } from "../types";
 
@@ -21,7 +21,6 @@ export default function InviteUserModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-
   const {
     register,
     handleSubmit,

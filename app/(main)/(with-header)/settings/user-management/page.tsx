@@ -1,5 +1,5 @@
-import { getUsersAction } from "@/src/features/settings/users/actions/get-users.actions";
-import UserManagementContent from "@/src/features/settings/users/components/UserManagementContent";
+import { getUsersAction } from "@/src/features/settings/user-management/users/actions/get-users.actions";
+import UserManagementContent from "@/src/features/settings/user-management/users/components/UserManagementContent";
 import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";

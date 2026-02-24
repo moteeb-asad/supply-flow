@@ -1,10 +1,14 @@
-import TableHeader from "@/src/features/settings/users/components/TableHeader";
-import TablePagination from "@/src/features/settings/users/components/TablePagination";
-import { getInvitationsAction } from "@/src/features/settings/users/actions/get-invitations.actions";
+import TableHeader from "@/src/features/settings/user-management/shared/components/TableHeader";
+import TablePagination from "@/src/features/settings/user-management/shared/components/TablePagination";
+import { getInvitationsAction } from "@/src/features/settings/user-management/invitations/actions/get-invitations.actions";
+import { formatRole, formatDate } from "@/src/lib/utils";
+import { Invitation } from "../types";
+import { JSX } from "react";
 
-export default async function InvitationsTable() {
-  const invitations = await getInvitationsAction();
+export default async function InvitationsTable(): Promise<JSX.Element> {
+  const invitations: Invitation[] = await getInvitationsAction();
 
+  console.log("Invitations in InvitationsTable:", invitations);
   return (
     <div className="flex-1 overflow-y-auto p-8">
       <div className="bg-white border border-[#e7ebf3] rounded-xl overflow-hidden shadow-sm">
@@ -56,23 +60,19 @@ export default async function InvitationsTable() {
                   </td>
                   <td className="px-6 py-4">
                     <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase">
-                      {invite.role_id}
+                      {formatRole(invite.role?.name || "Unknown Role")}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <span className="text-sm text-[#4e6797]">
-                      {invite.invited_by}
+                      {invite.inviter_profile?.full_name || "Unknown"}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-[#4e6797]">
-                    {invite.sent_at
-                      ? new Date(invite.sent_at).toLocaleDateString()
-                      : "-"}
+                    {invite.sent_at ? formatDate(invite.sent_at) : "-"}
                   </td>
                   <td className="px-6 py-4 text-sm text-[#4e6797]">
-                    {invite.expires_at
-                      ? new Date(invite.expires_at).toLocaleDateString()
-                      : "-"}
+                    {invite.expires_at ? formatDate(invite.expires_at) : "-"}
                   </td>
                   <td className="px-6 py-4">
                     <span

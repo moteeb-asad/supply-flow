@@ -1,5 +1,5 @@
-import UserManagementContainer from "@/src/features/settings/users/components/UserManagementContainer";
-import { getUsersAction } from "@/src/features/settings/users/actions/get-users.actions";
+import UserManagementContainer from "@/src/features/settings/user-management/UserManagementContainer";
+import { getUsersAction } from "@/src/features/settings/user-management/users/actions/get-users.actions";
 
 export const dynamic = "force-dynamic";
 

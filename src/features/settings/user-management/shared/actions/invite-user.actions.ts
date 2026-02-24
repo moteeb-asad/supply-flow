@@ -1,12 +1,14 @@
 "use server";
 
 import { createAdminClient } from "@/src/db/supabaseAdmin";
-import { inviteUserSchema } from "../validators/invite-user.schema";
+import { inviteUserSchema } from "../../users/validators/invite-user.schema";
+import { createClient } from "@/src/db/supabaseClient";
 
 type InviteUserResult =
   | { success: true; message: string }
   | { success: false; error: string };
 
+// Accept currentUser as argument for audit fields
 export async function inviteUserAction(
   fullName: string,
   email: string,
@@ -150,13 +152,23 @@ export async function inviteUserAction(
     }
 
     // 5. Insert invitation record
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("User not authenticated");
+
+    const sentAt = new Date();
+    const expiresAt = new Date(sentAt.getTime() + 24 * 60 * 60 * 1000); // 24 hours later
     const { error: invitationError } = await adminClient
       .from("invitations")
       .insert({
         email,
         role_id: primaryRoleId,
-        invited_by: process.env.ADMIN_USER_ID || null, // You may want to get the current admin's user id from session
-        sent_at: new Date().toISOString(),
+        invited_by: user.id,
+        sent_at: sentAt.toISOString(),
+        expires_at: expiresAt.toISOString(),
         status: "pending",
       });
     if (invitationError) {

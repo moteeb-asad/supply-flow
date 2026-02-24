@@ -6,7 +6,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatRole(role: UserRole | undefined | null): string {
+export function formatRole(role: string | UserRole | undefined | null): string {
   if (!role) return "User";
-  return ROLE_LABELS[role] || role;
+  return ROLE_LABELS[role as UserRole] || role;
+}
+
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }

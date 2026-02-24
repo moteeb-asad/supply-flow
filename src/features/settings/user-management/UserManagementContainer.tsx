@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import type { UserTableFilters } from "../types";
-import UsersTable from "./UsersTable";
-import { User } from "../types/user.types";
-import { getUsersAction } from "../actions/get-users.actions";
-import { UserManagementContainerProps } from "../types/user.types";
+import type { UserTableFilters } from "./shared/types";
+import UsersTable from "./users/components/UsersTable";
+import { User, UserManagementContainerProps } from "./users/types/user.types";
+import { getUsersAction } from "./users/actions/get-users.actions";
 import { useProgress } from "@/src/providers/ProgressProvider";
 
 const ITEMS_PER_PAGE = 10;

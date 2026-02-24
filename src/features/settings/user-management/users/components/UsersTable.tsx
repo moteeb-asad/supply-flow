@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import TableHeader from "@/src/features/settings/users/components/TableHeader";
-import TablePagination from "@/src/features/settings/users/components/TablePagination";
-import TableFilters from "@/src/features/settings/users/components/TableFilters";
+import TableHeader from "@/src/features/settings/user-management/shared/components/TableHeader";
+import TablePagination from "@/src/features/settings/user-management/shared/components/TablePagination";
+import TableFilters from "@/src/features/settings/user-management/shared/components/TableFilters";
 import { UsersTableProps } from "../types/user.types";
 import type { UserTableFilters } from "../types";
 import { formatDistanceToNow } from "date-fns";

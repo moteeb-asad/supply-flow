@@ -16,7 +16,6 @@ export async function loginAction(
 
   // Validate input
   const validation = loginSchema.safeParse({ email, password });
-  console.log("Validation result:", validation);
   if (!validation.success) {
     console.log("Validation errors:", validation.error.format());
     return {
