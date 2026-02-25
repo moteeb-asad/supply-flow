@@ -1,7 +1,7 @@
 import { Input } from "@/src/components/ui/Input";
 import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
 import { formatRole } from "@/src/lib/utils";
-import type { UserRole } from "@/src/types/auth";
+import type { UserRole } from "@/src/features/auth/types";
 
 export default async function ProfileCard() {
   const user = await getCurrentUser();

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import InviteUserModal from "@/src/features/settings/user-management/shared/components/InviteUserModal";
 
 export default function UsersLayout({
   children,
@@ -13,6 +14,13 @@ export default function UsersLayout({
   const linkActive = "text-primary border-primary";
   const linkInactive =
     "text-[#4e6797] hover:text-primary border-transparent hover:border-primary";
+
+  // const searchParams = useSearchParams();
+  // const router = useRouter();
+  // const isInviteModalOpen = searchParams.get("modal") === "invite-user";
+  // const handleCloseModal = () => {
+  //   router.push(pathname);
+  // };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -36,6 +44,7 @@ export default function UsersLayout({
 
       {/* Page content */}
       {children}
+      {/* <InviteUserModal isOpen={isInviteModalOpen} onClose={handleCloseModal} /> */}
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { createClient } from "@/src/db/supabaseClient";
 import { createAdminClient } from "@/src/db/supabaseAdmin";
-import type { UserRole } from "@/src/types/auth";
+import type { UserRole } from "@/src/features/auth/types";
 
 /**
  * Server Action: Get users with server-side pagination

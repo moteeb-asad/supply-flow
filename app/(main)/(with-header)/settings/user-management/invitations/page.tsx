@@ -1,5 +1,5 @@
-import InvitationsTable from "@/src/features/settings/user-management/invitations/components/InvitationsTable";
+import InvitationsTableView from "@/src/features/settings/user-management/invitations/components/InvitationsTableView";
 
 export default function InvitationsPage() {
-  return <InvitationsTable />;
+  return <InvitationsTableView />;
 }
