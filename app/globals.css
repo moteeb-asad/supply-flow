@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/forms";
 
 :root {
   --background: #ffffff;
@@ -31,12 +32,61 @@ body {
   font-family: var(--font-inter), Inter, sans-serif;
 }
 
+[type="checkbox"]:checked,
+[type="radio"]:checked {
+  border-color: transparent;
+  background-color: currentColor;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.toggle-checkbox:checked {
+  @apply right-0 border-primary bg-primary;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+  @apply bg-primary/20;
+}
+
 .watermark-pattern {
-  background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+  background-image: radial-gradient(
+    circle at 2px 2px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 0
+  );
   background-size: 40px 40px;
 }
 
 .bg-background-dark {
   --tw-bg-opacity: 1;
   background-color: rgb(17 22 33 / var(--tw-bg-opacity, 1));
+}
+
+.modal-overlay {
+  background-color: rgba(14, 18, 27, 0.4);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+.animate-progress {
+  animation: progress-loading 3s ease-out forwards;
+}
+
+@keyframes progress-loading {
+  0% {
+    width: 0%;
+  }
+
+  50% {
+    width: 70%;
+  }
+
+  100% {
+    width: 95%;
+  }
+}
+
+.skeleton-bar {
+  @apply h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse;
 }

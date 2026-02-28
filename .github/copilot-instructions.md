@@ -52,7 +52,7 @@ src/
 Three roles with distinct permissions (UI visibility differs, but **security must always be enforced server-side**):
 
 1. **Super Admin** (`super_admin`): Full system access and audits
-2. **Operations Manager** (`ops_manager`): Suppliers, inventory, stock movements, analytics
+2. **Operations Manager** (`operations_manager`): Suppliers, inventory, stock movements, analytics
 3. **Store Keeper** (`store_keeper`): SKU receiving and stock execution only
 
 **RBAC Implementation:**
@@ -140,7 +140,7 @@ export default async function SupplierList() {
 See [src/components/layout/sidebar/menu.config.ts](src/components/layout/sidebar/menu.config.ts):
 
 - Menu items filtered by user roles
-- Three roles: `super_admin`, `ops_manager`, `store_keeper`
+- Three roles: `super_admin`, `operations_manager`, `store_keeper`
 - Menu structure: `{ label, path, roles[] }`
 
 **Example menu item:**

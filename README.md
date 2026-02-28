@@ -33,6 +33,18 @@ SupplyFlow is a modern B2B internal operations platform designed to streamline w
 - **Icons:** Material Symbols Outlined
 - **Font:** Geist Sans & Geist Mono
 
+## Architecture
+
+- **App Router, server-first:** Server Components by default with Client Components only for interactivity.
+- **Route groups:** `(auth)` for public auth pages and `(main)` for the authenticated app shell.
+- **Layout composition:** Nested layouts handle sidebar/header and keep pages thin.
+- **Strict separation of concerns:**
+  - `app/` for routes and page composition
+  - `src/components/` for UI-only components
+  - `src/services/` for business logic and data access
+  - `lib/` for permissions, navigation, and shared helpers
+- **RBAC:** Declarative menu config with server-side permission checks.
+
 ## Environment Variables
 
 Create a `.env.local` file in the root directory:
@@ -57,7 +69,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 - User management and permissions
 - System configuration and audits
 
-**2. Operations Manager** (`ops_manager`)
+**2. Operations Manager** (`operations_manager`)
 
 - Supplier management and performance tracking
 - Inventory inflow/outflow management
@@ -117,7 +129,7 @@ npm install
 
 ```sql
 -- Add user roles enum
-CREATE TYPE user_role AS ENUM ('super_admin', 'ops_manager', 'store_keeper');
+CREATE TYPE user_role AS ENUM ('super_admin', 'operations_manager', 'store_keeper');
 
 -- Extend auth.users with role
 ALTER TABLE auth.users ADD COLUMN IF NOT EXISTS role user_role DEFAULT 'store_keeper';
@@ -150,6 +162,32 @@ npm run build
 npm start
 ```
 
+## Testing
+
+- **Linting:** ESLint is configured and runs with `npm run lint`.
+- **Type safety:** TypeScript strict mode is enabled in `tsconfig.json`.
+- **CI checks:** GitHub Actions runs lint + build on PRs targeting `develop` and `main`.
+
 ## Roadmap
 
-SupplyFlow is actively under development with a focus on building core supplier and inventory management features. The immediate priorities include implementing CRUD operations for suppliers, tracking performance metrics (delivery punctuality, quantity accuracy, price consistency), and building inventory inflow/outflow workflows. Future development will expand into outlet management with stock distribution capabilities, advanced analytics dashboards, real-time notifications, and mobile optimization. Long-term goals include multi-warehouse support, barcode scanning, predictive analytics, and third-party integrations for seamless workflow automation across the supply chain.
+SupplyFlow is actively under development with a focus on core supplier and inventory management features.
+
+Immediate priorities:
+
+- Implement CRUD operations for suppliers
+- Track performance metrics (delivery punctuality, quantity accuracy, price consistency)
+- Build inventory inflow/outflow workflows
+
+Future expansion:
+
+- Outlet management with stock distribution capabilities
+- Advanced analytics dashboards
+- Real-time notifications
+- Mobile optimization
+
+Long-term goals:
+
+- Multi-warehouse support
+- Barcode scanning
+- Predictive analytics
+- Third-party integrations for workflow automation

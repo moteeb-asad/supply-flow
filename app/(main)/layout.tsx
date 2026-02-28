@@ -1,4 +1,5 @@
 import Sidebar from "@/src/components/layout/sidebar/Sidebar";
+import { ProgressProvider } from "@/src/providers/ProgressProvider";
 
 export default function MainLayout({
   children,
@@ -8,7 +9,10 @@ export default function MainLayout({
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <div className="flex-1 flex flex-col">{children}</div>
+
+      <ProgressProvider>
+        <div className="flex-1 flex flex-col">{children}</div>
+      </ProgressProvider>
     </div>
   );
 }
