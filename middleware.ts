@@ -36,20 +36,36 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/login") ||
     pathname.startsWith("/forgot-password") ||
     pathname.startsWith("/reset-password");
+  const isResetPasswordRoute = pathname.startsWith("/reset-password");
 
   const isProtectedRoute = !isAuthRoute && !pathname.startsWith("/api");
 
   // Check if this is a password recovery flow
+  const typeParam = request.nextUrl.searchParams.get("type");
   const isPasswordRecovery =
     pathname === "/reset-password" &&
     (request.nextUrl.searchParams.has("token") ||
       request.nextUrl.searchParams.has("code") ||
-      request.nextUrl.hash.includes("type=recovery"));
+      request.nextUrl.searchParams.has("access_token") ||
+      request.nextUrl.searchParams.has("refresh_token") ||
+      typeParam === "recovery" ||
+      typeParam === "invite" ||
+      request.nextUrl.hash.includes("type=recovery") ||
+      request.nextUrl.hash.includes("type=invite"));
 
   // Handle PKCE code exchange for password recovery
-  if (request.nextUrl.searchParams.has("code")) {
+  if (
+    pathname === "/reset-password" &&
+    request.nextUrl.searchParams.has("code")
+  ) {
     const code = request.nextUrl.searchParams.get("code")!;
-    await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) {
+      console.error(
+        "exchangeCodeForSession failed in middleware:",
+        error.message,
+      );
+    }
   }
 
   const {
@@ -61,19 +77,44 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // 🔁 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
-  if (isAuthRoute && user && !isPasswordRecovery) {
+  const primaryRole = user?.user_metadata?.primary_role as string | undefined;
+  const legacyRole = user?.user_metadata?.role as string | undefined;
+  const rolesMetadata = user?.user_metadata?.roles;
+  const roles = Array.isArray(rolesMetadata)
+    ? (rolesMetadata.filter((value) => typeof value === "string") as string[])
+    : primaryRole
+      ? [primaryRole]
+      : legacyRole
+        ? [legacyRole]
+        : [];
+  const isKnownRole = roles.some(
+    (value) =>
+      value === "super_admin" ||
+      value === "operations_manager" ||
+      value === "store_keeper",
+  );
+
+  // 🔐 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
+  if (
+    isAuthRoute &&
+    user &&
+    isKnownRole &&
+    !isPasswordRecovery &&
+    !isResetPasswordRoute
+  ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   // 🔐 3️⃣ ROLE CHECK (⬅️ WRITE YOUR CODE HERE)
   if (user && isProtectedRoute) {
-    const role = user.user_metadata?.role;
-
     for (const route in routePermissions) {
       if (pathname.startsWith(route)) {
-        if (!role || !routePermissions[route].includes(role)) {
-          return NextResponse.redirect(new URL("/dashboard", request.url));
+        const allowedRoles = routePermissions[route];
+        const isAllowed = roles.some((value) => allowedRoles.includes(value));
+        if (!isAllowed) {
+          return NextResponse.redirect(
+            new URL("/login?unauthorized=1", request.url),
+          );
         }
       }
     }

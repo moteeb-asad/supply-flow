@@ -1,9 +1,8 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { resetPasswordAction } from "@/src/features/auth/actions/auth.actions";
 import { Input } from "@/src/components/ui/Input";
-import { useActionState, startTransition, useMemo } from "react";
+import { useActionState, useEffect, useState, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -13,25 +12,78 @@ import {
 import AuthShell from "@/src/features/auth/components/AuthShell";
 import AuthHeader from "@/src/features/auth/components/AuthHeader";
 import SubmitButton from "@/src/features/auth/components/SubmitButton";
+import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
 
 export default function ResetPasswordForm() {
   const [state, formAction] = useActionState(resetPasswordAction, undefined);
-  const searchParams = useSearchParams();
-  const mode = searchParams.get("type"); // "invite" | "recovery" | null
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
+  const [isInvite, setIsInvite] = useState(false);
+  const [tokenError, setTokenError] = useState<string | null>(null);
 
-  const isInvite = mode === "invite";
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const hashParams = new URLSearchParams(
+          window.location.hash.substring(1),
+        );
+        const searchParams = new URLSearchParams(window.location.search);
+        const accessToken = hashParams.get("access_token");
+        const refreshToken = hashParams.get("refresh_token");
+        const hashType = hashParams.get("type");
+        const queryType = searchParams.get("type");
+        const type = hashType || queryType;
+        const code = searchParams.get("code");
 
-  // Check for recovery token in URL hash
-  const tokenError = useMemo(() => {
-    if (typeof window === "undefined") return null;
+        setIsInvite(type === "invite");
 
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = hashParams.get("access_token");
-    const type = hashParams.get("type");
+        const supabase = createBrowserSupabaseClient();
 
-    return type === "recovery" && !accessToken
-      ? "Invalid or expired reset link. Please request a new one."
-      : null;
+        if (accessToken && refreshToken) {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          if (error) {
+            console.error("Supabase setSession error:", error);
+            setTokenError(
+              "Invalid or expired reset link. Please request a new one.",
+            );
+          }
+        } else if (!code && (type === "recovery" || type === "invite")) {
+          setTokenError(
+            "Invalid or expired reset link. Please request a new one.",
+          );
+        }
+
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (
+          !session &&
+          (accessToken ||
+            refreshToken ||
+            code ||
+            type === "recovery" ||
+            type === "invite")
+        ) {
+          setTokenError(
+            "Invalid or expired reset link. Please request a new one.",
+          );
+        }
+      } catch (error) {
+        console.error("Reset password session check failed:", error);
+        setTokenError(
+          "Unable to reach the authentication server. Check your Supabase URL and key.",
+        );
+      } finally {
+        setSessionReady(true);
+      }
+    };
+
+    checkSession();
   }, []);
 
   const {
@@ -42,17 +94,30 @@ export default function ResetPasswordForm() {
     resolver: zodResolver(resetPasswordSchema),
   });
 
+  useEffect(() => {
+    if (state?.error || state?.success) {
+      setIsSubmitting(false);
+    }
+  }, [state]);
+
   return (
     <AuthShell>
       <div className="max-w-md w-full mx-auto my-auto">
         <AuthHeader
-          title={isInvite ? "Set Your Password" : "Create New Password"}
+          title={isInvite ? "Welcome to SupplyFlow" : "Create New Password"}
           subtitle={
             isInvite
-              ? "Finish setting up your account by creating a password."
+              ? "Set up your account password to get started."
               : "Set a new password to regain access to your account."
           }
         />
+
+        {!sessionReady && (
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3 items-center">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+            <p className="text-sm text-blue-700">Verifying your link...</p>
+          </div>
+        )}
 
         {(state?.error ||
           tokenError ||
@@ -77,7 +142,9 @@ export default function ResetPasswordForm() {
               check_circle
             </span>
             <p className="text-sm text-green-700 font-medium">
-              {state.success}
+              {isInvite
+                ? "Password created successfully. You can sign in now."
+                : state.success}
             </p>
           </div>
         )}
@@ -86,10 +153,12 @@ export default function ResetPasswordForm() {
           className="space-y-6"
           noValidate
           onSubmit={handleSubmit((data) => {
+            setIsSubmitting(true);
+            const formData = new FormData();
+            formData.append("password", data.password);
+            formData.append("confirmPassword", data.confirmPassword);
+
             startTransition(() => {
-              const formData = new FormData();
-              formData.append("password", data.password);
-              formData.append("confirmPassword", data.confirmPassword);
               formAction(formData);
             });
           })}
@@ -140,28 +209,27 @@ export default function ResetPasswordForm() {
 
           <SubmitButton
             className="cursor-pointer"
-            text={isInvite ? "Set Password" : "Update Password"}
-            loadingText="Updating..."
+            text={isInvite ? "Create Password" : "Update Password"}
+            loadingText={isInvite ? "Creating..." : "Updating..."}
+            loading={isSubmitting}
             icon={
               <span className="material-symbols-outlined text-xl">
-                lock_reset
+                {isInvite ? "check_circle" : "lock_reset"}
               </span>
             }
           />
 
-          {!isInvite && (
-            <div className="text-center  mt-6">
-              <a
-                className="flex items-center justify-center text-xs font-bold text-primary"
-                href="/login"
-              >
-                <span className="material-symbols-outlined !text-[16px] mr-1">
-                  arrow_back
-                </span>
-                <span className="hover:underline">Back to Sign In</span>
-              </a>
-            </div>
-          )}
+          <div className="text-center  mt-6">
+            <a
+              className="flex items-center justify-center text-xs font-bold text-primary"
+              href="/login"
+            >
+              <span className="material-symbols-outlined !text-[16px] mr-1">
+                arrow_back
+              </span>
+              <span className="hover:underline">Back to Sign In</span>
+            </a>
+          </div>
         </form>
       </div>
     </AuthShell>

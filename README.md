@@ -69,7 +69,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 - User management and permissions
 - System configuration and audits
 
-**2. Operations Manager** (`ops_manager`)
+**2. Operations Manager** (`operations_manager`)
 
 - Supplier management and performance tracking
 - Inventory inflow/outflow management
@@ -129,7 +129,7 @@ npm install
 
 ```sql
 -- Add user roles enum
-CREATE TYPE user_role AS ENUM ('super_admin', 'ops_manager', 'store_keeper');
+CREATE TYPE user_role AS ENUM ('super_admin', 'operations_manager', 'store_keeper');
 
 -- Extend auth.users with role
 ALTER TABLE auth.users ADD COLUMN IF NOT EXISTS role user_role DEFAULT 'store_keeper';

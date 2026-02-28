@@ -3,9 +3,17 @@
 import { useState } from "react";
 import { Button } from "@/src/components/ui/Button";
 import ChangePasswordModal from "./ChangePasswordModal";
+import { formatDistanceToNow } from "date-fns";
+import { SecuritySectionProps } from "../types";
 
-export default function SecuritySection() {
+export default function SecuritySection({
+  passwordChangedAt,
+}: SecuritySectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const passwordChangedText = passwordChangedAt
+    ? `Last changed ${formatDistanceToNow(new Date(passwordChangedAt), { addSuffix: true })}`
+    : "Never changed";
 
   return (
     <div className="bg-white border border-[#e7ebf3] rounded-xl overflow-hidden shadow-sm">
@@ -20,15 +28,14 @@ export default function SecuritySection() {
             </div>
             <div>
               <p className="text-sm font-bold">Password</p>
-              <p className="text-xs text-[#4e6797]">
-                Last changed 3 months ago
-              </p>
+              <p className="text-xs text-[#4e6797]">{passwordChangedText}</p>
             </div>
           </div>
           <Button
             type="button"
             variant="secondary"
             size="sm"
+            shadow="none"
             onClick={() => setIsModalOpen(true)}
           >
             Change Password

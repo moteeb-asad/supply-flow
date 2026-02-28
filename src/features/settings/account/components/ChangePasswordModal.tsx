@@ -71,6 +71,7 @@ export default function ChangePasswordModal({
             type="submit"
             variant="primary"
             size="md"
+            shadow="none"
             className="flex-1"
             form="change-password-form"
             loading={isSubmitting}
@@ -81,6 +82,7 @@ export default function ChangePasswordModal({
             type="button"
             variant="secondary"
             size="md"
+            shadow="none"
             onClick={handleClose}
             className="flex-1"
             disabled={isSubmitting}

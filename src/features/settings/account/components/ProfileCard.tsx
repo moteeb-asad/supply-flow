@@ -1,6 +1,7 @@
 import { Input } from "@/src/components/ui/Input";
 import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
 import { formatRole } from "@/src/lib/utils";
+import type { UserRole } from "@/src/features/auth/types";
 
 export default async function ProfileCard() {
   const user = await getCurrentUser();
@@ -10,7 +11,9 @@ export default async function ProfileCard() {
     user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
   // Get first letter of name for avatar
   const initial = userName.charAt(0).toUpperCase();
-  const readableRole = formatRole(user?.user_metadata?.role);
+  const primaryRole = user?.user_metadata?.primary_role as UserRole | undefined;
+  const legacyRole = user?.user_metadata?.role as UserRole | undefined;
+  const readableRole = formatRole(primaryRole || legacyRole);
   return (
     <div className="bg-white border border-[#e7ebf3] rounded-xl overflow-hidden shadow-sm">
       <div className="px-6 py-4 border-b border-[#e7ebf3] flex items-center justify-between">
