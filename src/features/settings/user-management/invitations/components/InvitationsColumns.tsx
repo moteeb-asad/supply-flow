@@ -1,10 +1,5 @@
 import { DataTableColumn } from "@/src/components/data-table/types";
-import {
-  formatRole,
-  getInitials,
-  formatLastLogin,
-  formatDate,
-} from "@/src/lib/utils";
+import { formatRole, formatDate } from "@/src/lib/utils";
 import { Invitation } from "../types";
 
 export const invitationsColumns: DataTableColumn<Invitation>[] = [
@@ -22,10 +17,10 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
       <span
         className={
           formatRole(invite.role?.name) === "Admin"
-            ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase"
+            ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase text-nowrap"
             : formatRole(invite.role?.name) === "Operations Manager"
-              ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-600 uppercase"
-              : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-[#4e6797] uppercase"
+              ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-600 uppercase text-nowrap"
+              : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-[#4e6797] uppercase text-nowrap"
         }
       >
         {formatRole(invite.role?.name) ?? "—"}

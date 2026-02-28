@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import DataTableFiltersPanel from "./DataTableFiltersPanel";
 import DataTablePagination from "./DataTablePagination";
 import DataTableSearch from "./DataTableSearch";
+import DataTableSkeleton from "./DataTableSkeleton";
 import type { DataTableProps, PaginationState } from "./types";
 
 /**
@@ -99,6 +100,13 @@ export default function DataTable<
     setFiltersOpen(false);
   }
 
+  /** ---------------- APPLY SEARCH ---------------- */
+
+  function applySearch(value: string) {
+    setSearch(value);
+    setPagination((p) => ({ ...p, page: 1 }));
+  }
+
   /** ---------------- RENDERERS ---------------- */
 
   // Updated table head and body to match the raw HTML structure and classes
@@ -122,13 +130,7 @@ export default function DataTable<
 
   const renderTableBody = () => (
     <tbody className="divide-y divide-[#e7ebf3]">
-      {loading ? (
-        <tr>
-          <td colSpan={config.columns.length} className="text-center py-8">
-            Loading...
-          </td>
-        </tr>
-      ) : data.length === 0 ? (
+      {data.length === 0 ? (
         <tr>
           <td colSpan={config.columns.length} className="text-center py-8">
             No results found
@@ -157,10 +159,7 @@ export default function DataTable<
         <div className="p-4 border-b border-[#e7ebf3] flex items-center justify-between">
           <DataTableSearch
             value={search}
-            onChange={(v) => {
-              setSearch(v);
-              setPagination((p) => ({ ...p, page: 1 }));
-            }}
+            applySearch={applySearch}
             placeholder={config.searchPlaceholder}
           />
 
@@ -177,11 +176,17 @@ export default function DataTable<
           )}
         </div>
 
-        {/* Table */}
-        <table className="w-full text-left border-collapse">
-          {renderTableHead()}
-          {renderTableBody()}
-        </table>
+        {/* Skeleton or Table */}
+        {loading && search ? (
+          <DataTableSkeleton type="search" />
+        ) : loading ? (
+          <DataTableSkeleton type="loading" />
+        ) : (
+          <table className="w-full text-left border-collapse">
+            {renderTableHead()}
+            {renderTableBody()}
+          </table>
+        )}
 
         {/* Pagination */}
         <DataTablePagination

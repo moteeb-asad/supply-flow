@@ -28,3 +28,13 @@ export type QueryState = {
 export type DataTableProps<T extends { id: string | number }, P = unknown> = {
   config: DataTableConfig<T, P>;
 };
+
+export type DataTableSearchProps = {
+  value: string;
+  applySearch: (value: string) => void;
+  placeholder?: string;
+};
+
+export type DataTableSkeletonProps = {
+  type?: "loading" | "search";
+};

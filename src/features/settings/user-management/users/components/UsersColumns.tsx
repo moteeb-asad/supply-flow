@@ -40,10 +40,10 @@ export const usersColumns: DataTableColumn<User>[] = [
       <span
         className={
           formatRole(user.primary_role_label) === "Admin"
-            ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase"
+            ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase text-nowrap"
             : formatRole(user.primary_role_label) === "Operations Manager"
-              ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-600 uppercase"
-              : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-[#4e6797] uppercase"
+              ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-600 uppercase text-nowrap"
+              : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-[#4e6797] uppercase text-nowrap"
         }
       >
         {formatRole(user.primary_role_label)}

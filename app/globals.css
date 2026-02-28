@@ -32,7 +32,8 @@ body {
   font-family: var(--font-inter), Inter, sans-serif;
 }
 
-[type='checkbox']:checked, [type='radio']:checked {
+[type="checkbox"]:checked,
+[type="radio"]:checked {
   border-color: transparent;
   background-color: currentColor;
   background-size: 100% 100%;
@@ -44,12 +45,16 @@ body {
   @apply right-0 border-primary bg-primary;
 }
 
-.toggle-checkbox:checked+.toggle-label {
+.toggle-checkbox:checked + .toggle-label {
   @apply bg-primary/20;
 }
 
 .watermark-pattern {
-  background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+  background-image: radial-gradient(
+    circle at 2px 2px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 0
+  );
   background-size: 40px 40px;
 }
 
@@ -80,4 +85,8 @@ body {
   100% {
     width: 95%;
   }
+}
+
+.skeleton-bar {
+  @apply h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse;
 }
