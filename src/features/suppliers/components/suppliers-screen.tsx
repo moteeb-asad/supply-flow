@@ -5,7 +5,7 @@ import SupplierMetrics from "./dashboard/supplier-metrics";
 import SupplierSearch from "./dashboard/supplier-search";
 import SupplierGrid from "./supplier-grid/supplier-grid";
 import { useState } from "react";
-import SupplierOnboardingDrawer from "./onboarding/supplier-onboarding-drawer";
+import { CreateSupplierDrawer } from "./onboarding/CreateSupplierDrawer";
 
 export default function SuppliersScreen() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -22,7 +22,7 @@ export default function SuppliersScreen() {
         </div>
 
         <button
-          className="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-colors"
+          className="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-colors cursor-pointer"
           onClick={() => setDrawerOpen(true)}
         >
           <span className="material-symbols-outlined text-xl">add</span>
@@ -41,7 +41,7 @@ export default function SuppliersScreen() {
       </div>
 
       {drawerOpen && (
-        <SupplierOnboardingDrawer onClose={() => setDrawerOpen(false)} />
+        <CreateSupplierDrawer onClose={() => setDrawerOpen(false)} />
       )}
     </>
   );
