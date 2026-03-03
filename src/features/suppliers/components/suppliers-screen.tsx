@@ -6,8 +6,13 @@ import SupplierSearch from "./dashboard/supplier-search";
 import SupplierGrid from "./supplier-grid/supplier-grid";
 import { useState } from "react";
 import { CreateSupplierDrawer } from "./onboarding/CreateSupplierDrawer";
+import type { Supplier } from "@/src/features/suppliers/types/suppliers.types";
 
-export default function SuppliersScreen() {
+type SuppliersScreenProps = {
+  suppliers: Supplier[];
+};
+
+export default function SuppliersScreen({ suppliers }: SuppliersScreenProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
@@ -37,7 +42,7 @@ export default function SuppliersScreen() {
           <SupplierSearch />
           <CategoryFilter />
         </div>
-        <SupplierGrid />
+        <SupplierGrid suppliers={suppliers} />
       </div>
 
       {drawerOpen && (

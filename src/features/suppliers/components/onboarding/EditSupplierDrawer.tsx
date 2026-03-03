@@ -1,14 +1,6 @@
 import { SupplierDrawer } from "./SupplierDrawer";
-import {
-  SupplierForm,
-  SUPPLIER_FORM_ID,
-  type SupplierFormValues,
-} from "./SupplierForm";
-
-type EditSupplierDrawerProps = {
-  onClose?: () => void;
-  initialValues?: Partial<SupplierFormValues>;
-};
+import { SupplierForm, SUPPLIER_FORM_ID } from "./SupplierForm";
+import type { EditSupplierDrawerProps } from "@/src/features/suppliers/types/suppliers.types";
 
 export function EditSupplierDrawer({
   onClose,
