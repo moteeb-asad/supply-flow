@@ -1,11 +1,12 @@
 import SupplierCard from "../supplier-grid/supplier-card";
-import type { Supplier } from "@/src/features/suppliers/types/suppliers.types";
+import type { SupplierGridProps } from "@/src/features/suppliers/types/suppliers.types";
 
-type SupplierGridProps = {
-  suppliers: Supplier[];
-};
-
-export default function SupplierGrid({ suppliers }: SupplierGridProps) {
+export default function SupplierGrid({
+  suppliers,
+  hasMore,
+  isLoading,
+  onLoadMore,
+}: SupplierGridProps) {
   if (suppliers.length === 0) {
     return (
       <div className="border border-dashed border-[#d0d7e7] rounded-xl p-8 text-center text-sm text-[#4e6797]">
@@ -21,6 +22,17 @@ export default function SupplierGrid({ suppliers }: SupplierGridProps) {
           <SupplierCard key={supplier.id} supplier={supplier} />
         ))}
       </div>
+      {hasMore && (
+        <div className="pt-8 flex justify-center">
+          <button
+            className="px-8 py-3 bg-white dark:bg-slate-800 border border-[#d0d7e7] rounded-xl text-sm font-bold text-[#4e6797] hover:bg-slate-50 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
+            onClick={onLoadMore}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Load More Suppliers"}
+          </button>
+        </div>
+      )}
     </>
   );
 }

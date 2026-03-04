@@ -4,7 +4,50 @@ import { ReactNode } from "react";
 import type { SupplierFormInput } from "@/src/features/suppliers/validators/suppliers.schema";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 
+export type SuppliersScreenProps = {
+  initialSuppliers: Supplier[];
+  initialCursor: SupplierCursor | null;
+  initialHasMore: boolean;
+};
+
+export type CategoryFilterValue = "all" | "dry" | "liquid" | "mixed";
+
+export type CategoryFilterProps = {
+  value: CategoryFilterValue;
+  onChange: (value: CategoryFilterValue) => void;
+};
+
 // Data
+
+export type SupplierGridProps = {
+  suppliers: Supplier[];
+  hasMore: boolean;
+  isLoading: boolean;
+  onLoadMore: () => void;
+};
+
+export type SupplierCursor = {
+  createdAt: string;
+  id: string;
+};
+
+export type SuppliersPage = {
+  suppliers: Supplier[];
+  nextCursor: SupplierCursor | null;
+  hasMore: boolean;
+};
+
+export type SupplierCardProps = {
+  supplier: Supplier;
+};
+
+export type SupplierDetailScreenProps = {
+  supplier: Supplier;
+};
+
+export type SupplierHeaderProps = {
+  supplier: Supplier;
+};
 
 export type Supplier = {
   id: string;
@@ -48,6 +91,11 @@ export type EditSupplierDrawerProps = {
 
 export type CreateSupplierDrawerProps = {
   onClose?: () => void;
+};
+
+export type GetSuppliersInput = {
+  limit?: number;
+  cursor?: SupplierCursor | null;
 };
 
 // Form

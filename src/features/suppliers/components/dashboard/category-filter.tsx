@@ -1,4 +1,16 @@
-export default function CategoryFilter() {
+import type { CategoryFilterProps } from "@/src/features/suppliers/types/suppliers.types";
+
+const categories = [
+  { value: "all", label: "All" },
+  { value: "dry", label: "Dry" },
+  { value: "liquid", label: "Liquid" },
+  { value: "mixed", label: "Mixed" },
+] as const;
+
+export default function CategoryFilter({
+  value,
+  onChange,
+}: CategoryFilterProps) {
   return (
     <>
       <div className="flex items-center gap-2">
@@ -6,18 +18,20 @@ export default function CategoryFilter() {
           Filter by Category:
         </span>
         <div className="flex bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 p-1 rounded-lg">
-          <button className="px-4 py-1.5 text-xs font-bold rounded-md bg-primary text-white">
-            All
-          </button>
-          <button className="px-4 py-1.5 text-xs font-bold rounded-md text-[#4e6797] hover:bg-slate-100 dark:hover:bg-slate-700">
-            Dry
-          </button>
-          <button className="px-4 py-1.5 text-xs font-bold rounded-md text-[#4e6797] hover:bg-slate-100 dark:hover:bg-slate-700">
-            Liquid
-          </button>
-          <button className="px-4 py-1.5 text-xs font-bold rounded-md text-[#4e6797] hover:bg-slate-100 dark:hover:bg-slate-700">
-            Fresh
-          </button>
+          {categories.map((category) => (
+            <button
+              key={category.value}
+              className={
+                category.value === value
+                  ? "px-4 py-1.5 text-xs font-bold rounded-md bg-primary text-white"
+                  : "px-4 py-1.5 text-xs font-bold rounded-md text-[#4e6797] hover:bg-slate-100 dark:hover:bg-slate-700"
+              }
+              onClick={() => onChange(category.value)}
+              type="button"
+            >
+              {category.label}
+            </button>
+          ))}
         </div>
       </div>
     </>

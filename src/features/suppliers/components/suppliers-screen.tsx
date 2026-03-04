@@ -4,16 +4,44 @@ import CategoryFilter from "./dashboard/category-filter";
 import SupplierMetrics from "./dashboard/supplier-metrics";
 import SupplierSearch from "./dashboard/supplier-search";
 import SupplierGrid from "./supplier-grid/supplier-grid";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { CreateSupplierDrawer } from "./onboarding/CreateSupplierDrawer";
-import type { Supplier } from "@/src/features/suppliers/types/suppliers.types";
+import type {
+  SuppliersScreenProps,
+  SupplierCursor,
+  CategoryFilterValue,
+} from "@/src/features/suppliers/types/suppliers.types";
+import { getSuppliersAction } from "@/src/features/suppliers/actions/get-suppliers.action";
+import { SUPPLIERS_PAGE_SIZE } from "@/src/features/suppliers/constants/pagination";
 
-type SuppliersScreenProps = {
-  suppliers: Supplier[];
-};
-
-export default function SuppliersScreen({ suppliers }: SuppliersScreenProps) {
+export default function SuppliersScreen({
+  initialSuppliers,
+  initialCursor,
+  initialHasMore,
+}: SuppliersScreenProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [suppliers, setSuppliers] = useState(initialSuppliers);
+  const [cursor, setCursor] = useState<SupplierCursor | null>(initialCursor);
+  const [hasMore, setHasMore] = useState(initialHasMore);
+  const [isPending, startTransition] = useTransition();
+  const [category, setCategory] = useState<CategoryFilterValue>("all");
+
+  const handleLoadMore = () => {
+    if (!hasMore || isPending) {
+      return;
+    }
+
+    startTransition(async () => {
+      const page = await getSuppliersAction({
+        limit: SUPPLIERS_PAGE_SIZE,
+        cursor,
+      });
+
+      setSuppliers((prev) => [...prev, ...page.suppliers]);
+      setCursor(page.nextCursor);
+      setHasMore(page.hasMore);
+    });
+  };
 
   return (
     <>
@@ -40,9 +68,18 @@ export default function SuppliersScreen({ suppliers }: SuppliersScreenProps) {
       <div className="px-8 space-y-6 pb-12">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <SupplierSearch />
-          <CategoryFilter />
+          <CategoryFilter value={category} onChange={setCategory} />
         </div>
-        <SupplierGrid suppliers={suppliers} />
+        <SupplierGrid
+          suppliers={
+            category === "all"
+              ? suppliers
+              : suppliers.filter((supplier) => supplier.category === category)
+          }
+          hasMore={hasMore}
+          isLoading={isPending}
+          onLoadMore={handleLoadMore}
+        />
       </div>
 
       {drawerOpen && (
