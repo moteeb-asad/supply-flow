@@ -4,44 +4,42 @@ import CategoryFilter from "./dashboard/category-filter";
 import SupplierMetrics from "./dashboard/supplier-metrics";
 import SupplierSearch from "./dashboard/supplier-search";
 import SupplierGrid from "./supplier-grid/supplier-grid";
-import { useState, useTransition } from "react";
+import { useMemo, useState } from "react";
 import { CreateSupplierDrawer } from "./onboarding/CreateSupplierDrawer";
 import type {
   SuppliersScreenProps,
-  SupplierCursor,
   CategoryFilterValue,
 } from "@/src/features/suppliers/types/suppliers.types";
-import { getSuppliersAction } from "@/src/features/suppliers/actions/get-suppliers.action";
-import { SUPPLIERS_PAGE_SIZE } from "@/src/features/suppliers/constants/pagination";
+import { useSuppliers } from "@/src/features/suppliers/hooks/useSuppliers";
+import SupplierGridSkeleton from "./supplier-grid/supplier-grid-skeleton";
 
-export default function SuppliersScreen({
-  initialSuppliers,
-  initialCursor,
-  initialHasMore,
-}: SuppliersScreenProps) {
+export default function SuppliersScreen({}: SuppliersScreenProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [suppliers, setSuppliers] = useState(initialSuppliers);
-  const [cursor, setCursor] = useState<SupplierCursor | null>(initialCursor);
-  const [hasMore, setHasMore] = useState(initialHasMore);
-  const [isPending, startTransition] = useTransition();
   const [category, setCategory] = useState<CategoryFilterValue>("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const { suppliers, fetchNextPage, hasNextPage, isFetching, isLoading } =
+    useSuppliers({ category, search: searchTerm });
+
+  // Debug: Check query + loading transitions
+  console.log("[SuppliersScreen Debug]", {
+    category,
+    searchTerm,
+    isLoading,
+    isFetching,
+    suppliersLength: suppliers.length,
+    showSkeleton: isLoading && suppliers.length === 0,
+  });
+
+  const isGridLoading = isLoading || (isFetching && suppliers.length === 0);
   const handleLoadMore = () => {
-    if (!hasMore || isPending) {
+    if (!hasNextPage || isFetching) {
       return;
     }
-
-    startTransition(async () => {
-      const page = await getSuppliersAction({
-        limit: SUPPLIERS_PAGE_SIZE,
-        cursor,
-      });
-
-      setSuppliers((prev) => [...prev, ...page.suppliers]);
-      setCursor(page.nextCursor);
-      setHasMore(page.hasMore);
-    });
+    fetchNextPage();
   };
+
+  const list = useMemo(() => suppliers, [suppliers]);
 
   return (
     <>
@@ -67,19 +65,19 @@ export default function SuppliersScreen({
 
       <div className="px-8 space-y-6 pb-12">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <SupplierSearch />
+          <SupplierSearch onSearchChange={setSearchTerm} />
           <CategoryFilter value={category} onChange={setCategory} />
         </div>
-        <SupplierGrid
-          suppliers={
-            category === "all"
-              ? suppliers
-              : suppliers.filter((supplier) => supplier.category === category)
-          }
-          hasMore={hasMore}
-          isLoading={isPending}
-          onLoadMore={handleLoadMore}
-        />
+        {isLoading && suppliers.length === 0 ? (
+          <SupplierGridSkeleton />
+        ) : (
+          <SupplierGrid
+            suppliers={list}
+            hasMore={Boolean(hasNextPage)}
+            isLoading={isGridLoading}
+            onLoadMore={handleLoadMore}
+          />
+        )}
       </div>
 
       {drawerOpen && (

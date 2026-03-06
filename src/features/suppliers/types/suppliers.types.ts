@@ -4,17 +4,24 @@ import { ReactNode } from "react";
 import type { SupplierFormInput } from "@/src/features/suppliers/validators/suppliers.schema";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 
-export type SuppliersScreenProps = {
-  initialSuppliers: Supplier[];
-  initialCursor: SupplierCursor | null;
-  initialHasMore: boolean;
-};
+export type SuppliersScreenProps = Record<string, never>;
 
-export type CategoryFilterValue = "all" | "dry" | "liquid" | "mixed";
+export type CategoryFilterValue = "all" | "dry" | "liquid" | "fresh" | "mixed";
 
 export type CategoryFilterProps = {
   value: CategoryFilterValue;
   onChange: (value: CategoryFilterValue) => void;
+};
+
+export type SupplierSearchProps = {
+  defaultValue?: string;
+  debounceMs?: number;
+  onSearchChange: (value: string) => void;
+};
+
+export type UseSuppliersParams = {
+  category: CategoryFilterValue;
+  search: string;
 };
 
 // Data
@@ -96,6 +103,8 @@ export type CreateSupplierDrawerProps = {
 export type GetSuppliersInput = {
   limit?: number;
   cursor?: SupplierCursor | null;
+  category?: CategoryFilterValue;
+  search?: string;
 };
 
 // Form

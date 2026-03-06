@@ -1,15 +1,34 @@
 import SuppliersScreen from "@/src/features/suppliers/components/suppliers-screen";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import { getSuppliersAction } from "@/src/features/suppliers/actions/get-suppliers.action";
+import type { SupplierCursor } from "@/src/features/suppliers/types/suppliers.types";
 import { SUPPLIERS_PAGE_SIZE } from "@/src/features/suppliers/constants/pagination";
 
 export default async function SuppliersPage() {
-  const page = await getSuppliersAction({ limit: SUPPLIERS_PAGE_SIZE });
+  // Temporarily disabled for testing skeleton
+  // const queryClient = new QueryClient();
 
-  return (
-    <SuppliersScreen
-      initialSuppliers={page.suppliers}
-      initialCursor={page.nextCursor}
-      initialHasMore={page.hasMore}
-    />
-  );
+  // await queryClient.prefetchInfiniteQuery({
+  //   queryKey: ["suppliers", { category: "all", search: "" }],
+  //   queryFn: ({ pageParam }) =>
+  //     getSuppliersAction({
+  //       category: "all",
+  //       search: "",
+  //       cursor: (pageParam as SupplierCursor | null) ?? null,
+  //       limit: SUPPLIERS_PAGE_SIZE,
+  //     }),
+  //   initialPageParam: null as SupplierCursor | null,
+  //   getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+  // });
+
+  return <SuppliersScreen />;
+  // return (
+  //   <HydrationBoundary state={dehydrate(queryClient)}>
+  //     <SuppliersScreen />
+  //   </HydrationBoundary>
+  // );
 }

@@ -4,6 +4,7 @@ const categories = [
   { value: "all", label: "All" },
   { value: "dry", label: "Dry" },
   { value: "liquid", label: "Liquid" },
+  { value: "fresh", label: "Fresh" },
   { value: "mixed", label: "Mixed" },
 ] as const;
 
@@ -21,11 +22,12 @@ export default function CategoryFilter({
           {categories.map((category) => (
             <button
               key={category.value}
-              className={
-                category.value === value
-                  ? "px-4 py-1.5 text-xs font-bold rounded-md bg-primary text-white"
-                  : "px-4 py-1.5 text-xs font-bold rounded-md text-[#4e6797] hover:bg-slate-100 dark:hover:bg-slate-700"
-              }
+              className={`
+                ${
+                  category.value === value
+                    ? "px-4 py-1.5 text-xs font-bold rounded-md bg-primary text-white"
+                    : "px-4 py-1.5 text-xs font-bold rounded-md text-[#4e6797] hover:bg-slate-100 dark:hover:bg-slate-700"
+                } cursor-pointer`}
               onClick={() => onChange(category.value)}
               type="button"
             >

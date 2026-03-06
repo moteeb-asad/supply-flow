@@ -2,6 +2,7 @@
 
 import { createClient } from "@/src/db/supabaseClient";
 import type {
+  CategoryFilterValue,
   Supplier,
   SuppliersPage,
 } from "@/src/features/suppliers/types/suppliers.types";
@@ -41,6 +42,20 @@ export async function getSuppliersAction(
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
     .limit(pageSize + 1);
+
+  const category = input.category ?? "all";
+  const search = input.search?.trim();
+
+  if (category !== "all") {
+    query = query.eq(
+      "category",
+      category as Exclude<CategoryFilterValue, "all">,
+    );
+  }
+
+  if (search) {
+    query = query.ilike("name", `%${search}%`);
+  }
 
   if (input.cursor?.createdAt) {
     query = query.or(

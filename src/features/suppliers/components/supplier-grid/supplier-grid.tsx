@@ -7,10 +7,18 @@ export default function SupplierGrid({
   isLoading,
   onLoadMore,
 }: SupplierGridProps) {
+  if (isLoading && suppliers.length === 0) {
+    return (
+      <div className="border border-dashed border-[#d0d7e7] rounded-xl p-8 text-center text-sm text-[#4e6797]">
+        Loading suppliers...
+      </div>
+    );
+  }
+
   if (suppliers.length === 0) {
     return (
       <div className="border border-dashed border-[#d0d7e7] rounded-xl p-8 text-center text-sm text-[#4e6797]">
-        No suppliers found yet.
+        No suppliers found.
       </div>
     );
   }
