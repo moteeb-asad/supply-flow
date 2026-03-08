@@ -1,23 +1,34 @@
-export default function SuppliersPage() {
-  return (
-    <div>
-      {/* Header Section */}
-      <div className="px-8 py-8">
-        <div className="flex flex-wrap justify-between items-center gap-4">
-          <div>
-            <h2 className="text-[#0e121b]  text-3xl font-black tracking-tight">
-              Suppliers
-            </h2>
-            <p className="text-[#4e6797]  text-sm mt-1">
-              Manage and monitor vendor performance
-            </p>
-          </div>
-          <button className="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-colors">
-            <span className="material-symbols-outlined text-xl">add</span>
-            <span>Add Supplier</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+import SuppliersScreen from "@/src/features/suppliers/components/suppliers-screen";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
+import { getSuppliersAction } from "@/src/features/suppliers/actions/get-suppliers.action";
+import type { SupplierCursor } from "@/src/features/suppliers/types/suppliers.types";
+import { SUPPLIERS_PAGE_SIZE } from "@/src/features/suppliers/constants/pagination";
+
+export default async function SuppliersPage() {
+  // Temporarily disabled for testing skeleton
+  // const queryClient = new QueryClient();
+
+  // await queryClient.prefetchInfiniteQuery({
+  //   queryKey: ["suppliers", { category: "all", search: "" }],
+  //   queryFn: ({ pageParam }) =>
+  //     getSuppliersAction({
+  //       category: "all",
+  //       search: "",
+  //       cursor: (pageParam as SupplierCursor | null) ?? null,
+  //       limit: SUPPLIERS_PAGE_SIZE,
+  //     }),
+  //   initialPageParam: null as SupplierCursor | null,
+  //   getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+  // });
+
+  return <SuppliersScreen />;
+  // return (
+  //   <HydrationBoundary state={dehydrate(queryClient)}>
+  //     <SuppliersScreen />
+  //   </HydrationBoundary>
+  // );
 }
