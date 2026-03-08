@@ -12,24 +12,19 @@ import type {
 } from "@/src/features/suppliers/types/suppliers.types";
 import { useSuppliers } from "@/src/features/suppliers/hooks/useSuppliers";
 import SupplierGridSkeleton from "./supplier-grid/supplier-grid-skeleton";
+import { Button } from "@/src/components/ui/Button";
+import { useUser } from "@/src/providers/UserProvider";
 
 export default function SuppliersScreen({}: SuppliersScreenProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [category, setCategory] = useState<CategoryFilterValue>("all");
   const [searchTerm, setSearchTerm] = useState("");
 
+  const { user } = useUser();
+  const userRole = user?.primaryRole;
+
   const { suppliers, fetchNextPage, hasNextPage, isFetching, isLoading } =
     useSuppliers({ category, search: searchTerm });
-
-  // Debug: Check query + loading transitions
-  console.log("[SuppliersScreen Debug]", {
-    category,
-    searchTerm,
-    isLoading,
-    isFetching,
-    suppliersLength: suppliers.length,
-    showSkeleton: isLoading && suppliers.length === 0,
-  });
 
   const isGridLoading = isLoading || (isFetching && suppliers.length === 0);
   const handleLoadMore = () => {
@@ -52,13 +47,15 @@ export default function SuppliersScreen({}: SuppliersScreenProps) {
           </p>
         </div>
 
-        <button
-          className="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-colors cursor-pointer"
-          onClick={() => setDrawerOpen(true)}
-        >
-          <span className="material-symbols-outlined text-xl">add</span>
-          <span>Add Supplier</span>
-        </button>
+        {(userRole === "super_admin" || userRole === "operations_manager") && (
+          <Button
+            className="flex items-center justify-center gap-2 rounded-lg w-auto h-11 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-colors cursor-pointer"
+            onClick={() => setDrawerOpen(true)}
+          >
+            <span className="material-symbols-outlined text-xl">add</span>
+            <span>Add Supplier</span>
+          </Button>
+        )}
       </div>
 
       <SupplierMetrics />

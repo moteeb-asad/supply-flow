@@ -54,6 +54,7 @@ export type SupplierDetailScreenProps = {
 
 export type SupplierHeaderProps = {
   supplier: Supplier;
+  onEditClick?: () => void;
 };
 
 export type Supplier = {
@@ -93,7 +94,7 @@ export type SupplierFormProps = {
 
 export type EditSupplierDrawerProps = {
   onClose?: () => void;
-  initialValues?: Partial<SupplierFormValues>;
+  supplier: Supplier;
 };
 
 export type CreateSupplierDrawerProps = {

@@ -1,14 +1,15 @@
 import type { SupplierHeaderProps } from "@/src/features/suppliers/types/suppliers.types";
 import Link from "next/link";
+import { formatStatus } from "@/src/features/suppliers/utils/status";
+import { Button } from "@/src/components/ui/Button";
+import { useUser } from "@/src/providers/UserProvider";
 
-const formatStatus = (status: string | null) => {
-  if (!status) {
-    return "Active";
-  }
-  return status.charAt(0).toUpperCase() + status.slice(1);
-};
-
-export default function SupplierHeader({ supplier }: SupplierHeaderProps) {
+export default function SupplierHeader({
+  supplier,
+  onEditClick,
+}: SupplierHeaderProps) {
+  const { user } = useUser();
+  const userRole = user?.primaryRole;
   const status = supplier.status ?? "active";
   const statusStyles =
     status === "active"
@@ -59,16 +60,23 @@ export default function SupplierHeader({ supplier }: SupplierHeaderProps) {
             </p>
           </div>
           <div className="flex gap-3">
-            <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 text-[#0e121b] dark:text-white text-sm font-bold hover:bg-slate-50 transition-colors">
+            <Button className="flex items-center justify-center gap-2 rounded-lg shadow-none h-10 px-4 bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 text-[#0e121b] dark:text-white text-sm font-bold hover:bg-slate-50 transition-colors cursor-pointer">
               <span className="material-symbols-outlined text-lg">
                 download
               </span>
-              <span>Export Report</span>
-            </button>
-            <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors">
-              <span className="material-symbols-outlined text-lg">edit</span>
-              <span>Edit Supplier</span>
-            </button>
+              <span className="text-nowrap">Export Report</span>
+            </Button>
+            {(userRole === "super_admin" ||
+              userRole === "operations_manager") && (
+              <Button
+                className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer"
+                onClick={onEditClick}
+                type="button"
+              >
+                <span className="material-symbols-outlined text-lg">edit</span>
+                <span>Edit Supplier</span>
+              </Button>
+            )}
           </div>
         </div>
       </div>
