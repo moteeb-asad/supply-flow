@@ -1,9 +1,9 @@
 "use client";
 
-import CategoryFilter from "./dashboard/category-filter";
-import SupplierMetrics from "./dashboard/supplier-metrics";
-import SupplierSearch from "./dashboard/supplier-search";
-import SupplierGrid from "./supplier-grid/supplier-grid";
+import CategoryFilter from "./dashboard/CategoryFilter";
+import SupplierMetrics from "./dashboard/SupplierMetrics";
+import SupplierSearch from "./dashboard/SupplierSearch";
+import SupplierGrid from "./supplier-grid/SupplierGrid";
 import { useMemo, useState } from "react";
 import { CreateSupplierDrawer } from "./onboarding/CreateSupplierDrawer";
 import type {
@@ -11,7 +11,7 @@ import type {
   CategoryFilterValue,
 } from "@/src/features/suppliers/types/suppliers.types";
 import { useSuppliers } from "@/src/features/suppliers/hooks/useSuppliers";
-import SupplierGridSkeleton from "./supplier-grid/supplier-grid-skeleton";
+import SupplierGridSkeleton from "./supplier-grid/SupplierGridSkeleton";
 import { Button } from "@/src/components/ui/Button";
 import { useUser } from "@/src/providers/UserProvider";
 

@@ -112,7 +112,7 @@ export default function DataTable<
   // Updated table head and body to match the raw HTML structure and classes
   const renderTableHead = () => (
     <thead>
-      <tr className="bg-[#f7f9fc]">
+      <tr className="bg-slate-50 dark:bg-slate-900/50 border-b border-[#d0d7e7] dark:border-slate-700">
         {config.columns.map((col) => (
           <th
             key={col.key}
@@ -129,16 +129,22 @@ export default function DataTable<
   );
 
   const renderTableBody = () => (
-    <tbody className="divide-y divide-[#e7ebf3]">
+    <tbody className="divide-y divide-[#d0d7e7] dark:divide-slate-700">
       {data.length === 0 ? (
         <tr>
-          <td colSpan={config.columns.length} className="text-center py-8">
+          <td
+            colSpan={config.columns.length}
+            className="text-center py-10 text-sm font-medium text-[#4e6797]"
+          >
             No results found
           </td>
         </tr>
       ) : (
         data.map((row) => (
-          <tr key={row.id} className="hover:bg-gray-50/50 transition-colors">
+          <tr
+            key={row.id}
+            className="hover:bg-slate-50/50 dark:hover:bg-slate-900/20 transition-colors"
+          >
             {config.columns.map((col) => (
               <td key={col.key} className={col.className ?? "px-6 py-4"}>
                 {col.cell(row)}
@@ -153,39 +159,41 @@ export default function DataTable<
   /** ---------------- UI ---------------- */
 
   return (
-    <div className="flex-1 overflow-y-auto p-8 relative">
-      <div className="bg-white border border-[#e7ebf3] rounded-xl overflow-hidden shadow-sm">
-        {/* Header */}
-        <div className="p-4 border-b border-[#e7ebf3] flex items-center justify-between">
-          <DataTableSearch
-            value={search}
-            applySearch={applySearch}
-            placeholder={config.searchPlaceholder}
-          />
+    <div className="p-8 space-y-6 relative">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <DataTableSearch
+          value={search}
+          applySearch={applySearch}
+          placeholder={config.searchPlaceholder}
+        />
 
-          {config.filters && (
-            <button
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#4e6797] border border-[#e7ebf3] rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-              onClick={() => setFiltersOpen((v) => !v)}
-            >
-              <span className="material-symbols-outlined text-lg">
-                filter_alt
-              </span>
-              Filter
-            </button>
-          )}
-        </div>
+        {config.filters && (
+          <button
+            className="px-4 py-2.5 bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 rounded-lg text-sm font-bold flex items-center gap-2 text-[#4e6797] hover:bg-slate-50 transition-colors cursor-pointer"
+            onClick={() => setFiltersOpen((v) => !v)}
+            type="button"
+          >
+            <span className="material-symbols-outlined text-lg">
+              filter_alt
+            </span>
+            <span>Advanced Filters</span>
+          </button>
+        )}
+      </div>
 
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-[#d0d7e7] dark:border-slate-700 shadow-sm overflow-hidden">
         {/* Skeleton or Table */}
         {loading && search ? (
           <DataTableSkeleton type="search" />
         ) : loading ? (
           <DataTableSkeleton type="loading" />
         ) : (
-          <table className="w-full text-left border-collapse">
-            {renderTableHead()}
-            {renderTableBody()}
-          </table>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              {renderTableHead()}
+              {renderTableBody()}
+            </table>
+          </div>
         )}
 
         {/* Pagination */}

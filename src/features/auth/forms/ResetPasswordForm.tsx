@@ -157,6 +157,7 @@ export default function ResetPasswordForm() {
             const formData = new FormData();
             formData.append("password", data.password);
             formData.append("confirmPassword", data.confirmPassword);
+            formData.append("flowType", isInvite ? "invite" : "recovery");
 
             startTransition(() => {
               formAction(formData);

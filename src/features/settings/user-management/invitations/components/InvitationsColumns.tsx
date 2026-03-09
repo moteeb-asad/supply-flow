@@ -68,16 +68,16 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
     cell: (invite) => (
       <span
         className={
-          invite.status === "Pending"
+          invite.status === "pending"
             ? "inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-medium bg-blue-50 text-blue-600"
-            : "inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-medium bg-red-50 text-red-600"
+            : "inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-medium bg-green-50 text-green-600"
         }
       >
         <span
           className={
-            invite.status === "Pending"
+            invite.status === "pending"
               ? "size-1.5 rounded-full bg-blue-600"
-              : "size-1.5 rounded-full bg-red-600"
+              : "size-1.5 rounded-full bg-green-600 text-green-600"
           }
         ></span>
         {invite.status}
