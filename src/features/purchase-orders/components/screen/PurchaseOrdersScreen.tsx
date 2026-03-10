@@ -1,7 +1,13 @@
-import PurchaseOrdersMetrics from "./PurchaseOrdersMetrics";
-import PurchaseOrdersTable from "./PurchaseOrdersTable";
+"use client";
+
+import { useState } from "react";
+import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/list/PurchaseOrdersMetrics";
+import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/PurchaseOrdersTable";
+import CreatePurchaseOrderSidebar from "../create-po/CreatePurchaseOrderSidebar";
 
 export default function PurchaseOrdersPage() {
+  const [isCreateSidebarOpen, setIsCreateSidebarOpen] = useState(false);
+
   return (
     <>
       <div className="px-8 py-6">
@@ -23,7 +29,9 @@ export default function PurchaseOrdersPage() {
             </button>
             <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors">
               <span className="material-symbols-outlined text-lg">add</span>
-              <span>Create New PO</span>
+              <span onClick={() => setIsCreateSidebarOpen(true)} role="button">
+                Create New PO
+              </span>
             </button>
           </div>
         </div>
@@ -84,6 +92,13 @@ export default function PurchaseOrdersPage() {
       <div className="px-8 pb-8">
         <PurchaseOrdersMetrics />
       </div>
+
+      {isCreateSidebarOpen && (
+        <CreatePurchaseOrderSidebar
+          onClose={() => setIsCreateSidebarOpen(false)}
+          onSuccess={() => setIsCreateSidebarOpen(false)}
+        />
+      )}
     </>
   );
 }

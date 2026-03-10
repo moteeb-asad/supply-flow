@@ -2,7 +2,7 @@
 
 import type { DataTableConfig } from "@/src/components/data-table/types";
 import { purchaseOrdersFetcher } from "./fetchers/purchaseorders.fetcher";
-import PurchaseOrdersFilters from "./components/PurchaseOrdersFilters";
+import PurchaseOrdersFilters from "@/src/features/purchase-orders/components/list/PurchaseOrdersFilters";
 import type {
   PurchaseOrder,
   PurchaseOrdersQueryParams,
@@ -72,8 +72,7 @@ export const PurchaseOrdersTableConfig: DataTableConfig<
     {
       key: "po_number",
       header: "PO Number",
-      className:
-        "px-6 py-4 text-sm font-bold text-primary whitespace-nowrap",
+      className: "px-6 py-4 text-sm font-bold text-primary whitespace-nowrap",
       cell: (row) => `#${row.po_number}`,
     },
     {
@@ -124,7 +123,9 @@ export const PurchaseOrdersTableConfig: DataTableConfig<
           <span
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${style.className}`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${style.dotClass}`}></span>
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${style.dotClass}`}
+            ></span>
             {style.label}
           </span>
         );
@@ -152,7 +153,9 @@ export const PurchaseOrdersTableConfig: DataTableConfig<
                 : "text-[#4e6797] hover:text-primary hover:bg-primary/10"
             }`}
             disabled={row.status === "draft"}
-            title={row.status === "draft" ? "Cannot track draft" : "Track Delivery"}
+            title={
+              row.status === "draft" ? "Cannot track draft" : "Track Delivery"
+            }
             type="button"
           >
             <span className="material-symbols-outlined text-xl">

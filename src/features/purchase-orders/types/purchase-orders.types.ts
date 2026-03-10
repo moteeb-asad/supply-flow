@@ -28,3 +28,24 @@ export type PurchaseOrdersFiltersValue = {
   status?: PurchaseOrderStatus;
   dateRange?: "last_7_days" | "last_30_days" | "this_month" | "this_quarter";
 };
+
+export type PurchaseOrdersFiltersProps = {
+  value: Record<string, unknown>;
+  onChange: (filters: Record<string, unknown>) => void;
+};
+
+export type PurchaseOrderLineItemFormValue = {
+  skuName: string;
+  quantity: number;
+  unitPrice: number;
+};
+
+export type PurchaseOrderFormValues = {
+  supplierName: string;
+  orderDate: string;
+  expectedDeliveryDate: string;
+  shippingMethod: "standard" | "express" | "economy";
+  lineItems: PurchaseOrderLineItemFormValue[];
+};
+
+export type PurchaseOrderSidebarMode = "create" | "edit";

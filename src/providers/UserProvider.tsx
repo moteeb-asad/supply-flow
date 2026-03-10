@@ -42,7 +42,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         setUser({
           id: authUser.id,
           email: authUser.email ?? "",
-          fullName: authUser.user_metadata?.full_name ?? undefined,
+          fullName: authUser.user_metadata?.name ?? undefined,
           primaryRole: authUser.user_metadata?.primary_role ?? undefined,
         });
       } else {

@@ -3,12 +3,8 @@
 import type {
   PurchaseOrdersFiltersValue,
   PurchaseOrderStatus,
-} from "../types/purchase-orders.types";
-
-type PurchaseOrdersFiltersProps = {
-  value: Record<string, unknown>;
-  onChange: (filters: Record<string, unknown>) => void;
-};
+  PurchaseOrdersFiltersProps,
+} from "../../types/purchase-orders.types";
 
 const statusOptions: Array<{ value: PurchaseOrderStatus; label: string }> = [
   { value: "draft", label: "Draft" },
