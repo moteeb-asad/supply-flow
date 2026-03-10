@@ -2,158 +2,176 @@
 
 ## Overview
 
-SupplyFlow is a modern B2B internal operations platform designed to streamline warehouse and outlet management workflows. It addresses the critical challenge of managing supplier relationships, inventory flows, and multi-outlet operations in one centralized system.
+SupplyFlow is a B2B internal operations platform for supplier performance, inventory movement, and outlet stock operations.
 
-**Problem It Solves:**
+It is designed to replace fragmented spreadsheets and manual follow-ups with a single role-aware workflow across receiving, issuing, and tracking.
 
-- Eliminates manual tracking of supplier performance metrics
-- Provides real-time visibility into inventory inflow/outflow across multiple locations
-- Enables data-driven supplier decisions based on delivery punctuality, quantity accuracy, and price consistency
-- Simplifies stock distribution to outlets and internal consumption tracking
-- Reduces operational overhead through role-based access control and automated workflows
+Core outcomes:
+
+- Better visibility into inventory inflow and outflow.
+- Better supplier decisions using performance trends.
+- Better execution speed for warehouse and outlet teams.
+- Better control through role-based access.
+
+## Problem It Solves
+
+Operations teams often manage suppliers, stock movement, and outlet requests across disconnected tools, which causes delays, errors, and poor visibility.
+
+SupplyFlow solves this by providing:
+
+- A single place to track suppliers, inventory, and orders.
+- Clear role-based workflows for warehouse and operations users.
+- Faster decision-making through structured data and operational insights.
+- Better accountability with traceable actions and centralized records.
 
 ## Features
 
-- 🔐 **Secure Authentication** - Login with email/password via Supabase Auth
-- 👥 **Role-Based Access Control** - Three permission levels (Super Admin, Operations Manager, Store Keeper)
-- 📊 **Supplier Performance Tracking** - Monitor delivery punctuality, quantity accuracy, and price consistency
-- 📦 **Inventory Management** - Track stock inflow/outflow and warehouse-to-outlet distributions
-- 🏪 **Outlet Operations** - Issue stock to outlets and track outlet-level inventory
-- 📈 **Analytics & Reports** - Generate operational insights and performance metrics
-- 🎨 **Modern UI** - Clean, responsive interface with Material Design icons
+- Secure authentication with Supabase Auth.
+- Role-based access control for `super_admin`, `operations_manager`, and `store_keeper`.
+- Supplier management and performance tracking.
+- Inventory receiving and stock movement workflows.
+- Purchase orders listing and operational tracking foundations.
+- Analytics and reporting screens for operations monitoring.
+- Responsive dashboard UI with shared layout and reusable table patterns.
+
+### Screenshots
+
+Result looks like:
+
+<p align="center">
+  <img src="docs/screenshots/login.png" alt="Login" height="220" width="auto" />
+  <img src="docs/screenshots/dashboard.png" alt="Dashboard" height="220" width="auto" />
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/suppliers.png" alt="Suppliers" height="220" width="auto" />
+  <img src="docs/screenshots/purchase-orders.png" alt="Purchase Orders" height="220" width="auto" />
+</p>
 
 ## Tech Stack
 
-- **Framework:** Next.js 16.1.6 with App Router
-- **React:** 19.2.3 (Server & Client Components)
-- **Language:** TypeScript (Strict Mode)
-- **Styling:** Tailwind CSS v4
-- **Authentication:** Supabase Auth
-- **Database:** Supabase (PostgreSQL)
-- **Icons:** Material Symbols Outlined
-- **Font:** Geist Sans & Geist Mono
+- Framework: Next.js 16.1.6 (App Router)
+- React: 19.2.3
+- Language: TypeScript (strict mode)
+- Styling: Tailwind CSS v4
+- Auth and database: Supabase (PostgreSQL)
+- Data layer: Server actions + feature fetchers
+- UI icons: Material Symbols Outlined
 
 ## Architecture
 
-- **App Router, server-first:** Server Components by default with Client Components only for interactivity.
-- **Route groups:** `(auth)` for public auth pages and `(main)` for the authenticated app shell.
-- **Layout composition:** Nested layouts handle sidebar/header and keep pages thin.
-- **Strict separation of concerns:**
-  - `app/` for routes and page composition
-  - `src/components/` for UI-only components
-  - `src/services/` for business logic and data access
-  - `lib/` for permissions, navigation, and shared helpers
-- **RBAC:** Declarative menu config with server-side permission checks.
+- App Router with server-first rendering.
+- Route groups:
+  - `(auth)` for login and password flows.
+  - `(main)` for authenticated application routes.
+- Nested layouts for persistent shell composition (sidebar/header).
+- Feature-based organization under `src/features`.
+- Reusable UI system under `src/components`.
+- Shared permission and navigation logic under `lib`.
 
 ## Environment Variables
 
-Create a `.env.local` file in the root directory:
+Create `.env.local` in the project root (or copy from `.env.example`):
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+ROOT_ADMIN_EMAIL=admin@example.com
+ROOT_ADMIN_PASSWORD=your_secure_password
 ```
 
-| Variable                        | Description                 | Required |
-| ------------------------------- | --------------------------- | -------- |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Your Supabase project URL   | Yes      |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anonymous key | Yes      |
+| Variable                        | Description                                     | Required |
+| ------------------------------- | ----------------------------------------------- | -------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL (client + server usage)    | Yes      |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key                          | Yes      |
+| `NEXT_PUBLIC_SITE_URL`          | Base URL used for auth and email redirects      | Yes      |
+| `SUPABASE_URL`                  | Supabase project URL for scripts                | Optional |
+| `SUPABASE_ANON_KEY`             | Supabase anon key for scripts                   | Optional |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Service role key for admin scripts              | Optional |
+| `ROOT_ADMIN_EMAIL`              | Seed root admin email (used by setup script)    | Optional |
+| `ROOT_ADMIN_PASSWORD`           | Seed root admin password (used by setup script) | Optional |
+
+Notes:
+
+- Do not commit real secrets in `.env` or `.env.local`.
+- For production, set `NEXT_PUBLIC_SITE_URL` to your deployed domain.
 
 ## Authentication & Access Control
 
 ### User Roles
 
-**1. Super Admin** (`super_admin`)
+1. Super Admin (`super_admin`)
 
-- Full system access
-- User management and permissions
-- System configuration and audits
+- Full system access.
+- User and permission management.
+- Audit and governance visibility.
 
-**2. Operations Manager** (`operations_manager`)
+2. Operations Manager (`operations_manager`)
 
-- Supplier management and performance tracking
-- Inventory inflow/outflow management
-- Stock movement and outlet distributions
-- Analytics and reports
+- Supplier and inventory oversight.
+- Purchase order and stock movement workflows.
+- Operations analytics and reporting.
 
-**3. Store Keeper** (`store_keeper`)
+3. Store Keeper (`store_keeper`)
 
-- SKU receiving operations
-- Stock execution and physical inventory tasks
+- SKU receiving and stock execution tasks.
+- Operational inventory handling.
 
 ### Route Permissions
 
-Routes are protected based on user roles:
+Access is enforced by role-aware UI and server-side permission checks.
 
-- `/dashboard` - All authenticated users
-- `/suppliers` - Operations Manager, Super Admin
-- `/inventory` - Operations Manager, Super Admin, Store Keeper (limited)
-- `/settings` - Super Admin only
+- `/dashboard`: all authenticated users.
+- `/suppliers`: super admin and operations manager.
+- `/purchase-orders`: super admin and operations manager.
+- `/inventory/*`: operations manager and store keeper (with role-specific capabilities).
+- `/settings/*`: super admin.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm
-- Supabase account ([sign up free](https://supabase.com))
+- Node.js 18+
+- npm
+- Supabase project
 
 ### Installation
 
-1. **Clone the repository:**
+1. Clone the repository.
 
 ```bash
 git clone https://github.com/moteeb-asad/supply-flow.git
 cd supply-flow
 ```
 
-2. **Install dependencies:**
+2. Install dependencies.
 
 ```bash
 npm install
 ```
 
-3. **Set up Supabase:**
+3. Configure environment variables.
 
-   a. Create a new project at [supabase.com](https://supabase.com)
-
-   b. Get your project credentials from Settings > API
-
-   c. Create `.env.local` and add your credentials:
-
-   ```bash
-   NEXT_PUBLIC_SUPABASE_URL=your_project_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-   ```
-
-4. **Configure database (optional - for role management):**
-
-```sql
--- Add user roles enum
-CREATE TYPE user_role AS ENUM ('super_admin', 'operations_manager', 'store_keeper');
-
--- Extend auth.users with role
-ALTER TABLE auth.users ADD COLUMN IF NOT EXISTS role user_role DEFAULT 'store_keeper';
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-5. **Create your first admin user:**
+4. Apply database migrations from `supabase/migrations/` in your Supabase project.
 
-   a. Go to Authentication > Users in Supabase Dashboard
-
-   b. Click "Add user" and enter credentials
-
-   c. Set role via SQL Editor:
-
-   ```sql
-   UPDATE auth.users SET role = 'super_admin' WHERE email = 'your-email@example.com';
-   ```
-
-6. **Run the development server:**
+5. Run development server.
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) - you'll be redirected to the login page.
+App runs at `http://localhost:3000`.
 
 ### Build for Production
 
@@ -164,30 +182,26 @@ npm start
 
 ## Testing
 
-- **Linting:** ESLint is configured and runs with `npm run lint`.
-- **Type safety:** TypeScript strict mode is enabled in `tsconfig.json`.
-- **CI checks:** GitHub Actions runs lint + build on PRs targeting `develop` and `main`.
+- Linting: `npm run lint`
+- Type checking: TypeScript strict mode is enabled
+- CI: lint + build checks on pull requests to `develop` and `main`
 
 ## Roadmap
 
-SupplyFlow is actively under development with a focus on core supplier and inventory management features.
+Short-term:
 
-Immediate priorities:
+- Complete purchase order add/edit and detail workflows.
+- Expand inventory receive and issue actions.
+- Improve supplier insights and drill-down metrics.
 
-- Implement CRUD operations for suppliers
-- Track performance metrics (delivery punctuality, quantity accuracy, price consistency)
-- Build inventory inflow/outflow workflows
+Mid-term:
 
-Future expansion:
+- Outlet-level stock planning and forecasting.
+- Alerting for delayed deliveries and low stock.
+- Advanced reporting exports.
 
-- Outlet management with stock distribution capabilities
-- Advanced analytics dashboards
-- Real-time notifications
-- Mobile optimization
+Long-term:
 
-Long-term goals:
-
-- Multi-warehouse support
-- Barcode scanning
-- Predictive analytics
-- Third-party integrations for workflow automation
+- Multi-warehouse orchestration.
+- Barcode and scanner-assisted operations.
+- Predictive replenishment and supplier recommendations.
