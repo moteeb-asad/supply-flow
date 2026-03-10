@@ -38,14 +38,14 @@ SupplyFlow solves this by providing:
 
 Result looks like:
 
-<p align="center">
-  <img src="docs/screenshots/login.png" alt="Login" height="220" width="auto" />
-  <img src="docs/screenshots/dashboard.png" alt="Dashboard" height="220" width="auto" />
+<p align="left">
+  <img src="docs/screenshots/login.png" alt="Login" width="45%" height="220" />
+  <img src="docs/screenshots/dashboard.png" alt="Dashboard" width="45%" height="220" />
 </p>
 
-<p align="center">
-  <img src="docs/screenshots/suppliers.png" alt="Suppliers" height="220" width="auto" />
-  <img src="docs/screenshots/purchase-orders.png" alt="Purchase Orders" height="220" width="auto" />
+<p align="left">
+  <img src="docs/screenshots/suppliers.png" alt="Suppliers" width="45%" height="220" />
+  <img src="docs/screenshots/purchase-orders.png" alt="Purchase Orders" width="45%" height="220" />
 </p>
 
 ## Tech Stack
