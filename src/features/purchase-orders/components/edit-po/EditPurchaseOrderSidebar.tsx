@@ -2,18 +2,11 @@
 
 import { useTransition } from "react";
 import type {
-  PurchaseOrder,
+  EditPurchaseOrderSidebarProps,
   PurchaseOrderFormValues,
 } from "../../types/purchase-orders.types";
 import PurchaseOrderForm from "../shared/PurchaseOrderForm";
 import PurchaseOrderSidebarShell from "../shared/PurchaseOrderSidebarShell";
-
-type EditPurchaseOrderSidebarProps = {
-  purchaseOrder: PurchaseOrder;
-  onClose?: () => void;
-  onAddItemClick?: () => void;
-  onSuccess?: () => void;
-};
 
 export default function EditPurchaseOrderSidebar({
   purchaseOrder,
@@ -24,6 +17,7 @@ export default function EditPurchaseOrderSidebar({
   const [isPending, startTransition] = useTransition();
 
   const initialValues: Partial<PurchaseOrderFormValues> = {
+    supplierId: purchaseOrder.supplier_id,
     supplierName: purchaseOrder.supplier_name,
     orderDate: purchaseOrder.order_date ?? "",
     expectedDeliveryDate: purchaseOrder.expected_delivery_date ?? "",

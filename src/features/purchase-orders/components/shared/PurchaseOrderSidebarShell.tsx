@@ -1,11 +1,4 @@
-import type { ReactNode } from "react";
-
-type PurchaseOrderSidebarShellProps = {
-  title: string;
-  description: string;
-  onClose?: () => void;
-  children: ReactNode;
-};
+import type { PurchaseOrderSidebarShellProps } from "../../types/purchase-orders.types";
 
 export default function PurchaseOrderSidebarShell({
   title,

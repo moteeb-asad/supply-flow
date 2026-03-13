@@ -27,11 +27,12 @@ export default function PurchaseOrdersPage() {
               </span>
               <span>Bulk Upload</span>
             </button>
-            <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors">
+            <button
+              className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer"
+              onClick={() => setIsCreateSidebarOpen(true)}
+            >
               <span className="material-symbols-outlined text-lg">add</span>
-              <span onClick={() => setIsCreateSidebarOpen(true)} role="button">
-                Create New PO
-              </span>
+              <span role="button">Create New PO</span>
             </button>
           </div>
         </div>

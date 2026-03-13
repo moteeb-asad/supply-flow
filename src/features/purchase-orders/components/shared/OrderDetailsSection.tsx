@@ -1,8 +1,4 @@
-type OrderDetailsSectionProps = {
-  orderDate?: string;
-  expectedDeliveryDate?: string;
-  shippingMethod?: "standard" | "express" | "economy";
-};
+import { OrderDetailsSectionProps } from "@/src/features/purchase-orders/types/purchase-orders.types";
 
 export default function OrderDetailsSection({
   orderDate,
@@ -12,7 +8,7 @@ export default function OrderDetailsSection({
   return (
     <section className="space-y-4">
       <div className="flex items-center gap-2 text-primary">
-        <span className="material-symbols-outlined text-[20px]">
+        <span className="material-symbols-outlined !text-[20px]">
           calendar_today
         </span>
         <h3 className="font-semibold text-sm uppercase tracking-wider">
@@ -28,6 +24,7 @@ export default function OrderDetailsSection({
           <input
             className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
             defaultValue={orderDate || "2023-10-25"}
+            name="orderDate"
             type="date"
           />
         </div>
@@ -38,6 +35,7 @@ export default function OrderDetailsSection({
           <input
             className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
             defaultValue={expectedDeliveryDate || ""}
+            name="expectedDeliveryDate"
             type="date"
           />
         </div>
@@ -50,6 +48,7 @@ export default function OrderDetailsSection({
         <select
           className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
           defaultValue={shippingMethod || "standard"}
+          name="shippingMethod"
         >
           <option value="standard">Standard Freight (5-7 days)</option>
           <option value="express">Express Air (1-2 days)</option>

@@ -4,20 +4,10 @@ import { createAdminClient } from "@/src/db/supabaseAdmin";
 import type {
   PurchaseOrder,
   PurchaseOrdersFiltersValue,
-  PurchaseOrderStatus,
+  PurchaseOrderRow,
+  PurchaseOrderSupplierRelation,
   PurchaseOrdersQueryParams,
 } from "../types/purchase-orders.types";
-
-type PurchaseOrderRow = {
-  id: string;
-  po_number: string;
-  supplier_id: string;
-  order_date: string | null;
-  expected_delivery_date: string | null;
-  total_amount: number | string | null;
-  status: PurchaseOrderStatus;
-  suppliers: { name: string | null } | { name: string | null }[] | null;
-};
 
 function getDateRangeStart(dateRange?: string): string | null {
   const now = new Date();
@@ -51,7 +41,7 @@ function getDateRangeStart(dateRange?: string): string | null {
 }
 
 function mapSupplierName(
-  supplierRelation: { name: string | null } | { name: string | null }[] | null,
+  supplierRelation: PurchaseOrderSupplierRelation,
 ): string {
   if (!supplierRelation) return "Unknown Supplier";
   if (Array.isArray(supplierRelation)) {

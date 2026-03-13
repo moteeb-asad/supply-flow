@@ -1,31 +1,10 @@
-type LineItemsSectionProps = {
-  onAddItemClick?: () => void;
-  initialItems?: Array<{
-    skuName: string;
-    quantity: number;
-    unitPrice: number;
-  }>;
-};
+import type { LineItemsSectionProps } from "../../types/purchase-orders.types";
 
 export default function LineItemsSection({
   onAddItemClick,
   initialItems,
 }: LineItemsSectionProps) {
-  const rows =
-    initialItems && initialItems.length > 0
-      ? initialItems
-      : [
-          {
-            skuName: "SF-MOD-402 - Core Processor",
-            quantity: 25,
-            unitPrice: 120,
-          },
-          {
-            skuName: "SF-CAB-001 - High-Speed Cable",
-            quantity: 100,
-            unitPrice: 12.5,
-          },
-        ];
+  const rows = initialItems ?? [];
 
   return (
     <section className="space-y-4">
@@ -59,49 +38,67 @@ export default function LineItemsSection({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-            {rows.map((row, index) => (
-              <tr key={`${row.skuName}-${index}`}>
-                <td className="px-4 py-3">
-                  <input
-                    className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-400"
-                    defaultValue={row.skuName}
-                    placeholder="Search item..."
-                    type="text"
-                  />
-                </td>
-                <td className="px-4 py-3">
-                  <input
-                    className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100"
-                    defaultValue={String(row.quantity)}
-                    type="number"
-                  />
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center">
-                    <span className="text-slate-400 mr-1">$</span>
-                    <input
-                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100"
-                      defaultValue={row.unitPrice.toFixed(2)}
-                      type="number"
-                    />
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <button
-                    className="text-slate-400 hover:text-red-500 transition-colors"
-                    type="button"
-                  >
-                    <span className="material-symbols-outlined text-[20px]">
-                      delete
-                    </span>
-                  </button>
+            {rows.length === 0 ? (
+              <tr>
+                <td
+                  className="px-4 py-6 text-sm text-slate-500 text-center"
+                  colSpan={4}
+                >
+                  No line items yet. Click &quot;Add Item&quot; to add your
+                  first item.
                 </td>
               </tr>
-            ))}
+            ) : (
+              rows.map((row, index) => (
+                <tr key={`${row.skuName}-${index}`}>
+                  <td className="px-4 py-3">
+                    <input
+                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-400"
+                      defaultValue={row.skuName}
+                      name={`lineItems[${index}].skuName`}
+                      placeholder="Search item..."
+                      type="text"
+                    />
+                  </td>
+                  <td className="px-4 py-3">
+                    <input
+                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100"
+                      defaultValue={String(row.quantity)}
+                      min={1}
+                      name={`lineItems[${index}].quantity`}
+                      type="number"
+                    />
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center">
+                      <span className="text-slate-400 mr-1">$</span>
+                      <input
+                        className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100"
+                        defaultValue={row.unitPrice.toFixed(2)}
+                        min={0}
+                        name={`lineItems[${index}].unitPrice`}
+                        step="0.01"
+                        type="number"
+                      />
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button
+                      className="text-slate-400 hover:text-red-500 transition-colors"
+                      type="button"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">
+                        delete
+                      </span>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
             <tr>
               <td className="px-4 py-3" colSpan={4}>
                 <button
-                  className="w-full py-2 border border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-2 border border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   onClick={onAddItemClick}
                   type="button"
                 >
