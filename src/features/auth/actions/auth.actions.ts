@@ -22,11 +22,6 @@ async function markInvitationAccepted(email: string, userId: string) {
     .limit(1)
     .maybeSingle();
 
-  console.log("[InviteAccept] lookup result", {
-    foundInvitationId: invitation?.id ?? null,
-    lookupError: invitationLookupError?.message ?? null,
-  });
-
   if (invitationLookupError) {
     console.error("Invitation lookup error:", invitationLookupError);
     return;
@@ -45,12 +40,6 @@ async function markInvitationAccepted(email: string, userId: string) {
       accepted_at: new Date().toISOString(),
     })
     .eq("id", invitation.id);
-
-  console.log("[InviteAccept] update result", {
-    invitationId: invitation.id,
-    updated: !invitationUpdateError,
-    updateError: invitationUpdateError?.message ?? null,
-  });
 
   if (invitationUpdateError) {
     console.error("Invitation update error:", invitationUpdateError);
@@ -159,12 +148,6 @@ export async function resetPasswordAction(
     error: userError,
   } = await supabase.auth.getUser();
 
-  console.log("[InviteAccept] resetPasswordAction context", {
-    flowType,
-    userId: user?.id ?? null,
-    userEmail: user?.email ?? null,
-  });
-
   if (userError || !user) {
     console.error("Session error:", userError);
     return {
@@ -184,12 +167,6 @@ export async function resetPasswordAction(
 
   if (flowType === "invite" && user.email) {
     await markInvitationAccepted(user.email, user.id);
-  } else {
-    console.log("[InviteAccept] skipped", {
-      reason: flowType !== "invite" ? "flowType_not_invite" : "missing_email",
-      flowType,
-      hasEmail: Boolean(user.email),
-    });
   }
 
   return { success: "Password updated successfully. You can sign in now." };

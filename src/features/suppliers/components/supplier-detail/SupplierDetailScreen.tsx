@@ -364,7 +364,6 @@ export default function SupplierDetailScreen({
           supplier={supplierData!}
           onClose={() => setDrawerOpen(false)}
           onSuccess={() => {
-            console.log("Edit success: triggering refetch...");
             refetch();
           }}
         />
