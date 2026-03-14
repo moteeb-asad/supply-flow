@@ -20,6 +20,9 @@ export default function CreatePurchaseOrderSidebar({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitValidationErrors, setSubmitValidationErrors] = useState<
+    string[]
+  >([]);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
   const [lineItems, setLineItems] = useState<
     PurchaseOrderFormValues["lineItems"]
@@ -28,11 +31,13 @@ export default function CreatePurchaseOrderSidebar({
   const handleSubmit = (values: PurchaseOrderFormValues) => {
     startTransition(async () => {
       setSubmitError(null);
+      setSubmitValidationErrors([]);
 
       const result = await createPurchaseOrderAction(values);
 
       if (!result.success) {
         setSubmitError(result.error ?? "Failed to create purchase order.");
+        setSubmitValidationErrors(result.validationErrors ?? []);
         return;
       }
 
@@ -64,6 +69,13 @@ export default function CreatePurchaseOrderSidebar({
             <p className="rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm px-3 py-2">
               {submitError}
             </p>
+            {submitValidationErrors.length > 0 ? (
+              <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                {submitValidationErrors.map((message) => (
+                  <p key={message}>{message}</p>
+                ))}
+              </div>
+            ) : null}
           </div>
         ) : null}
 

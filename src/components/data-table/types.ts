@@ -1,6 +1,7 @@
 export type DataTableConfig<T, P = unknown> = {
   fetcher: (params: P) => Promise<{ data: T[]; total: number }>;
   columns: DataTableColumn<T>[];
+  rowHref?: (row: T) => string;
   filters?: React.ComponentType<{
     value: Record<string, unknown>;
     onChange: (filters: Record<string, unknown>) => void;

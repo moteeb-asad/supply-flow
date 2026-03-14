@@ -3,6 +3,7 @@ import type { LineItemsSectionProps } from "../../types/purchase-orders.types";
 export default function LineItemsSection({
   onAddItemClick,
   initialItems,
+  error,
 }: LineItemsSectionProps) {
   const rows = initialItems ?? [];
 
@@ -110,6 +111,10 @@ export default function LineItemsSection({
           </tbody>
         </table>
       </div>
+
+      {error ? (
+        <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+      ) : null}
     </section>
   );
 }

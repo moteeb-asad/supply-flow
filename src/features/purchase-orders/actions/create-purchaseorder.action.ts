@@ -6,6 +6,7 @@ import type {
   CreatePurchaseOrderInput,
   PurchaseOrderLineItemFormValue,
 } from "../types/purchase-orders.types";
+import { createPurchaseOrderSchema } from "../validators/purchase-order.schema";
 
 function buildPurchaseOrderNumber(): string {
   const stamp = Date.now().toString().slice(-8);
@@ -34,14 +35,31 @@ function normalizeLineItems(
 export async function createPurchaseOrderAction(
   input: CreatePurchaseOrderInput,
 ): Promise<CreatePurchaseOrderActionResult> {
-  const supplierId = input.supplierId.trim();
-  const lineItems = normalizeLineItems(input.lineItems);
+  const schemaResult = createPurchaseOrderSchema.safeParse(input);
+
+  if (!schemaResult.success) {
+    const validationErrors = Object.values(
+      schemaResult.error.flatten().fieldErrors,
+    )
+      .flat()
+      .filter((message): message is string => Boolean(message));
+
+    return {
+      success: false,
+      error: validationErrors[0] ?? "Invalid purchase order payload.",
+      validationErrors,
+    };
+  }
+
+  const validatedInput = schemaResult.data;
+  const supplierId = validatedInput.supplierId.trim();
+  const lineItems = normalizeLineItems(validatedInput.lineItems);
 
   if (!supplierId) {
     return { success: false, error: "Supplier is required." };
   }
 
-  if (!input.orderDate) {
+  if (!validatedInput.orderDate) {
     return { success: false, error: "Order date is required." };
   }
 
@@ -115,9 +133,10 @@ export async function createPurchaseOrderAction(
       po_number: buildPurchaseOrderNumber(),
       supplier_id: supplier.id,
       created_by: user.id,
-      status: "draft",
-      order_date: input.orderDate,
-      expected_delivery_date: input.expectedDeliveryDate || null,
+      status: validatedInput.status,
+      order_date: validatedInput.orderDate,
+      expected_delivery_date: validatedInput.expectedDeliveryDate || null,
+      notes: validatedInput.notes || null,
       currency: "USD",
       subtotal,
       tax_amount: taxAmount,

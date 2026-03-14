@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import DataTableFiltersPanel from "./DataTableFiltersPanel";
 import DataTablePagination from "./DataTablePagination";
 import DataTableSearch from "./DataTableSearch";
@@ -32,6 +33,8 @@ export default function DataTable<
     filters?: Record<string, unknown>;
   },
 >({ config }: DataTableProps<T, P>) {
+  const router = useRouter();
+
   /** ---------------- STATE ---------------- */
 
   const [data, setData] = useState<T[]>([]);
@@ -109,6 +112,20 @@ export default function DataTable<
 
   /** ---------------- RENDERERS ---------------- */
 
+  const shouldIgnoreRowNavigation = (target: EventTarget | null) => {
+    if (!(target instanceof HTMLElement)) return false;
+    return Boolean(
+      target.closest(
+        'button, a, input, select, textarea, [role="button"], [data-row-click-ignore="true"]',
+      ),
+    );
+  };
+
+  const navigateToRow = (row: T) => {
+    if (!config.rowHref) return;
+    router.push(config.rowHref(row));
+  };
+
   // Updated table head and body to match the raw HTML structure and classes
   const renderTableHead = () => (
     <thead>
@@ -143,7 +160,25 @@ export default function DataTable<
         data.map((row) => (
           <tr
             key={row.id}
-            className="hover:bg-slate-50/50 dark:hover:bg-slate-900/20 transition-colors"
+            className={`hover:bg-slate-50/50 dark:hover:bg-slate-900/20 transition-colors ${config.rowHref ? "cursor-pointer" : ""}`}
+            onClick={(event) => {
+              if (!config.rowHref || shouldIgnoreRowNavigation(event.target)) {
+                return;
+              }
+              navigateToRow(row);
+            }}
+            onKeyDown={(event) => {
+              if (!config.rowHref || shouldIgnoreRowNavigation(event.target)) {
+                return;
+              }
+
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                navigateToRow(row);
+              }
+            }}
+            role={config.rowHref ? "link" : undefined}
+            tabIndex={config.rowHref ? 0 : undefined}
           >
             {config.columns.map((col) => (
               <td key={col.key} className={col.className ?? "px-6 py-4"}>

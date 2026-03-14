@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import type {
   PurchaseOrderFormProps,
   PurchaseOrderFormValues,
 } from "../../types/purchase-orders.types";
+import { createPurchaseOrderSchema } from "../../validators/purchase-order.schema";
+import AdditionalNotesSection from "./AdditionalNotesSection";
 import LineItemsSection from "./LineItemsSection";
 import OrderDetailsSection from "./OrderDetailsSection";
 import SupplierSelectionSection from "./SupplierSelectionSection";
@@ -12,9 +15,11 @@ import TotalAmountSection from "./TotalAmountSection";
 const defaultValues: PurchaseOrderFormValues = {
   supplierId: "",
   supplierName: "",
-  orderDate: "2023-10-25",
+  orderDate: "",
   expectedDeliveryDate: "",
   shippingMethod: "standard",
+  status: "draft",
+  notes: "",
   lineItems: [],
 };
 
@@ -26,6 +31,17 @@ export default function PurchaseOrderForm({
   onAddItemClick,
   isSubmitting = false,
 }: PurchaseOrderFormProps) {
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [fieldErrors, setFieldErrors] = useState<{
+    supplier?: string;
+    orderDate?: string;
+    expectedDeliveryDate?: string;
+    shippingMethod?: string;
+    status?: string;
+    lineItems?: string;
+    notes?: string;
+  }>({});
+
   const merged: PurchaseOrderFormValues = {
     ...defaultValues,
     ...initialValues,
@@ -52,6 +68,8 @@ export default function PurchaseOrderForm({
     ).trim();
     const shippingMethod =
       String(formData.get("shippingMethod") ?? "standard") || "standard";
+    const status = String(formData.get("status") ?? "draft") || "draft";
+    const notes = String(formData.get("notes") ?? "").trim();
 
     const lineItemsMap = new Map<
       number,
@@ -102,15 +120,53 @@ export default function PurchaseOrderForm({
         };
       });
 
-    onSubmit?.({
+    const payload: PurchaseOrderFormValues = {
       supplierId: supplierId || merged.supplierId,
       supplierName: supplierName || merged.supplierName,
       orderDate: orderDate || merged.orderDate,
       expectedDeliveryDate,
       shippingMethod:
         shippingMethod as PurchaseOrderFormValues["shippingMethod"],
+      status: status as PurchaseOrderFormValues["status"],
+      notes,
       lineItems: lineItems.length > 0 ? lineItems : merged.lineItems,
-    });
+    };
+
+    const validationResult = createPurchaseOrderSchema.safeParse(payload);
+
+    if (!validationResult.success) {
+      const flattenedFieldErrors = validationResult.error.flatten().fieldErrors;
+
+      setFieldErrors({
+        supplier:
+          flattenedFieldErrors.supplierId?.[0] ??
+          flattenedFieldErrors.supplierName?.[0],
+        orderDate: flattenedFieldErrors.orderDate?.[0],
+        expectedDeliveryDate: flattenedFieldErrors.expectedDeliveryDate?.[0],
+        shippingMethod: flattenedFieldErrors.shippingMethod?.[0],
+        status: flattenedFieldErrors.status?.[0],
+        lineItems: flattenedFieldErrors.lineItems?.[0],
+        notes: flattenedFieldErrors.notes?.[0],
+      });
+
+      const summaryErrors = Object.values(flattenedFieldErrors)
+        .flat()
+        .filter((message): message is string => Boolean(message));
+
+      const dedupedSummaryErrors = [...new Set(summaryErrors)];
+
+      setValidationErrors(
+        dedupedSummaryErrors.length > 0
+          ? dedupedSummaryErrors
+          : ["Please fix the highlighted form issues."],
+      );
+
+      return;
+    }
+
+    setFieldErrors({});
+    setValidationErrors([]);
+    onSubmit?.(payload);
   };
 
   return (
@@ -119,19 +175,37 @@ export default function PurchaseOrderForm({
       onSubmit={handleSubmit}
     >
       <div className="flex-1 min-h-0 overflow-y-auto px-6 py-6 space-y-8">
+        {validationErrors.length > 0 ? (
+          <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {validationErrors.map((message) => (
+              <p key={message}>{message}</p>
+            ))}
+          </div>
+        ) : null}
+
         <SupplierSelectionSection
           supplierId={merged.supplierId}
           supplierName={merged.supplierName}
+          error={fieldErrors.supplier}
         />
         <OrderDetailsSection
           expectedDeliveryDate={merged.expectedDeliveryDate}
           orderDate={merged.orderDate}
           shippingMethod={merged.shippingMethod}
+          status={merged.status}
+          errors={{
+            orderDate: fieldErrors.orderDate,
+            expectedDeliveryDate: fieldErrors.expectedDeliveryDate,
+            shippingMethod: fieldErrors.shippingMethod,
+            status: fieldErrors.status,
+          }}
         />
         <LineItemsSection
           initialItems={merged.lineItems}
           onAddItemClick={onAddItemClick}
+          error={fieldErrors.lineItems}
         />
+        <AdditionalNotesSection notes={merged.notes} error={fieldErrors.notes} />
       </div>
       <TotalAmountSection
         isSubmitting={isSubmitting}

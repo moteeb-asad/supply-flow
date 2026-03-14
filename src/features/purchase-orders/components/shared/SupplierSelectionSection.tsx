@@ -10,6 +10,7 @@ import type {
 export default function SupplierSelectionSection({
   supplierId,
   supplierName,
+  error,
 }: SupplierSelectionSectionProps) {
   const [query, setQuery] = useState(supplierName ?? "");
   const [selectedSupplier, setSelectedSupplier] =
@@ -144,7 +145,9 @@ export default function SupplierSelectionSection({
           ) : null}
         </div>
 
-        {selectedSupplier ? (
+        {error ? (
+          <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+        ) : selectedSupplier ? (
           <p className="text-xs text-slate-500 dark:text-slate-400">
             Selected: {selectedSupplier.name} ({supplierStatusLabel})
           </p>

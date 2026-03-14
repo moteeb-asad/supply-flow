@@ -10,6 +10,8 @@ export type PurchaseOrderStatus =
 
 export type ShippingMethod = "standard" | "express" | "economy";
 
+export type CreatePurchaseOrderStatus = "draft" | "pending";
+
 export type PurchaseOrdersDateRangeFilter =
   | "last_7_days"
   | "last_30_days"
@@ -17,8 +19,18 @@ export type PurchaseOrdersDateRangeFilter =
   | "this_quarter";
 
 export type PurchaseOrderSupplierRelation =
-  | { name: string | null }
-  | { name: string | null }[]
+  | {
+      name: string | null;
+      primary_contact_name?: string | null;
+      primary_contact_email?: string | null;
+      primary_contact_phone?: string | null;
+    }
+  | {
+      name: string | null;
+      primary_contact_name?: string | null;
+      primary_contact_email?: string | null;
+      primary_contact_phone?: string | null;
+    }[]
   | null;
 
 export type PurchaseOrder = {
@@ -26,10 +38,30 @@ export type PurchaseOrder = {
   po_number: string;
   supplier_id: string;
   supplier_name: string;
+  supplier_contact_name?: string | null;
+  supplier_contact_email?: string | null;
+  supplier_contact_phone?: string | null;
   order_date: string | null;
   expected_delivery_date: string | null;
   total_amount: number;
   status: PurchaseOrderStatus;
+  notes?: string | null;
+  lineItems?: PurchaseOrderDetailLineItem[];
+};
+
+export type PurchaseOrderItemSkuRelation =
+  | { sku_code: string | null; name: string | null }
+  | { sku_code: string | null; name: string | null }[]
+  | null;
+
+export type PurchaseOrderDetailLineItem = {
+  id: string;
+  ordered_qty: number;
+  received_qty: number;
+  unit_price: number;
+  line_total: number;
+  sku_code: string;
+  sku_name: string;
 };
 
 export type PurchaseOrdersQueryParams = {
@@ -61,13 +93,27 @@ export type CreatePurchaseOrderInput = {
   orderDate: string;
   expectedDeliveryDate?: string;
   shippingMethod: ShippingMethod;
+  status: CreatePurchaseOrderStatus;
+  notes?: string;
   lineItems: PurchaseOrderLineItemFormValue[];
 };
 
 export type CreatePurchaseOrderActionResult = {
   success: boolean;
   error?: string;
+  validationErrors?: string[];
   purchaseOrderId?: string;
+};
+
+export type UpdatePurchaseOrderInput = {
+  purchaseOrderId: string;
+  values: CreatePurchaseOrderInput;
+};
+
+export type UpdatePurchaseOrderActionResult = {
+  success: boolean;
+  error?: string;
+  validationErrors?: string[];
 };
 
 export type PurchaseOrderFormValues = {
@@ -76,6 +122,8 @@ export type PurchaseOrderFormValues = {
   orderDate: string;
   expectedDeliveryDate: string;
   shippingMethod: ShippingMethod;
+  status: CreatePurchaseOrderStatus;
+  notes: string;
   lineItems: PurchaseOrderLineItemFormValue[];
 };
 
@@ -124,6 +172,7 @@ export type EditPurchaseOrderSidebarProps = {
 export type SupplierSelectionSectionProps = {
   supplierId?: string;
   supplierName?: string;
+  error?: string;
 };
 
 export type PurchaseOrderSupplierOption = {
@@ -153,6 +202,7 @@ export type GetPurchaseOrderSkusInput = {
 export type LineItemsSectionProps = {
   onAddItemClick?: () => void;
   initialItems?: PurchaseOrderLineItemFormValue[];
+  error?: string;
 };
 
 export type AddItemFormValues = PurchaseOrderLineItemFormValue;
@@ -174,6 +224,13 @@ export type OrderDetailsSectionProps = {
   orderDate?: string;
   expectedDeliveryDate?: string;
   shippingMethod?: ShippingMethod;
+  status?: CreatePurchaseOrderStatus;
+  errors?: {
+    orderDate?: string;
+    expectedDeliveryDate?: string;
+    shippingMethod?: string;
+    status?: string;
+  };
 };
 
 export type TotalAmountSectionProps = {
@@ -183,4 +240,22 @@ export type TotalAmountSectionProps = {
   submitLabel: string;
   onCancel?: () => void;
   isSubmitting?: boolean;
+};
+
+export type AdditionalNotesSectionProps = {
+  notes?: string;
+  error?: string;
+};
+
+export type PurchaseOrderDetailScreenProps = {
+  purchaseOrder: PurchaseOrder;
+};
+
+export type PurchaseOrderHeaderProps = {
+  purchaseOrder: PurchaseOrder;
+  onEditClick?: () => void;
+};
+
+export type LineItemsTableProps = {
+  lineItems: PurchaseOrderDetailLineItem[];
 };

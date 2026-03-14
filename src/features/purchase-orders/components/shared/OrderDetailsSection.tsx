@@ -4,6 +4,8 @@ export default function OrderDetailsSection({
   orderDate,
   expectedDeliveryDate,
   shippingMethod,
+  status,
+  errors,
 }: OrderDetailsSectionProps) {
   return (
     <section className="space-y-4">
@@ -23,10 +25,15 @@ export default function OrderDetailsSection({
           </label>
           <input
             className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-            defaultValue={orderDate || "2023-10-25"}
+            defaultValue={orderDate || ""}
             name="orderDate"
             type="date"
           />
+          {errors?.orderDate ? (
+            <p className="text-xs text-red-600 dark:text-red-400">
+              {errors.orderDate}
+            </p>
+          ) : null}
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -38,6 +45,11 @@ export default function OrderDetailsSection({
             name="expectedDeliveryDate"
             type="date"
           />
+          {errors?.expectedDeliveryDate ? (
+            <p className="text-xs text-red-600 dark:text-red-400">
+              {errors.expectedDeliveryDate}
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -54,6 +66,30 @@ export default function OrderDetailsSection({
           <option value="express">Express Air (1-2 days)</option>
           <option value="economy">Economy Ground (10-14 days)</option>
         </select>
+        {errors?.shippingMethod ? (
+          <p className="text-xs text-red-600 dark:text-red-400">
+            {errors.shippingMethod}
+          </p>
+        ) : null}
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+          Status
+        </label>
+        <select
+          className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+          defaultValue={status || "draft"}
+          name="status"
+        >
+          <option value="draft">Draft</option>
+          <option value="pending">Pending</option>
+        </select>
+        {errors?.status ? (
+          <p className="text-xs text-red-600 dark:text-red-400">
+            {errors.status}
+          </p>
+        ) : null}
       </div>
     </section>
   );
