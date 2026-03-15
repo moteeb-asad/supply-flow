@@ -1,5 +1,6 @@
 export type DataTableConfig<T, P = unknown> = {
   fetcher: (params: P) => Promise<{ data: T[]; total: number }>;
+  queryKey?: (params: P) => readonly unknown[];
   columns: DataTableColumn<T>[];
   rowHref?: (row: T) => string;
   filters?: React.ComponentType<{
@@ -28,6 +29,7 @@ export type QueryState = {
 
 export type DataTableProps<T extends { id: string | number }, P = unknown> = {
   config: DataTableConfig<T, P>;
+  refreshKey?: string | number;
 };
 
 export type DataTableSearchProps = {

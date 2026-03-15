@@ -67,6 +67,7 @@ export const PurchaseOrdersTableConfig: DataTableConfig<
   PurchaseOrdersQueryParams
 > = {
   fetcher: purchaseOrdersFetcher,
+  queryKey: (params) => ["purchase-orders-table", params],
   rowHref: (row) => `/purchase-orders/${row.id}`,
   filters: PurchaseOrdersFilters,
   columns: [

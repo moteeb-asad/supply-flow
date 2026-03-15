@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { useEffect, useState, useCallback } from "react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import DataTableFiltersPanel from "./DataTableFiltersPanel";
 import DataTablePagination from "./DataTablePagination";
@@ -32,14 +33,10 @@ export default function DataTable<
     search?: string;
     filters?: Record<string, unknown>;
   },
->({ config }: DataTableProps<T, P>) {
+>({ config, refreshKey }: DataTableProps<T, P>) {
   const router = useRouter();
 
   /** ---------------- STATE ---------------- */
-
-  const [data, setData] = useState<T[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(false);
 
   const [search, setSearch] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -57,35 +54,56 @@ export default function DataTable<
 
   /** ---------------- FETCH DATA ---------------- */
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-
-    try {
-      const result = await config.fetcher({
+  const params = useMemo(
+    () =>
+      ({
         page: pagination.page,
         pageSize: pagination.pageSize,
         search,
         filters: appliedFilters,
-      } as P);
+      }) as P,
+    [pagination.page, pagination.pageSize, search, appliedFilters],
+  );
 
-      setData(result.data);
-      setTotal(result.total);
-    } catch (err) {
-      console.error("DataTable fetch error:", err);
-    } finally {
-      setLoading(false);
-    }
+  const queryKey = useMemo(() => {
+    const baseKey = config.queryKey
+      ? config.queryKey(params)
+      : ([
+          "data-table",
+          pagination.page,
+          pagination.pageSize,
+          search,
+          appliedFilters,
+        ] as const);
+
+    return refreshKey === undefined ? baseKey : [...baseKey, refreshKey];
   }, [
-    config.fetcher,
+    appliedFilters,
+    config,
     pagination.page,
     pagination.pageSize,
+    params,
+    refreshKey,
     search,
-    appliedFilters,
   ]);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  const {
+    data: queryData,
+    isPending,
+    error,
+  } = useQuery({
+    queryKey,
+    queryFn: () => config.fetcher(params),
+    placeholderData: keepPreviousData,
+  });
+
+  const data = queryData?.data ?? [];
+  const total = queryData?.total ?? 0;
+  const loading = isPending;
+
+  if (error) {
+    console.error("DataTable fetch error:", error);
+  }
 
   /** ---------------- FILTER ACTIONS ---------------- */
 

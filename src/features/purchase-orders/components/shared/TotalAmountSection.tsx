@@ -38,11 +38,18 @@ export default function TotalAmountSection({
 
       <div className="flex gap-3">
         <button
-          className="flex-1 bg-primary text-white font-bold py-3 px-4 rounded-lg hover:bg-primary/90 transition-all shadow-md active:scale-[0.98] cursor-pointer"
+          className="flex-1 bg-primary text-white font-bold py-3 px-4 rounded-lg hover:bg-primary/90 transition-all shadow-md active:scale-[0.98] cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
           disabled={isSubmitting}
           type="submit"
         >
-          {isSubmitting ? "Saving..." : submitLabel}
+          {isSubmitting ? (
+            <span className="inline-flex items-center gap-2">
+              <span className="size-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+              <span>Saving...</span>
+            </span>
+          ) : (
+            submitLabel
+          )}
         </button>
         <button
           className="flex-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold py-3 px-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-[0.98]"

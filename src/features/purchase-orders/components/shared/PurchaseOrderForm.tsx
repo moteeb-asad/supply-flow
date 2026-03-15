@@ -174,7 +174,11 @@ export default function PurchaseOrderForm({
       className="flex-1 min-h-0 flex flex-col overflow-hidden"
       onSubmit={handleSubmit}
     >
-      <div className="flex-1 min-h-0 overflow-y-auto px-6 py-6 space-y-8">
+      <div
+        className={`flex-1 min-h-0 overflow-y-auto px-6 py-6 space-y-8 transition-opacity ${
+          isSubmitting ? "opacity-60" : "opacity-100"
+        }`}
+      >
         {validationErrors.length > 0 ? (
           <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
             {validationErrors.map((message) => (
@@ -202,10 +206,13 @@ export default function PurchaseOrderForm({
         />
         <LineItemsSection
           initialItems={merged.lineItems}
-          onAddItemClick={onAddItemClick}
+          onAddItemClick={isSubmitting ? undefined : onAddItemClick}
           error={fieldErrors.lineItems}
         />
-        <AdditionalNotesSection notes={merged.notes} error={fieldErrors.notes} />
+        <AdditionalNotesSection
+          notes={merged.notes}
+          error={fieldErrors.notes}
+        />
       </div>
       <TotalAmountSection
         isSubmitting={isSubmitting}

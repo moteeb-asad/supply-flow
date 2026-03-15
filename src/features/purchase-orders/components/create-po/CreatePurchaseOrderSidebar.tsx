@@ -48,6 +48,7 @@ export default function CreatePurchaseOrderSidebar({
   };
 
   const handleAddItemClick = () => {
+    if (isPending) return;
     onAddItemClick?.();
     setIsAddItemModalOpen(true);
   };

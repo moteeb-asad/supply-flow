@@ -1,12 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/list/PurchaseOrdersMetrics";
 import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/PurchaseOrdersTable";
 import CreatePurchaseOrderSidebar from "../create-po/CreatePurchaseOrderSidebar";
 
 export default function PurchaseOrdersPage() {
   const [isCreateSidebarOpen, setIsCreateSidebarOpen] = useState(false);
+  const supabase = useMemo(() => createBrowserSupabaseClient(), []);
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("purchase-orders-live")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "purchase_orders",
+        },
+        () => {
+          void queryClient.invalidateQueries({
+            queryKey: ["purchase-orders-table"],
+          });
+        },
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [queryClient, supabase]);
 
   return (
     <>
@@ -97,7 +124,12 @@ export default function PurchaseOrdersPage() {
       {isCreateSidebarOpen && (
         <CreatePurchaseOrderSidebar
           onClose={() => setIsCreateSidebarOpen(false)}
-          onSuccess={() => setIsCreateSidebarOpen(false)}
+          onSuccess={() => {
+            void queryClient.invalidateQueries({
+              queryKey: ["purchase-orders-table"],
+            });
+            setIsCreateSidebarOpen(false);
+          }}
         />
       )}
     </>
