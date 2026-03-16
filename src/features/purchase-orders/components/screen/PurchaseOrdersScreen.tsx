@@ -3,12 +3,18 @@
 import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/list/PurchaseOrdersMetrics";
-import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/PurchaseOrdersTable";
 import CreatePurchaseOrderSidebar from "../create-po/CreatePurchaseOrderSidebar";
+import PurchaseOrdersFilters from "@/src/features/purchase-orders/components/list/PurchaseOrdersFilters";
+import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/list/PurchaseOrdersMetrics";
+import PurchaseOrdersStatusTabs from "@/src/features/purchase-orders/components/list/PurchaseOrdersStatusTabs";
+import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/PurchaseOrdersTable";
 
-export default function PurchaseOrdersPage() {
+export default function PurchaseOrdersScreen() {
   const [isCreateSidebarOpen, setIsCreateSidebarOpen] = useState(false);
+  const [filters, setFilters] = useState<{
+    status?: string;
+    dateRange?: string;
+  }>({});
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const queryClient = useQueryClient();
 
@@ -65,57 +71,22 @@ export default function PurchaseOrdersPage() {
         </div>
       </div>
       <div className="px-8">
-        <div className="flex border-b border-[#d0d7e7] dark:border-slate-700 gap-8">
-          <a
-            className="flex flex-col items-center justify-center border-b-[3px] active-tab pb-[13px] pt-4"
-            href="#"
-          >
-            <p className="text-sm font-bold leading-normal tracking-wide">
-              All Orders
-            </p>
-          </a>
-          <a
-            className="flex flex-col items-center justify-center border-b-[3px] inactive-tab pb-[13px] pt-4"
-            href="#"
-          >
-            <p className="text-sm font-bold leading-normal tracking-wide">
-              Draft
-            </p>
-          </a>
-          <a
-            className="flex flex-col items-center justify-center border-b-[3px] inactive-tab pb-[13px] pt-4"
-            href="#"
-          >
-            <div className="flex items-center gap-2">
-              <p className="text-sm font-bold leading-normal tracking-wide">
-                Pending
-              </p>
-              <span className="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded-full">
-                14
-              </span>
-            </div>
-          </a>
-          <a
-            className="flex flex-col items-center justify-center border-b-[3px] inactive-tab pb-[13px] pt-4"
-            href="#"
-          >
-            <p className="text-sm font-bold leading-normal tracking-wide">
-              Partially Received
-            </p>
-          </a>
-          <a
-            className="flex flex-col items-center justify-center border-b-[3px] inactive-tab pb-[13px] pt-4"
-            href="#"
-          >
-            <p className="text-sm font-bold leading-normal tracking-wide">
-              Closed
-            </p>
-          </a>
-        </div>
+        <PurchaseOrdersStatusTabs
+          status={filters.status}
+          onStatusChange={(status) => {
+            console.log("Tab clicked", status);
+            if (filters.status !== status) {
+              setFilters((prev) => ({ ...prev, status }));
+              console.log("setFilters called", status);
+            } else {
+              console.log("setFilters NOT called (status unchanged)", status);
+            }
+          }}
+        />
       </div>
 
       <div className="space-y-6">
-        <PurchaseOrdersTable />
+        <PurchaseOrdersTable filters={filters} />
       </div>
       <div className="px-8 pb-8">
         <PurchaseOrdersMetrics />

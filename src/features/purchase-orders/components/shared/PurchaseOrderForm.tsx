@@ -203,6 +203,7 @@ export default function PurchaseOrderForm({
             shippingMethod: fieldErrors.shippingMethod,
             status: fieldErrors.status,
           }}
+          mode={mode}
         />
         <LineItemsSection
           initialItems={merged.lineItems}

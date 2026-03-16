@@ -1,13 +1,16 @@
 "use client";
 
-import React from "react";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import DataTableFiltersPanel from "./DataTableFiltersPanel";
-import DataTablePagination from "./DataTablePagination";
-import DataTableSearch from "./DataTableSearch";
+
+import { DataTableHeader } from "./components/DataTableHeader";
+import { DataTableBody } from "./components/DataTableBody";
+import { DataTableFilters } from "./components/DataTableFilters";
+import { DataTableSearchBar } from "./components/DataTableSearchBar";
+import { DataTablePaginationBar } from "./components/DataTablePaginationBar";
 import DataTableSkeleton from "./DataTableSkeleton";
+
 import type { DataTableProps, PaginationState } from "./types";
 
 /**
@@ -17,7 +20,6 @@ import type { DataTableProps, PaginationState } from "./types";
  * - Driven by DataTableConfig
  * - Supports search, pagination, filters
  * - Used by Users, Invitations, and future modules
- * DO NOT add feature-specific logic here.
  */
 
 export default function DataTable<
@@ -38,21 +40,20 @@ export default function DataTable<
 
   /** ---------------- STATE ---------------- */
 
-  const [search, setSearch] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
-
-  // filters editing vs applied
   const [draftFilters, setDraftFilters] = useState<Record<string, unknown>>({});
   const [appliedFilters, setAppliedFilters] = useState<Record<string, unknown>>(
     {},
   );
-
+  const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
     page: 1,
     pageSize: 10,
   });
 
-  /** ---------------- FETCH DATA ---------------- */
+  const setPage = (page: number) => setPagination((p) => ({ ...p, page }));
+
+  /** ---------------- FETCH PARAMS ---------------- */
 
   const params = useMemo(
     () =>
@@ -65,27 +66,31 @@ export default function DataTable<
     [pagination.page, pagination.pageSize, search, appliedFilters],
   );
 
+  /** ---------------- QUERY KEY ---------------- */
+
   const queryKey = useMemo(() => {
     const baseKey = config.queryKey
       ? config.queryKey(params)
-      : ([
+      : [
           "data-table",
           pagination.page,
           pagination.pageSize,
           search,
-          appliedFilters,
-        ] as const);
+          JSON.stringify(appliedFilters),
+        ];
 
     return refreshKey === undefined ? baseKey : [...baseKey, refreshKey];
   }, [
-    appliedFilters,
     config,
-    pagination.page,
-    pagination.pageSize,
     params,
     refreshKey,
+    pagination.page,
+    pagination.pageSize,
     search,
+    appliedFilters,
   ]);
+
+  /** ---------------- QUERY ---------------- */
 
   const {
     data: queryData,
@@ -105,118 +110,37 @@ export default function DataTable<
     console.error("DataTable fetch error:", error);
   }
 
-  /** ---------------- FILTER ACTIONS ---------------- */
+  /** ---------------- HANDLERS ---------------- */
 
-  function applyFilters() {
+  function handleApplySearch(value: string) {
+    setSearch(value);
+    setPage(1);
+  }
+
+  function handleApplyFilters() {
     setAppliedFilters(draftFilters);
-    setPagination((p) => ({ ...p, page: 1 }));
+    setPage(1);
     setFiltersOpen(false);
   }
 
-  function clearFilters() {
+  function handleClearFilters() {
     setDraftFilters({});
     setAppliedFilters({});
     setSearch("");
-    setPagination((p) => ({ ...p, page: 1 }));
+    setPage(1);
     setFiltersOpen(false);
   }
 
-  /** ---------------- APPLY SEARCH ---------------- */
-
-  function applySearch(value: string) {
-    setSearch(value);
-    setPagination((p) => ({ ...p, page: 1 }));
-  }
-
-  /** ---------------- RENDERERS ---------------- */
-
-  const shouldIgnoreRowNavigation = (target: EventTarget | null) => {
-    if (!(target instanceof HTMLElement)) return false;
-    return Boolean(
-      target.closest(
-        'button, a, input, select, textarea, [role="button"], [data-row-click-ignore="true"]',
-      ),
-    );
-  };
-
-  const navigateToRow = (row: T) => {
-    if (!config.rowHref) return;
-    router.push(config.rowHref(row));
-  };
-
-  // Updated table head and body to match the raw HTML structure and classes
-  const renderTableHead = () => (
-    <thead>
-      <tr className="bg-slate-50 dark:bg-slate-900/50 border-b border-[#d0d7e7] dark:border-slate-700">
-        {config.columns.map((col) => (
-          <th
-            key={col.key}
-            className={
-              col.className ??
-              `px-6 py-4 text-xs font-bold text-[#4e6797] uppercase tracking-wider ${col.header === "Actions" ? "text-right" : ""}`
-            }
-          >
-            {col.header}
-          </th>
-        ))}
-      </tr>
-    </thead>
-  );
-
-  const renderTableBody = () => (
-    <tbody className="divide-y divide-[#d0d7e7] dark:divide-slate-700">
-      {data.length === 0 ? (
-        <tr>
-          <td
-            colSpan={config.columns.length}
-            className="text-center py-10 text-sm font-medium text-[#4e6797]"
-          >
-            No results found
-          </td>
-        </tr>
-      ) : (
-        data.map((row) => (
-          <tr
-            key={row.id}
-            className={`hover:bg-slate-50/50 dark:hover:bg-slate-900/20 transition-colors ${config.rowHref ? "cursor-pointer" : ""}`}
-            onClick={(event) => {
-              if (!config.rowHref || shouldIgnoreRowNavigation(event.target)) {
-                return;
-              }
-              navigateToRow(row);
-            }}
-            onKeyDown={(event) => {
-              if (!config.rowHref || shouldIgnoreRowNavigation(event.target)) {
-                return;
-              }
-
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                navigateToRow(row);
-              }
-            }}
-            role={config.rowHref ? "link" : undefined}
-            tabIndex={config.rowHref ? 0 : undefined}
-          >
-            {config.columns.map((col) => (
-              <td key={col.key} className={col.className ?? "px-6 py-4"}>
-                {col.cell(row)}
-              </td>
-            ))}
-          </tr>
-        ))
-      )}
-    </tbody>
-  );
-
-  /** ---------------- UI ---------------- */
+  /** ---------------- RENDER ---------------- */
 
   return (
     <div className="p-8 space-y-6 relative">
+      {/* Search + Filters */}
+
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <DataTableSearch
-          value={search}
-          applySearch={applySearch}
+        <DataTableSearchBar
+          search={search}
+          applySearch={handleApplySearch}
           placeholder={config.searchPlaceholder}
         />
 
@@ -234,8 +158,9 @@ export default function DataTable<
         )}
       </div>
 
+      {/* Table */}
+
       <div className="bg-white dark:bg-slate-800 rounded-xl border border-[#d0d7e7] dark:border-slate-700 shadow-sm overflow-hidden">
-        {/* Skeleton or Table */}
         {loading && search ? (
           <DataTableSkeleton type="search" />
         ) : loading ? (
@@ -243,30 +168,31 @@ export default function DataTable<
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              {renderTableHead()}
-              {renderTableBody()}
+              <DataTableHeader config={config} />
+              {/* <DataTableBody config={config} data={data} /> */}
             </table>
           </div>
         )}
 
         {/* Pagination */}
-        <DataTablePagination
-          page={pagination.page}
-          pageSize={pagination.pageSize}
+
+        <DataTablePaginationBar
+          pagination={pagination}
           total={total}
-          onPageChange={(page) => setPagination((p) => ({ ...p, page }))}
+          onPageChange={setPage}
         />
       </div>
 
-      {/* Filters Panel */}
-      {filtersOpen && config.filters && (
-        <DataTableFiltersPanel onApply={applyFilters} onClear={clearFilters}>
-          {React.createElement(config.filters, {
-            value: draftFilters,
-            onChange: setDraftFilters,
-          })}
-        </DataTableFiltersPanel>
-      )}
+      {/* Filters */}
+
+      <DataTableFilters
+        filtersOpen={filtersOpen}
+        config={config}
+        draftFilters={draftFilters}
+        setDraftFilters={setDraftFilters}
+        onApply={handleApplyFilters}
+        onClear={handleClearFilters}
+      />
     </div>
   );
 }

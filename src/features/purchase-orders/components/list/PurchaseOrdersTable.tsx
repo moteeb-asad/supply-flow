@@ -5,7 +5,12 @@ import type {
   PurchaseOrdersQueryParams,
 } from "../../types/purchase-orders.types";
 
-export default function PurchaseOrdersTableView() {
+export default function PurchaseOrdersTable({
+  filters,
+}: {
+  filters: { status?: string; dateRange?: string };
+}) {
+  // Pass filters as refreshKey to force update
   return (
     <DataTable<PurchaseOrder, PurchaseOrdersQueryParams>
       config={PurchaseOrdersTableConfig}

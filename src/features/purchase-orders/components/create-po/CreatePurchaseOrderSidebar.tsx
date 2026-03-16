@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState, useTransition } from "react";
 import { createPurchaseOrderAction } from "../../actions/create-purchaseorder.action";
 import type {
@@ -17,7 +17,7 @@ export default function CreatePurchaseOrderSidebar({
   onAddItemClick,
   onSuccess,
 }: CreatePurchaseOrderSidebarProps) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitValidationErrors, setSubmitValidationErrors] = useState<
@@ -41,7 +41,12 @@ export default function CreatePurchaseOrderSidebar({
         return;
       }
 
-      router.refresh();
+      await queryClient.invalidateQueries({
+        queryKey: ["purchase-orders-table"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["purchase-orders-metrics"],
+      });
       onSuccess?.();
       onClose?.();
     });

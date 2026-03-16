@@ -1,4 +1,7 @@
-import { OrderDetailsSectionProps } from "@/src/features/purchase-orders/types/purchase-orders.types";
+import {
+  OrderDetailsSectionProps,
+  PurchaseOrderSidebarMode,
+} from "@/src/features/purchase-orders/types/purchase-orders.types";
 
 export default function OrderDetailsSection({
   orderDate,
@@ -6,7 +9,8 @@ export default function OrderDetailsSection({
   shippingMethod,
   status,
   errors,
-}: OrderDetailsSectionProps) {
+  mode = "create",
+}: OrderDetailsSectionProps & { mode?: PurchaseOrderSidebarMode }) {
   return (
     <section className="space-y-4">
       <div className="flex items-center gap-2 text-primary">
@@ -82,8 +86,21 @@ export default function OrderDetailsSection({
           defaultValue={status || "draft"}
           name="status"
         >
-          <option value="draft">Draft</option>
-          <option value="pending">Pending</option>
+          {mode === "create" ? (
+            <>
+              <option value="draft">Draft</option>
+              <option value="pending">Pending</option>
+            </>
+          ) : (
+            <>
+              <option value="draft">Draft</option>
+              <option value="pending">Pending</option>
+              <option value="partially_received">Partially Received</option>
+              <option value="closed">Closed</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="overdue">Overdue</option>
+            </>
+          )}
         </select>
         {errors?.status ? (
           <p className="text-xs text-red-600 dark:text-red-400">

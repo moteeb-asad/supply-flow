@@ -9,6 +9,7 @@ import type {
 } from "../../types/purchase-orders.types";
 import AddItemModal from "../shared/add-item-modal/AddItemModal";
 import PurchaseOrderForm from "../shared/PurchaseOrderForm";
+import { useQueryClient } from "@tanstack/react-query";
 import PurchaseOrderSidebarShell from "../shared/PurchaseOrderSidebarShell";
 
 export default function EditPurchaseOrderSidebar({
@@ -17,6 +18,7 @@ export default function EditPurchaseOrderSidebar({
   onAddItemClick: _onAddItemClick,
   onSuccess,
 }: EditPurchaseOrderSidebarProps) {
+  const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
@@ -35,7 +37,7 @@ export default function EditPurchaseOrderSidebar({
     supplierName: purchaseOrder.supplier_name,
     orderDate: purchaseOrder.order_date ?? "",
     expectedDeliveryDate: purchaseOrder.expected_delivery_date ?? "",
-    status: purchaseOrder.status === "pending" ? purchaseOrder.status : "draft",
+    status: purchaseOrder.status,
     notes: purchaseOrder.notes ?? "",
     lineItems,
   };
@@ -63,6 +65,14 @@ export default function EditPurchaseOrderSidebar({
         setSubmitError(result.error ?? "Failed to update purchase order.");
         return;
       }
+
+      // Invalidate purchase orders table and metrics queries
+      await queryClient.invalidateQueries({
+        queryKey: ["purchase-orders-table"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["purchase-orders-metrics"],
+      });
 
       onSuccess?.();
       onClose?.();

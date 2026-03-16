@@ -10,7 +10,13 @@ export type PurchaseOrderStatus =
 
 export type ShippingMethod = "standard" | "express" | "economy";
 
-export type CreatePurchaseOrderStatus = "draft" | "pending";
+export type CreatePurchaseOrderStatus =
+  | "draft"
+  | "pending"
+  | "partially_received"
+  | "closed"
+  | "cancelled"
+  | "overdue";
 
 export type PurchaseOrdersDateRangeFilter =
   | "last_7_days"
