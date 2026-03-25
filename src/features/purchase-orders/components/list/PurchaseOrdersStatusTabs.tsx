@@ -28,7 +28,6 @@ export default function PurchaseOrdersStatusTabs({
               : "inactive-tab border-transparent text-[#4e6797]"
           }`}
           onClick={() => {
-            console.log("Status tab clicked:", tab.key);
             onStatusChange(tab.key);
           }}
         >

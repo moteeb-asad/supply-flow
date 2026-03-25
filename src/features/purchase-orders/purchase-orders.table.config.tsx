@@ -8,23 +8,7 @@ import type {
   PurchaseOrdersQueryParams,
   PurchaseOrderStatus,
 } from "./types/purchase-orders.types";
-
-const formatDate = (date: string | null) => {
-  if (!date) return "---";
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-};
-
-const formatAmount = (value: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format(value);
-};
+import { formatAmount, formatDate } from "./utils/formatters";
 
 const statusStyles: Record<
   PurchaseOrderStatus,
@@ -74,7 +58,7 @@ export const PurchaseOrdersTableConfig: DataTableConfig<
     {
       key: "po_number",
       header: "PO Number",
-      className: "px-6 py-4 text-sm font-bold text-primary whitespace-nowrap",
+      className: "px-6 py-4 text-sm font-bold text-primary whitespace-wrap",
       cell: (row) => `#${row.po_number}`,
     },
     {
@@ -83,9 +67,6 @@ export const PurchaseOrdersTableConfig: DataTableConfig<
       className: "px-6 py-4",
       cell: (row) => (
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
-            <span className="material-symbols-outlined text-sm">store</span>
-          </div>
           <span className="text-sm font-medium">{row.supplier_name}</span>
         </div>
       ),

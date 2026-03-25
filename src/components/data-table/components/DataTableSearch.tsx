@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { DataTableSearchProps } from "./types";
+import { DataTableSearchProps } from "../../data-table/types";
 
 export default function DataTableSearch({
   value,

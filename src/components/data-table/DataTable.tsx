@@ -4,12 +4,12 @@ import { useMemo, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-import { DataTableHeader } from "./components/DataTableHeader";
+import { DataTableHeader } from "././components/DataTableHeader";
 import { DataTableBody } from "./components/DataTableBody";
-import { DataTableFilters } from "./components/DataTableFilters";
-import { DataTableSearchBar } from "./components/DataTableSearchBar";
-import { DataTablePaginationBar } from "./components/DataTablePaginationBar";
-import DataTableSkeleton from "./DataTableSkeleton";
+import { DataTableFilters } from "././components/DataTableFilters";
+import { DataTableSearchBar } from "././components/DataTableSearchBar";
+import { DataTablePaginationBar } from "././components/DataTablePaginationBar";
+import DataTableSkeleton from "./components/DataTableSkeleton";
 
 import type { DataTableProps, PaginationState } from "./types";
 
@@ -35,7 +35,7 @@ export default function DataTable<
     search?: string;
     filters?: Record<string, unknown>;
   },
->({ config, refreshKey }: DataTableProps<T, P>) {
+>({ config, refreshKey, onRowClick }: DataTableProps<T, P>) {
   const router = useRouter();
 
   /** ---------------- STATE ---------------- */
@@ -169,7 +169,11 @@ export default function DataTable<
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <DataTableHeader config={config} />
-              {/* <DataTableBody config={config} data={data} /> */}
+              <DataTableBody<T, P>
+                config={config}
+                data={data}
+                onRowClick={onRowClick}
+              />
             </table>
           </div>
         )}

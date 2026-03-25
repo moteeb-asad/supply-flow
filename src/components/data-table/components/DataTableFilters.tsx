@@ -1,5 +1,5 @@
 import React from "react";
-import DataTableFiltersPanel from "../DataTableFiltersPanel";
+import DataTableFiltersPanel from "../../data-table/components/DataTableFiltersPanel";
 
 export function DataTableFilters({
   filtersOpen,

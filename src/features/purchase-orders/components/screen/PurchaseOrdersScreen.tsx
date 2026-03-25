@@ -4,7 +4,6 @@ import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import CreatePurchaseOrderSidebar from "../create-po/CreatePurchaseOrderSidebar";
-import PurchaseOrdersFilters from "@/src/features/purchase-orders/components/list/PurchaseOrdersFilters";
 import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/list/PurchaseOrdersMetrics";
 import PurchaseOrdersStatusTabs from "@/src/features/purchase-orders/components/list/PurchaseOrdersStatusTabs";
 import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/PurchaseOrdersTable";
@@ -74,7 +73,6 @@ export default function PurchaseOrdersScreen() {
         <PurchaseOrdersStatusTabs
           status={filters.status}
           onStatusChange={(status) => {
-            console.log("Tab clicked", status);
             if (filters.status !== status) {
               setFilters((prev) => ({ ...prev, status }));
               console.log("setFilters called", status);

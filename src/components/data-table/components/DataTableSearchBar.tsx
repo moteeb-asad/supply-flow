@@ -1,5 +1,5 @@
 import React from "react";
-import DataTableSearch from "../DataTableSearch";
+import DataTableSearch from "../../data-table/components/DataTableSearch";
 
 export function DataTableSearchBar({
   search,

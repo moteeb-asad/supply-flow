@@ -1,4 +1,4 @@
-import { DataTableSkeletonProps } from "./types";
+import { DataTableSkeletonProps } from "../../data-table/types";
 
 export default function DataTableSkeleton({
   type = "loading",

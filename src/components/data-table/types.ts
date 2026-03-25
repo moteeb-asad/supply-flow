@@ -30,6 +30,7 @@ export type QueryState = {
 export type DataTableProps<T extends { id: string | number }, P = unknown> = {
   config: DataTableConfig<T, P>;
   refreshKey?: string | number;
+  onRowClick?: (row: T, event: React.MouseEvent) => void;
 };
 
 export type DataTableSearchProps = {

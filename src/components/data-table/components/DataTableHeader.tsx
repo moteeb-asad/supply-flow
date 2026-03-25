@@ -13,8 +13,9 @@ export function DataTableHeader<T, P = unknown>({
           <th
             key={col.key}
             className={
-              col.className ??
-              `px-6 py-4 text-xs font-bold text-[#4e6797] uppercase tracking-wider ${col.header === "Actions" ? "text-right" : ""}`
+              `px-6 py-4 text-xs font-bold text-[#4e6797] uppercase tracking-wider ` +
+              (col.className ?? "") +
+              (col.header === "Actions" ? " text-right" : "")
             }
           >
             {col.header}
