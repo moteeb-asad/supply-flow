@@ -91,9 +91,9 @@ export async function getPurchaseOrdersAction(
     )
     .order("created_at", { ascending: false });
 
- if (search) {
-   query = query.ilike("po_number", `%${search}%`);
- }
+  if (search) {
+    query = query.ilike("po_number", `%${search}%`);
+  }
 
   if (typedFilters.status) {
     query = query.eq("status", typedFilters.status);

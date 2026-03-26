@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 
 import { DataTableHeader } from "././components/DataTableHeader";
 import { DataTableBody } from "./components/DataTableBody";
@@ -35,22 +34,24 @@ export default function DataTable<
     search?: string;
     filters?: Record<string, unknown>;
   },
->({ config, refreshKey, onRowClick }: DataTableProps<T, P>) {
-  const router = useRouter();
-
+>({
+  config,
+  refreshKey,
+  onRowClick,
+  filters,
+  onFiltersChange,
+}: DataTableProps<T, P> & {
+  filters: Record<string, unknown>;
+  onFiltersChange: (filters: Record<string, unknown>) => void;
+}) {
   /** ---------------- STATE ---------------- */
 
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [draftFilters, setDraftFilters] = useState<Record<string, unknown>>({});
-  const [appliedFilters, setAppliedFilters] = useState<Record<string, unknown>>(
-    {},
-  );
   const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
     page: 1,
     pageSize: 10,
   });
-
   const setPage = (page: number) => setPagination((p) => ({ ...p, page }));
 
   /** ---------------- FETCH PARAMS ---------------- */
@@ -61,9 +62,9 @@ export default function DataTable<
         page: pagination.page,
         pageSize: pagination.pageSize,
         search,
-        filters: appliedFilters,
+        filters,
       }) as P,
-    [pagination.page, pagination.pageSize, search, appliedFilters],
+    [pagination.page, pagination.pageSize, search, filters],
   );
 
   /** ---------------- QUERY KEY ---------------- */
@@ -76,7 +77,7 @@ export default function DataTable<
           pagination.page,
           pagination.pageSize,
           search,
-          JSON.stringify(appliedFilters),
+          JSON.stringify(filters),
         ];
 
     return refreshKey === undefined ? baseKey : [...baseKey, refreshKey];
@@ -87,7 +88,7 @@ export default function DataTable<
     pagination.page,
     pagination.pageSize,
     search,
-    appliedFilters,
+    filters,
   ]);
 
   /** ---------------- QUERY ---------------- */
@@ -112,24 +113,9 @@ export default function DataTable<
 
   /** ---------------- HANDLERS ---------------- */
 
-  function handleApplySearch(value: string) {
+  const handleApplySearch = (value: string) => {
     setSearch(value);
-    setPage(1);
-  }
-
-  function handleApplyFilters() {
-    setAppliedFilters(draftFilters);
-    setPage(1);
-    setFiltersOpen(false);
-  }
-
-  function handleClearFilters() {
-    setDraftFilters({});
-    setAppliedFilters({});
-    setSearch("");
-    setPage(1);
-    setFiltersOpen(false);
-  }
+  }; // Controlled search bar handler
 
   /** ---------------- RENDER ---------------- */
 
@@ -192,10 +178,8 @@ export default function DataTable<
       <DataTableFilters
         filtersOpen={filtersOpen}
         config={config}
-        draftFilters={draftFilters}
-        setDraftFilters={setDraftFilters}
-        onApply={handleApplyFilters}
-        onClear={handleClearFilters}
+        value={filters}
+        onChange={onFiltersChange}
       />
     </div>
   );

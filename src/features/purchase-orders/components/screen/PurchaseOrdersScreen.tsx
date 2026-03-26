@@ -75,16 +75,13 @@ export default function PurchaseOrdersScreen() {
           onStatusChange={(status) => {
             if (filters.status !== status) {
               setFilters((prev) => ({ ...prev, status }));
-              console.log("setFilters called", status);
-            } else {
-              console.log("setFilters NOT called (status unchanged)", status);
             }
           }}
         />
       </div>
 
       <div className="space-y-6">
-        <PurchaseOrdersTable filters={filters} />
+        <PurchaseOrdersTable filters={filters} onFiltersChange={setFilters} />
       </div>
       <div className="px-8 pb-8">
         <PurchaseOrdersMetrics />

@@ -20,3 +20,10 @@ export interface Invitation {
     };
   };
 }
+
+export type InvitationsTableQueryParams = {
+  page: number;
+  pageSize: number;
+  search?: string;
+  filters?: Record<string, unknown>;
+};

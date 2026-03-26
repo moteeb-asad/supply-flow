@@ -1,5 +1,3 @@
-"use client";
-
 import type { DataTableConfig } from "@/src/components/data-table/types";
 import { purchaseOrdersFetcher } from "./fetchers/purchaseorders.fetcher";
 import PurchaseOrdersFilters from "@/src/features/purchase-orders/components/list/PurchaseOrdersFilters";

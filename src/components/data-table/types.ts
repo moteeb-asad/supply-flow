@@ -1,3 +1,17 @@
+export type DataTableFiltersProps = {
+  filtersOpen: boolean;
+  config: {
+    filters?: React.ComponentType<{
+      value: Record<string, unknown>;
+      onChange: (filters: Record<string, unknown>) => void;
+    }>;
+  };
+  value: Record<string, unknown>;
+  onChange: (filters: Record<string, unknown>) => void;
+  onApply?: () => void;
+  onClear?: () => void;
+};
+
 export type DataTableConfig<T, P = unknown> = {
   fetcher: (params: P) => Promise<{ data: T[]; total: number }>;
   queryKey?: (params: P) => readonly unknown[];
