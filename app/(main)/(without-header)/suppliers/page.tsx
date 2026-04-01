@@ -1,4 +1,4 @@
-import SuppliersScreen from "@/src/features/suppliers/components/suppliers-screen";
+import SuppliersScreen from "@/src/features/suppliers/components/SuppliersScreen";
 import {
   HydrationBoundary,
   QueryClient,

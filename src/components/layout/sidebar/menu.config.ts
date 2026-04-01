@@ -20,6 +20,12 @@ export const sidebarMenu: SidebarMenuItem[] = [
     roles: ["super_admin", "operations_manager", "store_keeper"],
   },
   {
+    label: "Purchase Orders",
+    path: "/purchase-orders",
+    icon: "package_2",
+    roles: ["super_admin", "operations_manager"],
+  },
+  {
     label: "Reports",
     path: "/reports",
     icon: "analytics",

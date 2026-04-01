@@ -33,3 +33,10 @@ export interface TableFiltersProps {
   onApply?: (filters: UserTableFilters) => void;
   onClear?: () => void;
 }
+
+export type UsersTableQueryParams = {
+  page: number;
+  pageSize: number;
+  search?: string;
+  filters?: Record<string, unknown>;
+};

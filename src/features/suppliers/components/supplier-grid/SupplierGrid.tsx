@@ -1,4 +1,4 @@
-import SupplierCard from "../supplier-grid/supplier-card";
+import SupplierCard from "../supplier-grid/SupplierCard";
 import type { SupplierGridProps } from "@/src/features/suppliers/types/suppliers.types";
 
 export default function SupplierGrid({

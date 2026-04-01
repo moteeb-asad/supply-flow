@@ -1,13 +1,13 @@
 import SidebarNav from "./SidebarNav";
 import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
+import { formatRole } from "@/src/lib/utils";
 import SettingsLink from "./SettingsLink";
 
 export default async function Sidebar() {
   const user = await getCurrentUser();
-
   // Extract name from user metadata
   const userName =
-    user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
+    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
   // Get first letter of name for avatar
   const initial = userName.charAt(0).toUpperCase();
   return (
@@ -37,7 +37,7 @@ export default async function Sidebar() {
               {userName}
             </p>
             <p className="text-xs text-[#4e6797] truncate max-w-32">
-              {user?.email}
+              {formatRole(user?.user_metadata.primary_role)}
             </p>
           </div>
         </div>

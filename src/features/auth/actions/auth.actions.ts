@@ -1,11 +1,50 @@
 "use server";
 
 import { createClient } from "@/src/db/supabaseClient";
+import { createAdminClient } from "@/src/db/supabaseAdmin";
 import { redirect } from "next/navigation";
 import {
   loginSchema,
   resetPasswordSchema,
 } from "@/src/features/auth/validators/auth.schema";
+
+async function markInvitationAccepted(email: string, userId: string) {
+  const adminClient = createAdminClient();
+  const normalizedEmail = email.toLowerCase();
+
+  const { data: invitation, error: invitationLookupError } = await adminClient
+    .from("invitations")
+    .select("id")
+    .ilike("email", normalizedEmail)
+    .eq("status", "pending")
+    .is("accepted_by", null)
+    .order("sent_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (invitationLookupError) {
+    console.error("Invitation lookup error:", invitationLookupError);
+    return;
+  }
+
+  if (!invitation?.id) {
+    console.warn("[InviteAccept] no pending invitation found to update");
+    return;
+  }
+
+  const { error: invitationUpdateError } = await adminClient
+    .from("invitations")
+    .update({
+      status: "accepted",
+      accepted_by: userId,
+      accepted_at: new Date().toISOString(),
+    })
+    .eq("id", invitation.id);
+
+  if (invitationUpdateError) {
+    console.error("Invitation update error:", invitationUpdateError);
+  }
+}
 
 export async function loginAction(
   _prevState: { error?: string } | undefined,
@@ -17,7 +56,6 @@ export async function loginAction(
   // Validate input
   const validation = loginSchema.safeParse({ email, password });
   if (!validation.success) {
-    console.log("Validation errors:", validation.error.format());
     return {
       error: "Invalid email or password format",
     };
@@ -89,6 +127,7 @@ export async function resetPasswordAction(
 ) {
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
+  const flowType = formData.get("flowType") as string | null;
 
   // Use Zod schema for server-side validation too
   const validation = resetPasswordSchema.safeParse({
@@ -124,6 +163,10 @@ export async function resetPasswordAction(
     return {
       error: error.message || "Unable to update password. Please try again.",
     };
+  }
+
+  if (flowType === "invite" && user.email) {
+    await markInvitationAccepted(user.email, user.id);
   }
 
   return { success: "Password updated successfully. You can sign in now." };

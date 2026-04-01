@@ -1,6 +1,22 @@
+export type DataTableFiltersProps = {
+  filtersOpen: boolean;
+  config: {
+    filters?: React.ComponentType<{
+      value: Record<string, unknown>;
+      onChange: (filters: Record<string, unknown>) => void;
+    }>;
+  };
+  value: Record<string, unknown>;
+  onChange: (filters: Record<string, unknown>) => void;
+  onApply?: () => void;
+  onClear?: () => void;
+};
+
 export type DataTableConfig<T, P = unknown> = {
   fetcher: (params: P) => Promise<{ data: T[]; total: number }>;
+  queryKey?: (params: P) => readonly unknown[];
   columns: DataTableColumn<T>[];
+  rowHref?: (row: T) => string;
   filters?: React.ComponentType<{
     value: Record<string, unknown>;
     onChange: (filters: Record<string, unknown>) => void;
@@ -27,6 +43,8 @@ export type QueryState = {
 
 export type DataTableProps<T extends { id: string | number }, P = unknown> = {
   config: DataTableConfig<T, P>;
+  refreshKey?: string | number;
+  onRowClick?: (row: T, event: React.MouseEvent) => void;
 };
 
 export type DataTableSearchProps = {

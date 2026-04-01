@@ -8,19 +8,13 @@ import {
   ReactNode,
 } from "react";
 import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
-import type { UserRole } from "@/src/features/auth/types";
-
-export type UserProfile = {
-  id: string;
-  email: string;
-  fullName?: string;
-  primaryRole?: UserRole;
-};
-
-interface UserContextValue {
-  user: UserProfile | null;
-  loading: boolean;
-}
+import type { UserRole } from "@/src/types/layout";
+import type {
+  ProfileRoleRow,
+  RoleNameRow,
+  UserContextValue,
+  UserProfile,
+} from "@/src/types/user";
 
 const UserContext = createContext<UserContextValue>({
   user: null,
@@ -32,25 +26,70 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const supabase = createBrowserSupabaseClient();
+    let active = true;
+
     async function fetchUser() {
+      if (!active) return;
       setLoading(true);
-      const supabase = createBrowserSupabaseClient();
+
       const {
         data: { user: authUser },
       } = await supabase.auth.getUser();
+
+      if (!active) return;
+
       if (authUser) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("full_name, primary_role_id")
+          .eq("id", authUser.id)
+          .maybeSingle<ProfileRoleRow>();
+
+        let primaryRole: UserRole | undefined =
+          authUser.user_metadata?.primary_role ?? undefined;
+
+        if (profile?.primary_role_id) {
+          const { data: role } = await supabase
+            .from("roles")
+            .select("name")
+            .eq("id", profile.primary_role_id)
+            .maybeSingle<RoleNameRow>();
+
+          if (role?.name) {
+            primaryRole = role.name as UserRole;
+          }
+        }
+
+        if (!active) return;
+
         setUser({
           id: authUser.id,
           email: authUser.email ?? "",
-          fullName: authUser.user_metadata?.full_name ?? undefined,
-          primaryRole: authUser.user_metadata?.primary_role ?? undefined,
+          fullName:
+            profile?.full_name ?? authUser.user_metadata?.name ?? undefined,
+          primaryRole,
         });
       } else {
         setUser(null);
       }
+
+      if (!active) return;
       setLoading(false);
     }
+
     fetchUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
+      void fetchUser();
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (

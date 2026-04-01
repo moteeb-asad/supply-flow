@@ -17,11 +17,11 @@ export const usersColumns: DataTableColumn<User>[] = [
           ></div>
         ) : (
           <div className="size-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">
-            {getInitials(user.full_name)}
+            {getInitials(user?.full_name)}
           </div>
         )}
         <span className="text-sm font-semibold text-[#0e121b]">
-          {user.full_name}
+          {user?.full_name}
         </span>
       </div>
     ),

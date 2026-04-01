@@ -1,0 +1,45 @@
+"use client";
+
+import type {
+  PurchaseOrdersFiltersValue,
+  PurchaseOrdersFiltersProps,
+} from "../../types";
+
+export default function PurchaseOrdersFilters({
+  value,
+  onChange,
+}: PurchaseOrdersFiltersProps) {
+  const filters = value as PurchaseOrdersFiltersValue;
+
+  const setFilter = (key: string, nextValue: string) => {
+    const next = { ...value };
+    if (!nextValue) {
+      delete next[key];
+    } else {
+      next[key] = nextValue;
+    }
+    onChange(next);
+  };
+
+  return (
+    <>
+      <div>
+        <h3 className="text-xs font-bold text-[#4e6797] uppercase tracking-wider mb-3">
+          Date Range
+        </h3>
+        <select
+          className="w-full bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+          onChange={(event) => setFilter("dateRange", event.target.value)}
+          value={(filters.dateRange as string | undefined) ?? ""}
+        >
+          <option value="">All Dates</option>
+          <option value="last_24_hours">Last 24 Hours</option>
+          <option value="last_7_days">Last 7 Days</option>
+          <option value="last_30_days">Last 30 Days</option>
+          <option value="this_month">This Month</option>
+          <option value="this_quarter">This Quarter</option>
+        </select>
+      </div>
+    </>
+  );
+}
