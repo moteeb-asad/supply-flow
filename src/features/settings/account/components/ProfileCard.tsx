@@ -8,7 +8,7 @@ export default async function ProfileCard() {
 
   // Extract name from user metadata
   const userName =
-    user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
+    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
   // Get first letter of name for avatar
   const initial = userName.charAt(0).toUpperCase();
   const primaryRole = user?.user_metadata?.primary_role as UserRole | undefined;
