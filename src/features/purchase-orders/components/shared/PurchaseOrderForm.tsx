@@ -4,7 +4,7 @@ import { useState } from "react";
 import type {
   PurchaseOrderFormProps,
   PurchaseOrderFormValues,
-} from "../../types/purchase-orders.types";
+} from "../../types";
 import { createPurchaseOrderSchema } from "../../validators/purchase-order.schema";
 import AdditionalNotesSection from "./AdditionalNotesSection";
 import LineItemsSection from "./LineItemsSection";
@@ -18,6 +18,7 @@ const defaultValues: PurchaseOrderFormValues = {
   orderDate: "",
   expectedDeliveryDate: "",
   shippingMethod: "standard",
+  paymentMethod: "cod",
   status: "draft",
   notes: "",
   lineItems: [],
@@ -29,6 +30,7 @@ export default function PurchaseOrderForm({
   onSubmit,
   onCancel,
   onAddItemClick,
+  onLineItemsChange,
   isSubmitting = false,
 }: PurchaseOrderFormProps) {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -37,6 +39,7 @@ export default function PurchaseOrderForm({
     orderDate?: string;
     expectedDeliveryDate?: string;
     shippingMethod?: string;
+    paymentMethod?: string;
     status?: string;
     lineItems?: string;
     notes?: string;
@@ -48,11 +51,28 @@ export default function PurchaseOrderForm({
     lineItems: initialValues?.lineItems ?? defaultValues.lineItems,
   };
 
-  const subtotal = merged.lineItems.reduce(
+  const [lineItems, setLineItems] = useState<
+    PurchaseOrderFormValues["lineItems"]
+  >(merged.lineItems);
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    PurchaseOrderFormValues["paymentMethod"]
+  >(merged.paymentMethod);
+
+  const handleLineItemsChange = (
+    nextItems: PurchaseOrderFormValues["lineItems"],
+  ) => {
+    setLineItems(nextItems);
+    onLineItemsChange?.(nextItems);
+  };
+
+  const subtotal = lineItems.reduce(
     (sum, item) => sum + item.quantity * item.unitPrice,
     0,
   );
-  const taxAmount = Number((subtotal * 0.08).toFixed(2));
+  const taxRate = selectedPaymentMethod === "card" ? 0.05 : 0.16;
+  const taxLabel = selectedPaymentMethod === "card" ? "GST (5%)" : "GST (16%)";
+  const taxAmount = Number((subtotal * taxRate).toFixed(2));
   const totalAmount = Number((subtotal + taxAmount).toFixed(2));
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -68,57 +88,16 @@ export default function PurchaseOrderForm({
     ).trim();
     const shippingMethod =
       String(formData.get("shippingMethod") ?? "standard") || "standard";
+    const paymentMethod =
+      String(formData.get("paymentMethod") ?? "cod") || "cod";
     const status = String(formData.get("status") ?? "draft") || "draft";
     const notes = String(formData.get("notes") ?? "").trim();
 
-    const lineItemsMap = new Map<
-      number,
-      { skuName?: string; quantity?: number; unitPrice?: number }
-    >();
-
-    for (const [key, value] of formData.entries()) {
-      const match = key.match(
-        /lineItems\[(\d+)\]\.(skuName|quantity|unitPrice)/,
-      );
-      if (!match) continue;
-
-      const index = Number(match[1]);
-      const field = match[2];
-      const row = lineItemsMap.get(index) ?? {};
-
-      if (field === "skuName") {
-        row.skuName = String(value ?? "").trim();
-      }
-
-      if (field === "quantity") {
-        row.quantity = Number(value);
-      }
-
-      if (field === "unitPrice") {
-        row.unitPrice = Number(value);
-      }
-
-      lineItemsMap.set(index, row);
-    }
-
-    const lineItems = Array.from(lineItemsMap.entries())
-      .sort((a, b) => a[0] - b[0])
-      .map(([, item]) => {
-        const quantity =
-          typeof item.quantity === "number" && Number.isFinite(item.quantity)
-            ? item.quantity
-            : 0;
-        const unitPrice =
-          typeof item.unitPrice === "number" && Number.isFinite(item.unitPrice)
-            ? item.unitPrice
-            : 0;
-
-        return {
-          skuName: item.skuName ?? "",
-          quantity,
-          unitPrice,
-        };
-      });
+    const normalizedLineItems = lineItems.map((item) => ({
+      skuName: String(item.skuName ?? "").trim(),
+      quantity: Number.isFinite(item.quantity) ? item.quantity : 0,
+      unitPrice: Number.isFinite(item.unitPrice) ? item.unitPrice : 0,
+    }));
 
     const payload: PurchaseOrderFormValues = {
       supplierId: supplierId || merged.supplierId,
@@ -127,9 +106,10 @@ export default function PurchaseOrderForm({
       expectedDeliveryDate,
       shippingMethod:
         shippingMethod as PurchaseOrderFormValues["shippingMethod"],
+      paymentMethod: paymentMethod as PurchaseOrderFormValues["paymentMethod"],
       status: status as PurchaseOrderFormValues["status"],
       notes,
-      lineItems: lineItems.length > 0 ? lineItems : merged.lineItems,
+      lineItems: normalizedLineItems,
     };
 
     const validationResult = createPurchaseOrderSchema.safeParse(payload);
@@ -144,6 +124,7 @@ export default function PurchaseOrderForm({
         orderDate: flattenedFieldErrors.orderDate?.[0],
         expectedDeliveryDate: flattenedFieldErrors.expectedDeliveryDate?.[0],
         shippingMethod: flattenedFieldErrors.shippingMethod?.[0],
+        paymentMethod: flattenedFieldErrors.paymentMethod?.[0],
         status: flattenedFieldErrors.status?.[0],
         lineItems: flattenedFieldErrors.lineItems?.[0],
         notes: flattenedFieldErrors.notes?.[0],
@@ -196,17 +177,21 @@ export default function PurchaseOrderForm({
           expectedDeliveryDate={merged.expectedDeliveryDate}
           orderDate={merged.orderDate}
           shippingMethod={merged.shippingMethod}
+          paymentMethod={selectedPaymentMethod}
+          onPaymentMethodChange={setSelectedPaymentMethod}
           status={merged.status}
           errors={{
             orderDate: fieldErrors.orderDate,
             expectedDeliveryDate: fieldErrors.expectedDeliveryDate,
             shippingMethod: fieldErrors.shippingMethod,
+            paymentMethod: fieldErrors.paymentMethod,
             status: fieldErrors.status,
           }}
           mode={mode}
         />
         <LineItemsSection
-          initialItems={merged.lineItems}
+          initialItems={lineItems}
+          onLineItemsChange={handleLineItemsChange}
           onAddItemClick={isSubmitting ? undefined : onAddItemClick}
           error={fieldErrors.lineItems}
         />
@@ -222,6 +207,7 @@ export default function PurchaseOrderForm({
         submitLabel={
           mode === "create" ? "Create Purchase Order" : "Save Changes"
         }
+        taxLabel={taxLabel}
         taxAmount={taxAmount}
         totalAmount={totalAmount}
       />

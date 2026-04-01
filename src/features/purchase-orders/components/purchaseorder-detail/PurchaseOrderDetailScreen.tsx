@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { PurchaseOrderDetailScreenProps } from "../../types/purchase-orders.types";
+import type { PurchaseOrderDetailScreenProps } from "../../types";
 import EditPurchaseOrderSidebar from "../edit-po/EditPurchaseOrderSidebar";
 import PurchaseOrderHeader from "./header/PurchaseOrderHeader";
 import LineItemsTable from "./sections/LineItemsTable";
@@ -30,7 +30,7 @@ export default function PurchaseOrderDetailScreen({
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <LineItemsTable lineItems={purchaseOrder.lineItems ?? []} />
             <div className="space-y-6">
-              <OrderActivityTimeline />
+              <OrderActivityTimeline purchaseOrder={purchaseOrder} />
               <SupplierInformationCard purchaseOrder={purchaseOrder} />
               <PurchaseOrderNotesCard notes={purchaseOrder.notes} />
             </div>

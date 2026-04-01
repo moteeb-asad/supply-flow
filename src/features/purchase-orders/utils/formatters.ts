@@ -38,3 +38,18 @@ export const formatDate = (date: string | null) => {
     year: "numeric",
   });
 };
+
+export function formatDateTime(value: string | null): string {
+  if (!value) return "Not available";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Not available";
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}

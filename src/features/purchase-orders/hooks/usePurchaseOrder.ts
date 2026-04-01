@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { PurchaseOrder } from "../types/purchase-orders.types";
+import { PurchaseOrder } from "../types";
 import { getPurchaseOrderAction } from "../actions/get-purchaseorder.action";
 
 export function usePurchaseOrder(purchaseOrderId: string) {

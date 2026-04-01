@@ -7,6 +7,7 @@ import CreatePurchaseOrderSidebar from "../create-po/CreatePurchaseOrderSidebar"
 import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/list/PurchaseOrdersMetrics";
 import PurchaseOrdersStatusTabs from "@/src/features/purchase-orders/components/list/PurchaseOrdersStatusTabs";
 import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/PurchaseOrdersTable";
+import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
 
 export default function PurchaseOrdersScreen() {
   const [isCreateSidebarOpen, setIsCreateSidebarOpen] = useState(false);
@@ -53,7 +54,10 @@ export default function PurchaseOrdersScreen() {
             </p>
           </div>
           <div className="flex gap-3">
-            <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 text-[#0e121b] dark:text-white text-sm font-bold hover:bg-slate-50 transition-colors">
+            <button
+              disabled
+              className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 text-[#0e121b] dark:text-white text-sm font-bold cursor-not-allowed opacity-50 transition-colors"
+            >
               <span className="material-symbols-outlined text-lg">
                 upload_file
               </span>
@@ -81,7 +85,9 @@ export default function PurchaseOrdersScreen() {
       </div>
 
       <div className="space-y-6">
-        <PurchaseOrdersTable filters={filters} onFiltersChange={setFilters} />
+        <ErrorBoundary>
+          <PurchaseOrdersTable filters={filters} onFiltersChange={setFilters} />
+        </ErrorBoundary>
       </div>
       <div className="px-8 pb-8">
         <PurchaseOrdersMetrics />

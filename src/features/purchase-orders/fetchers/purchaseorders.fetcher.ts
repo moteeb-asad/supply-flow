@@ -1,16 +1,12 @@
 "use client";
 
 import { getPurchaseOrdersAction } from "../actions/get-purchaseorders.actions";
-import type { PurchaseOrdersQueryParams } from "../types/purchase-orders.types";
+import type { PurchaseOrdersQueryParams } from "../types";
 
 export async function purchaseOrdersFetcher(params: PurchaseOrdersQueryParams) {
   const result = await getPurchaseOrdersAction(params);
-
   if (!result.success) {
-    return {
-      data: [],
-      total: 0,
-    };
+    throw new Error("Failed to fetch purchase orders");
   }
 
   return {

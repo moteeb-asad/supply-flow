@@ -48,9 +48,11 @@ export default function DataTable<
 
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [draftFilters, setDraftFilters] =
+    useState<Record<string, unknown>>(filters);
   const [pagination, setPagination] = useState<PaginationState>({
     page: 1,
-    pageSize: 10,
+    pageSize: 6,
   });
   const setPage = (page: number) => setPagination((p) => ({ ...p, page }));
 
@@ -117,6 +119,36 @@ export default function DataTable<
     setSearch(value);
   }; // Controlled search bar handler
 
+  const handleToggleFilters = () => {
+    if (!filtersOpen) {
+      setDraftFilters(filters);
+    }
+    setFiltersOpen((prev) => !prev);
+  };
+
+  const handleApplyFilters = () => {
+    onFiltersChange(draftFilters);
+    setPage(1);
+    setFiltersOpen(false);
+  };
+
+  const handleClearFilters = () => {
+    const statusValue = filters["status"];
+    const preservedFilters =
+      typeof statusValue === "string" ? { status: statusValue } : {};
+
+    setDraftFilters(preservedFilters);
+    onFiltersChange(preservedFilters);
+    setPage(1);
+    setFiltersOpen(false);
+  };
+
+  const activeAdvancedFiltersCount = Object.entries(filters).filter(
+    ([key, value]) => key !== "status" && Boolean(value),
+  ).length;
+
+  const isAdvancedFiltersActive = activeAdvancedFiltersCount > 0;
+
   /** ---------------- RENDER ---------------- */
 
   return (
@@ -132,14 +164,23 @@ export default function DataTable<
 
         {config.filters && (
           <button
-            className="px-4 py-2.5 bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 rounded-lg text-sm font-bold flex items-center gap-2 text-[#4e6797] hover:bg-slate-50 transition-colors cursor-pointer"
-            onClick={() => setFiltersOpen((v) => !v)}
+            className={`px-4 py-2.5 border rounded-lg text-sm font-bold flex items-center gap-2 transition-colors cursor-pointer ${
+              isAdvancedFiltersActive
+                ? "bg-primary/10 border-primary/30 text-primary"
+                : "bg-white dark:bg-slate-800 border-[#d0d7e7] dark:border-slate-700 text-[#4e6797] hover:bg-slate-50"
+            }`}
+            onClick={handleToggleFilters}
             type="button"
           >
             <span className="material-symbols-outlined text-lg">
               filter_alt
             </span>
             <span>Advanced Filters</span>
+            {isAdvancedFiltersActive ? (
+              <span className="inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-primary text-white text-[11px] px-1.5">
+                {activeAdvancedFiltersCount}
+              </span>
+            ) : null}
           </button>
         )}
       </div>
@@ -178,8 +219,10 @@ export default function DataTable<
       <DataTableFilters
         filtersOpen={filtersOpen}
         config={config}
-        value={filters}
-        onChange={onFiltersChange}
+        value={draftFilters}
+        onChange={setDraftFilters}
+        onApply={handleApplyFilters}
+        onClear={handleClearFilters}
       />
     </div>
   );

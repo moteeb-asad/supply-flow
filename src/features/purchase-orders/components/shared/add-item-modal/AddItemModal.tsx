@@ -1,6 +1,6 @@
 "use client";
 
-import type { AddItemModalProps } from "../../../types/purchase-orders.types";
+import type { AddItemModalProps } from "../../../types";
 import AddItemForm from "./AddItemForm";
 
 export default function AddItemModal({
@@ -8,6 +8,7 @@ export default function AddItemModal({
   onClose,
   onAddItem,
   isSubmitting = false,
+  submitError,
 }: AddItemModalProps) {
   if (!open) {
     return null;
@@ -38,6 +39,7 @@ export default function AddItemModal({
           isSubmitting={isSubmitting}
           onCancel={onClose}
           onSubmit={onAddItem}
+          submitError={submitError}
         />
       </div>
     </div>

@@ -1,8 +1,9 @@
-import { TotalAmountSectionProps } from "@/src/features/purchase-orders/types/purchase-orders.types";
+import { TotalAmountSectionProps } from "@/src/features/purchase-orders/types";
 
 export default function TotalAmountSection({
   subtotal,
   taxAmount,
+  taxLabel,
   totalAmount,
   submitLabel,
   onCancel,
@@ -25,7 +26,7 @@ export default function TotalAmountSection({
           </span>
         </div>
         <div className="flex justify-between text-slate-600 dark:text-slate-400">
-          <span>Tax (8%)</span>
+          <span>{taxLabel}</span>
           <span className="font-medium text-slate-900 dark:text-slate-100">
             {formatCurrency(taxAmount)}
           </span>

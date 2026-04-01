@@ -4,7 +4,7 @@ import { createClient } from "@/src/db/supabaseClient";
 import type {
   GetPurchaseOrderSuppliersInput,
   PurchaseOrderSupplierOption,
-} from "../types/purchase-orders.types";
+} from "../types";
 
 const DEFAULT_LIMIT = 8;
 const MAX_LIMIT = 20;

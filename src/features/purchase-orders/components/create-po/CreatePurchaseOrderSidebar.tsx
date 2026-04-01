@@ -7,7 +7,7 @@ import type {
   AddItemFormValues,
   CreatePurchaseOrderSidebarProps,
   PurchaseOrderFormValues,
-} from "../../types/purchase-orders.types";
+} from "../../types";
 import AddItemModal from "../shared/add-item-modal/AddItemModal";
 import PurchaseOrderForm from "../shared/PurchaseOrderForm";
 import PurchaseOrderSidebarShell from "../shared/PurchaseOrderSidebarShell";
@@ -24,6 +24,9 @@ export default function CreatePurchaseOrderSidebar({
     string[]
   >([]);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  const [addItemSubmitError, setAddItemSubmitError] = useState<string | null>(
+    null,
+  );
   const [lineItems, setLineItems] = useState<
     PurchaseOrderFormValues["lineItems"]
   >([]);
@@ -54,12 +57,26 @@ export default function CreatePurchaseOrderSidebar({
 
   const handleAddItemClick = () => {
     if (isPending) return;
+    setAddItemSubmitError(null);
     onAddItemClick?.();
     setIsAddItemModalOpen(true);
   };
 
   const handleAddItem = (item: AddItemFormValues) => {
+    const normalizedSkuName = item.skuName.trim().toLowerCase();
+    const alreadyExists = lineItems.some(
+      (lineItem) => lineItem.skuName.trim().toLowerCase() === normalizedSkuName,
+    );
+
+    if (alreadyExists) {
+      setAddItemSubmitError(
+        "This item already exists in line items. Edit its quantity or unit price instead.",
+      );
+      return;
+    }
+
     setLineItems((prev) => [...prev, item]);
+    setAddItemSubmitError(null);
     setIsAddItemModalOpen(false);
   };
 
@@ -91,14 +108,19 @@ export default function CreatePurchaseOrderSidebar({
           mode="create"
           onAddItemClick={handleAddItemClick}
           onCancel={onClose}
+          onLineItemsChange={setLineItems}
           onSubmit={handleSubmit}
         />
       </PurchaseOrderSidebarShell>
 
       <AddItemModal
         onAddItem={handleAddItem}
-        onClose={() => setIsAddItemModalOpen(false)}
+        onClose={() => {
+          setAddItemSubmitError(null);
+          setIsAddItemModalOpen(false);
+        }}
         open={isAddItemModalOpen}
+        submitError={addItemSubmitError}
       />
     </>
   );

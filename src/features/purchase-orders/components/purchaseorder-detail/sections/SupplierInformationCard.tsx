@@ -1,4 +1,4 @@
-import type { PurchaseOrder } from "../../../types/purchase-orders.types";
+import type { PurchaseOrder } from "../../../types";
 
 type SupplierInformationCardProps = {
   purchaseOrder: PurchaseOrder;

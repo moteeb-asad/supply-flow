@@ -5,7 +5,7 @@ import { getPurchaseOrderSuppliersAction } from "../../actions/get-purchaseorder
 import type {
   PurchaseOrderSupplierOption,
   SupplierSelectionSectionProps,
-} from "../../types/purchase-orders.types";
+} from "../../types";
 
 export default function SupplierSelectionSection({
   supplierId,

@@ -7,22 +7,23 @@ import type {
   PurchaseOrderRow,
   PurchaseOrderSupplierRelation,
   PurchaseOrdersQueryParams,
-} from "../types/purchase-orders.types";
+} from "../types";
 
 function getDateRangeStart(dateRange?: string): string | null {
   const now = new Date();
 
   if (!dateRange) return null;
 
-  if (dateRange === "last_7_days") {
-    const d = new Date(now);
-    d.setDate(now.getDate() - 7);
-    return d.toISOString().slice(0, 10);
-  }
+  const dayOffsets: Record<string, number> = {
+    last_24_hours: 1,
+    last_7_days: 7,
+    last_30_days: 30,
+  };
 
-  if (dateRange === "last_30_days") {
+  const dayOffset = dayOffsets[dateRange];
+  if (dayOffset) {
     const d = new Date(now);
-    d.setDate(now.getDate() - 30);
+    d.setDate(now.getDate() - dayOffset);
     return d.toISOString().slice(0, 10);
   }
 
@@ -55,6 +56,7 @@ function mapPurchaseOrderDTO(row: PurchaseOrderRow): PurchaseOrder {
     id: row.id,
     po_number: row.po_number,
     supplier_id: row.supplier_id,
+    payment_method: row.payment_method,
     supplier_name: mapSupplierName(row.suppliers),
     order_date: row.order_date,
     expected_delivery_date: row.expected_delivery_date,
@@ -68,6 +70,7 @@ export async function getPurchaseOrdersAction(
 ) {
   const supabase = await createClient();
   const { page, pageSize, search, filters } = params;
+  const searchTerm = search?.trim();
 
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
@@ -81,6 +84,7 @@ export async function getPurchaseOrdersAction(
       id,
       po_number,
       supplier_id,
+      payment_method,
       order_date,
       expected_delivery_date,
       total_amount,
@@ -91,8 +95,30 @@ export async function getPurchaseOrdersAction(
     )
     .order("created_at", { ascending: false });
 
-  if (search) {
-    query = query.ilike("po_number", `%${search}%`);
+  if (searchTerm) {
+    const { data: matchedSuppliers, error: supplierSearchError } =
+      await supabase
+        .from("suppliers")
+        .select("id")
+        .ilike("name", `%${searchTerm}%`)
+        .limit(50);
+
+    if (supplierSearchError) {
+      console.error(
+        "Failed to search suppliers for purchase order search:",
+        supplierSearchError,
+      );
+    }
+
+    const supplierIds = (matchedSuppliers ?? []).map((supplier) => supplier.id);
+
+    if (supplierIds.length > 0) {
+      query = query.or(
+        `po_number.ilike.%${searchTerm}%,supplier_id.in.(${supplierIds.join(",")})`,
+      );
+    } else {
+      query = query.ilike("po_number", `%${searchTerm}%`);
+    }
   }
 
   if (typedFilters.status) {
@@ -108,7 +134,7 @@ export async function getPurchaseOrdersAction(
 
   if (error) {
     console.error("Failed to fetch purchase orders:", error);
-    return { success: false, data: [] as PurchaseOrder[], total: 0 };
+    return { success: false, data: [], total: 0 };
   }
 
   const mapped = ((data ?? []) as PurchaseOrderRow[]).map(mapPurchaseOrderDTO);

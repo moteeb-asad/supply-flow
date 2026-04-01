@@ -6,7 +6,7 @@ import type {
   AddItemFormProps,
   AddItemFormValues,
   PurchaseOrderSkuOption,
-} from "../../../types/purchase-orders.types";
+} from "../../../types";
 
 const defaultFormValues: AddItemFormValues = {
   skuName: "",
@@ -18,6 +18,7 @@ export default function AddItemForm({
   onSubmit,
   onCancel,
   isSubmitting = false,
+  submitError,
 }: AddItemFormProps) {
   const [values, setValues] = useState<AddItemFormValues>(defaultFormValues);
   const [query, setQuery] = useState("");
@@ -75,6 +76,12 @@ export default function AddItemForm({
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>
       <div className="p-8 space-y-6">
+        {submitError ? (
+          <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {submitError}
+          </div>
+        ) : null}
+
         <div className="flex flex-col gap-2">
           <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
             SKU / Item Name

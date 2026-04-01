@@ -3,7 +3,7 @@
 import type {
   PurchaseOrdersFiltersValue,
   PurchaseOrdersFiltersProps,
-} from "../../types/purchase-orders.types";
+} from "../../types";
 
 export default function PurchaseOrdersFilters({
   value,

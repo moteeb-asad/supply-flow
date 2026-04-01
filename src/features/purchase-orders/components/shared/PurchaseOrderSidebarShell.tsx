@@ -1,4 +1,4 @@
-import type { PurchaseOrderSidebarShellProps } from "../../types/purchase-orders.types";
+import type { PurchaseOrderSidebarShellProps } from "../../types";
 
 export default function PurchaseOrderSidebarShell({
   title,

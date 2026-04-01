@@ -4,7 +4,7 @@ import Link from "next/link";
 import type {
   PurchaseOrderStatus,
   PurchaseOrderHeaderProps,
-} from "../../../types/purchase-orders.types";
+} from "../../../types";
 
 const statusConfig: Record<
   PurchaseOrderStatus,
@@ -63,7 +63,7 @@ export default function PurchaseOrderHeader({
               </div>
             </div>
             <div className="flex gap-3">
-              <button className="disabled:opacity-50 disabled:cursor-not-allowed w-full py-3.5 shadow-primary/20 flex items-center justify-center gap-2 rounded-lg shadow-none h-10 px-4 bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 text-[#0e121b] dark:text-white text-sm font-bold hover:bg-slate-50 transition-colors cursor-pointer">
+              <button disabled className="disabled:opacity-50 disabled:cursor-not-allowed w-full py-3.5 shadow-primary/20 flex items-center justify-center gap-2 rounded-lg shadow-none h-10 px-4 bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 text-[#0e121b] dark:text-white text-sm font-bold hover:bg-slate-50 transition-colors cursor-pointer">
                 <span className="material-symbols-outlined text-lg">
                   download
                 </span>

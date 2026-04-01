@@ -5,7 +5,7 @@ import type {
   CreatePurchaseOrderActionResult,
   CreatePurchaseOrderInput,
   PurchaseOrderLineItemFormValue,
-} from "../types/purchase-orders.types";
+} from "../types";
 import { createPurchaseOrderSchema } from "../validators/purchase-order.schema";
 
 function buildPurchaseOrderNumber(): string {
@@ -124,7 +124,8 @@ export async function createPurchaseOrderAction(
     (sum, item) => sum + item.quantity * item.unitPrice,
     0,
   );
-  const taxAmount = Number((subtotal * 0.08).toFixed(2));
+  const taxRate = validatedInput.paymentMethod === "card" ? 0.05 : 0.16;
+  const taxAmount = Number((subtotal * taxRate).toFixed(2));
   const totalAmount = Number((subtotal + taxAmount).toFixed(2));
 
   const { data: purchaseOrder, error: insertPoError } = await supabase
@@ -136,6 +137,7 @@ export async function createPurchaseOrderAction(
       status: validatedInput.status,
       order_date: validatedInput.orderDate,
       expected_delivery_date: validatedInput.expectedDeliveryDate || null,
+      payment_method: validatedInput.paymentMethod,
       notes: validatedInput.notes || null,
       currency: "USD",
       subtotal,

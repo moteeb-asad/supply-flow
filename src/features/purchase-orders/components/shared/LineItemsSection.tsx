@@ -1,11 +1,62 @@
-import type { LineItemsSectionProps } from "../../types/purchase-orders.types";
+import type { LineItemsSectionProps } from "../../types";
 
 export default function LineItemsSection({
   onAddItemClick,
   initialItems,
+  onLineItemsChange,
   error,
 }: LineItemsSectionProps) {
   const rows = initialItems ?? [];
+
+  const getIndex = (value: string | undefined): number => {
+    if (!value) return -1;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : -1;
+  };
+
+  const updateRow = (
+    index: number,
+    updater: (row: (typeof rows)[number]) => (typeof rows)[number],
+  ) => {
+    if (index < 0 || index >= rows.length) return;
+    const next = rows.map((row, rowIndex) =>
+      rowIndex === index ? updater(row) : row,
+    );
+    onLineItemsChange?.(next);
+  };
+
+  const handleSkuNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const index = getIndex(event.currentTarget.dataset.index);
+    const value = event.currentTarget.value;
+    updateRow(index, (row) => ({ ...row, skuName: value }));
+  };
+
+  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const index = getIndex(event.currentTarget.dataset.index);
+    const parsed = Number(event.currentTarget.value);
+    updateRow(index, (row) => ({
+      ...row,
+      quantity: Number.isFinite(parsed) ? parsed : 0,
+    }));
+  };
+
+  const handleUnitPriceChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const index = getIndex(event.currentTarget.dataset.index);
+    const parsed = Number(event.currentTarget.value);
+    updateRow(index, (row) => ({
+      ...row,
+      unitPrice: Number.isFinite(parsed) ? parsed : 0,
+    }));
+  };
+
+  const handleRemoveItem = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const index = getIndex(event.currentTarget.dataset.index);
+    if (index < 0 || index >= rows.length) return;
+    const next = rows.filter((_, rowIndex) => rowIndex !== index);
+    onLineItemsChange?.(next);
+  };
 
   return (
     <section className="space-y-4">
@@ -55,19 +106,23 @@ export default function LineItemsSection({
                   <td className="px-4 py-3">
                     <input
                       className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-400"
-                      defaultValue={row.skuName}
+                      data-index={String(index)}
                       name={`lineItems[${index}].skuName`}
                       placeholder="Search item..."
                       type="text"
+                      value={row.skuName}
+                      onChange={handleSkuNameChange}
                     />
                   </td>
                   <td className="px-4 py-3">
                     <input
                       className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100"
-                      defaultValue={String(row.quantity)}
+                      data-index={String(index)}
                       min={1}
                       name={`lineItems[${index}].quantity`}
                       type="number"
+                      value={Number.isFinite(row.quantity) ? row.quantity : 0}
+                      onChange={handleQuantityChange}
                     />
                   </td>
                   <td className="px-4 py-3">
@@ -75,17 +130,23 @@ export default function LineItemsSection({
                       <span className="text-slate-400 mr-1">$</span>
                       <input
                         className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100"
-                        defaultValue={row.unitPrice.toFixed(2)}
+                        data-index={String(index)}
                         min={0}
                         name={`lineItems[${index}].unitPrice`}
                         step="0.01"
                         type="number"
+                        value={
+                          Number.isFinite(row.unitPrice) ? row.unitPrice : 0
+                        }
+                        onChange={handleUnitPriceChange}
                       />
                     </div>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
                       className="text-slate-400 hover:text-red-500 transition-colors"
+                      data-index={String(index)}
+                      onClick={handleRemoveItem}
                       type="button"
                     >
                       <span className="material-symbols-outlined text-[20px]">

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { purchaseOrdersFetcher } from "@/src/features/purchase-orders/fetchers/purchaseorders.fetcher";
-import type { PurchaseOrder } from "@/src/features/purchase-orders/types/purchase-orders.types";
+import type { PurchaseOrder } from "@/src/features/purchase-orders/types";
 
 export default function PurchaseOrdersMetrics() {
   const { data, isPending } = useQuery({

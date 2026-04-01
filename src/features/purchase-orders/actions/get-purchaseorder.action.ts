@@ -6,7 +6,7 @@ import type {
   PurchaseOrderDetailLineItem,
   PurchaseOrderItemSkuRelation,
   PurchaseOrderSupplierRelation,
-} from "../types/purchase-orders.types";
+} from "../types";
 
 const isUuid = (value: string) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
@@ -91,6 +91,7 @@ type PurchaseOrderDetailRow = {
   id: string;
   po_number: string;
   supplier_id: string;
+  payment_method: PurchaseOrder["payment_method"];
   order_date: string | null;
   expected_delivery_date: string | null;
   total_amount: number | string | null;
@@ -116,6 +117,7 @@ export async function getPurchaseOrderAction(
         "id",
         "po_number",
         "supplier_id",
+        "payment_method",
         "order_date",
         "expected_delivery_date",
         "total_amount",
@@ -144,6 +146,7 @@ export async function getPurchaseOrderAction(
     id: row.id,
     po_number: row.po_number,
     supplier_id: row.supplier_id,
+    payment_method: row.payment_method,
     supplier_name: mapSupplierName(row.suppliers),
     supplier_contact_name: supplierContact.contactName,
     supplier_contact_email: supplierContact.contactEmail,

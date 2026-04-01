@@ -1,4 +1,4 @@
-import type { PurchaseOrder } from "../../../types/purchase-orders.types";
+import type { PurchaseOrder } from "../../../types";
 import {
   formatPurchaseOrderAmount,
   formatPurchaseOrderDate,
@@ -8,11 +8,21 @@ type QuickStatsCardsProps = {
   purchaseOrder: PurchaseOrder;
 };
 
+const paymentMethodLabel: Record<PurchaseOrder["payment_method"], string> = {
+  cod: "COD (Cash)",
+  card: "Card",
+};
+
+const gstLabel: Record<PurchaseOrder["payment_method"], string> = {
+  cod: "GST 16%",
+  card: "GST 5%",
+};
+
 export default function QuickStatsCards({
   purchaseOrder,
 }: QuickStatsCardsProps) {
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5">
       <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
           Supplier
@@ -64,6 +74,25 @@ export default function QuickStatsCards({
           <p className="text-lg font-black text-slate-900 dark:text-slate-100">
             {formatPurchaseOrderAmount(purchaseOrder.total_amount)}
           </p>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+          Payment Method
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary">
+            credit_card
+          </span>
+          <div>
+            <p className="text-lg font-bold text-slate-900 dark:text-slate-100">
+              {paymentMethodLabel[purchaseOrder.payment_method]}
+            </p>
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              {gstLabel[purchaseOrder.payment_method]}
+            </p>
+          </div>
         </div>
       </div>
     </div>

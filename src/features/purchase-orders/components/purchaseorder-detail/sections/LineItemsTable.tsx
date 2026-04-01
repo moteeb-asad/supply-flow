@@ -1,4 +1,4 @@
-import type { LineItemsTableProps } from "../../../types/purchase-orders.types";
+import type { LineItemsTableProps } from "../../../types";
 import {
   formatAmount,
   formatQuantity,

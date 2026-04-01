@@ -5,7 +5,7 @@ import type {
   PurchaseOrder,
   PurchaseOrdersQueryParams,
   PurchaseOrderStatus,
-} from "./types/purchase-orders.types";
+} from "./types";
 import { formatAmount, formatDate } from "./utils/formatters";
 
 const statusStyles: Record<
@@ -41,6 +41,22 @@ const statusStyles: Record<
     label: "Cancelled",
     className: "bg-slate-100 text-slate-700",
     dotClass: "bg-slate-500",
+  },
+};
+
+const paymentMethodStyles: Record<
+  PurchaseOrder["payment_method"],
+  { label: string; gst: string; className: string }
+> = {
+  cod: {
+    label: "COD",
+    gst: "GST 16%",
+    className: "bg-orange-100 text-orange-700",
+  },
+  card: {
+    label: "Card",
+    gst: "GST 5%",
+    className: "bg-sky-100 text-sky-700",
   },
 };
 
@@ -95,6 +111,24 @@ export const PurchaseOrdersTableConfig: DataTableConfig<
       cell: (row) => formatAmount(row.total_amount),
     },
     {
+      key: "payment_method",
+      header: "Payment",
+      className: "px-6 py-4 whitespace-nowrap",
+      cell: (row) => {
+        const payment = paymentMethodStyles[row.payment_method];
+        return (
+          <div className="space-y-1">
+            <span
+              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${payment.className}`}
+            >
+              {payment.label}
+            </span>
+            <p className="text-xs text-slate-500">{payment.gst}</p>
+          </div>
+        );
+      },
+    },
+    {
       key: "status",
       header: "Status",
       className: "px-6 py-4",
@@ -119,7 +153,8 @@ export const PurchaseOrdersTableConfig: DataTableConfig<
       cell: (row) => (
         <div className="flex justify-end gap-2">
           <button
-            className="p-1.5 text-[#4e6797] hover:text-primary hover:bg-primary/10 rounded transition-all"
+            disabled
+            className="p-1.5 text-[#4e6797] cursor-not-allowed opacity-50 rounded transition-all"
             title="View PDF"
             type="button"
           >
@@ -128,15 +163,9 @@ export const PurchaseOrdersTableConfig: DataTableConfig<
             </span>
           </button>
           <button
-            className={`p-1.5 rounded transition-all ${
-              row.status === "draft"
-                ? "text-[#4e6797] cursor-not-allowed opacity-50"
-                : "text-[#4e6797] hover:text-primary hover:bg-primary/10"
-            }`}
-            disabled={row.status === "draft"}
-            title={
-              row.status === "draft" ? "Cannot track draft" : "Track Delivery"
-            }
+            disabled
+            className="p-1.5 text-[#4e6797] cursor-not-allowed opacity-50 rounded transition-all"
+            title="Track Delivery"
             type="button"
           >
             <span className="material-symbols-outlined text-xl">

@@ -1,4 +1,4 @@
-import type { AdditionalNotesSectionProps } from "../../types/purchase-orders.types";
+import type { AdditionalNotesSectionProps } from "../../types";
 
 export default function AdditionalNotesSection({
   notes,

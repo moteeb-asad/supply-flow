@@ -16,6 +16,7 @@ export const createPurchaseOrderSchema = z.object({
   orderDate: z.string().trim().min(1, "Order date is required"),
   expectedDeliveryDate: z.string().trim().optional().default(""),
   shippingMethod: z.enum(["standard", "express", "economy"]),
+  paymentMethod: z.enum(["cod", "card"]),
   status: z.enum([
     "draft",
     "pending",

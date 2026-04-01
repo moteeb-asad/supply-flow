@@ -1,16 +1,24 @@
 import {
   OrderDetailsSectionProps,
   PurchaseOrderSidebarMode,
-} from "@/src/features/purchase-orders/types/purchase-orders.types";
+} from "@/src/features/purchase-orders/types";
 
 export default function OrderDetailsSection({
   orderDate,
   expectedDeliveryDate,
   shippingMethod,
+  paymentMethod,
+  onPaymentMethodChange,
   status,
   errors,
   mode = "create",
 }: OrderDetailsSectionProps & { mode?: PurchaseOrderSidebarMode }) {
+  const handlePaymentMethodChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    onPaymentMethodChange?.(event.target.value as "cod" | "card");
+  };
+
   return (
     <section className="space-y-4">
       <div className="flex items-center gap-2 text-primary">
@@ -73,6 +81,26 @@ export default function OrderDetailsSection({
         {errors?.shippingMethod ? (
           <p className="text-xs text-red-600 dark:text-red-400">
             {errors.shippingMethod}
+          </p>
+        ) : null}
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+          Payment Method
+        </label>
+        <select
+          className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+          value={paymentMethod || "cod"}
+          name="paymentMethod"
+          onChange={handlePaymentMethodChange}
+        >
+          <option value="cod">COD (Cash) - GST 16%</option>
+          <option value="card">Card - GST 5%</option>
+        </select>
+        {errors?.paymentMethod ? (
+          <p className="text-xs text-red-600 dark:text-red-400">
+            {errors.paymentMethod}
           </p>
         ) : null}
       </div>

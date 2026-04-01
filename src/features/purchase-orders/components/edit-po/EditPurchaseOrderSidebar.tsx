@@ -6,7 +6,7 @@ import type {
   AddItemFormValues,
   EditPurchaseOrderSidebarProps,
   PurchaseOrderFormValues,
-} from "../../types/purchase-orders.types";
+} from "../../types";
 import AddItemModal from "../shared/add-item-modal/AddItemModal";
 import PurchaseOrderForm from "../shared/PurchaseOrderForm";
 import { useQueryClient } from "@tanstack/react-query";
@@ -22,6 +22,9 @@ export default function EditPurchaseOrderSidebar({
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  const [addItemSubmitError, setAddItemSubmitError] = useState<string | null>(
+    null,
+  );
   const [lineItems, setLineItems] = useState<
     PurchaseOrderFormValues["lineItems"]
   >(
@@ -37,18 +40,33 @@ export default function EditPurchaseOrderSidebar({
     supplierName: purchaseOrder.supplier_name,
     orderDate: purchaseOrder.order_date ?? "",
     expectedDeliveryDate: purchaseOrder.expected_delivery_date ?? "",
+    paymentMethod: purchaseOrder.payment_method,
     status: purchaseOrder.status,
     notes: purchaseOrder.notes ?? "",
     lineItems,
   };
 
   const handleAddItemClick = () => {
+    setAddItemSubmitError(null);
     _onAddItemClick?.();
     setIsAddItemModalOpen(true);
   };
 
   const handleAddItem = (item: AddItemFormValues) => {
+    const normalizedSkuName = item.skuName.trim().toLowerCase();
+    const alreadyExists = lineItems.some(
+      (lineItem) => lineItem.skuName.trim().toLowerCase() === normalizedSkuName,
+    );
+
+    if (alreadyExists) {
+      setAddItemSubmitError(
+        "This item already exists in line items. Edit its quantity or unit price instead.",
+      );
+      return;
+    }
+
     setLineItems((prev) => [...prev, item]);
+    setAddItemSubmitError(null);
     setIsAddItemModalOpen(false);
   };
 
@@ -100,14 +118,19 @@ export default function EditPurchaseOrderSidebar({
           mode="edit"
           onAddItemClick={handleAddItemClick}
           onCancel={onClose}
+          onLineItemsChange={setLineItems}
           onSubmit={handleSubmit}
         />
       </PurchaseOrderSidebarShell>
 
       <AddItemModal
         onAddItem={handleAddItem}
-        onClose={() => setIsAddItemModalOpen(false)}
+        onClose={() => {
+          setAddItemSubmitError(null);
+          setIsAddItemModalOpen(false);
+        }}
         open={isAddItemModalOpen}
+        submitError={addItemSubmitError}
       />
     </>
   );

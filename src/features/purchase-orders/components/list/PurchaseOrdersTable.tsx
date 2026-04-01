@@ -3,7 +3,7 @@ import { PurchaseOrdersTableConfig } from "@/src/features/purchase-orders/purcha
 import type {
   PurchaseOrder,
   PurchaseOrdersQueryParams,
-} from "../../types/purchase-orders.types";
+} from "../../types";
 import { useRouter } from "next/navigation";
 
 export default function PurchaseOrdersTable({
@@ -13,6 +13,7 @@ export default function PurchaseOrdersTable({
   filters: { status?: string; dateRange?: string };
   onFiltersChange: (filters: { status?: string; dateRange?: string }) => void;
 }) {
+  // if (true) throw new Error("Test error boundary");
   const router = useRouter();
   // Pass filters as refreshKey to force update
   return (
