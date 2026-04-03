@@ -10,7 +10,7 @@ export default async function DashboardPage() {
     <>
       <div className="flex-1 overflow-y-auto p-8 space-y-8">
         <div>
-          <h3 className="text-2xl font-bold text-[#0e121b] dark:text-white">
+          <h3 className="text-2xl font-bold text-[#0e121b]">
             Welcome back, {displayName}
           </h3>
           <p className="text-[#4e6797] text-sm mt-1">
@@ -18,7 +18,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white dark:bg-[#1a1f2e] p-5 rounded-xl border border-[#e7ebf3] dark:border-gray-800">
+          <div className="bg-white p-5 rounded-xl border border-[#e7ebf3]">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-[#4e6797]">
                 Open Purchase Orders
@@ -53,7 +53,7 @@ export default async function DashboardPage() {
               </span>
             </div>
           </div>
-          <div className="bg-white dark:bg-[#1a1f2e] p-5 rounded-xl border border-[#e7ebf3] dark:border-gray-800">
+          <div className="bg-white p-5 rounded-xl border border-[#e7ebf3]">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-[#4e6797]">
                 Low Stock Alerts
@@ -70,7 +70,7 @@ export default async function DashboardPage() {
               </span>
             </div>
           </div>
-          <div className="bg-white dark:bg-[#1a1f2e] p-5 rounded-xl border border-[#e7ebf3] dark:border-gray-800">
+          <div className="bg-white p-5 rounded-xl border border-[#e7ebf3]">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-[#4e6797]">
                 Total Monthly Spend
@@ -88,8 +88,8 @@ export default async function DashboardPage() {
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white dark:bg-[#1a1f2e] rounded-xl border border-[#e7ebf3] dark:border-gray-800 overflow-hidden">
-            <div className="p-6 border-b border-[#e7ebf3] dark:border-gray-800 flex justify-between items-center">
+          <div className="bg-white rounded-xl border border-[#e7ebf3] overflow-hidden">
+            <div className="p-6 border-b border-[#e7ebf3] flex justify-between items-center">
               <h4 className="font-bold">Recent Receiving Activity</h4>
               <button className="text-primary text-xs font-bold hover:underline">
                 View All Logs
@@ -97,7 +97,7 @@ export default async function DashboardPage() {
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-background-light dark:bg-gray-800/50">
+                <thead className="bg-background-light">
                   <tr>
                     <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-[#4e6797]">
                       SKU / Item
@@ -113,7 +113,7 @@ export default async function DashboardPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#e7ebf3] dark:divide-gray-800">
+                <tbody className="divide-y divide-[#e7ebf3]">
                   <tr>
                     <td className="px-6 py-4">
                       <p className="text-sm font-semibold">SKU-2938</p>
@@ -178,7 +178,7 @@ export default async function DashboardPage() {
               </table>
             </div>
           </div>
-          <div className="bg-white dark:bg-[#1a1f2e] rounded-xl border border-[#e7ebf3] dark:border-gray-800 p-6">
+          <div className="bg-white rounded-xl border border-[#e7ebf3] p-6">
             <div className="flex justify-between items-center mb-6">
               <h4 className="font-bold">Supplier Performance Trends</h4>
               <div className="flex gap-4">
@@ -201,11 +201,11 @@ export default async function DashboardPage() {
             <SupplierPerformanceChart />
           </div>
         </div>
-        <div className="bg-white dark:bg-[#1a1f2e] rounded-xl border border-[#e7ebf3] dark:border-gray-800 p-6">
+        <div className="bg-white rounded-xl border border-[#e7ebf3] p-6">
           <h4 className="font-bold mb-4">Quick Tasks</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button className="flex items-center gap-3 p-4 bg-background-light dark:bg-gray-800/50 rounded-lg hover:bg-primary/5 transition-colors text-left group">
-              <div className="size-10 bg-white dark:bg-gray-700 rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
+            <button className="flex items-center gap-3 p-4 bg-background-light rounded-lg hover:bg-primary/5 transition-colors text-left group">
+              <div className="size-10 bg-white rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
                 <span className="material-symbols-outlined">receipt_long</span>
               </div>
               <div>
@@ -215,8 +215,8 @@ export default async function DashboardPage() {
                 </p>
               </div>
             </button>
-            <button className="flex items-center gap-3 p-4 bg-background-light dark:bg-gray-800/50 rounded-lg hover:bg-primary/5 transition-colors text-left group">
-              <div className="size-10 bg-white dark:bg-gray-700 rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
+            <button className="flex items-center gap-3 p-4 bg-background-light rounded-lg hover:bg-primary/5 transition-colors text-left group">
+              <div className="size-10 bg-white rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
                 <span className="material-symbols-outlined">
                   add_shopping_cart
                 </span>
@@ -228,8 +228,8 @@ export default async function DashboardPage() {
                 </p>
               </div>
             </button>
-            <button className="flex items-center gap-3 p-4 bg-background-light dark:bg-gray-800/50 rounded-lg hover:bg-primary/5 transition-colors text-left group">
-              <div className="size-10 bg-white dark:bg-gray-700 rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
+            <button className="flex items-center gap-3 p-4 bg-background-light rounded-lg hover:bg-primary/5 transition-colors text-left group">
+              <div className="size-10 bg-white rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
                 <span className="material-symbols-outlined">groups</span>
               </div>
               <div>
@@ -239,8 +239,8 @@ export default async function DashboardPage() {
                 </p>
               </div>
             </button>
-            <button className="flex items-center gap-3 p-4 bg-background-light dark:bg-gray-800/50 rounded-lg hover:bg-primary/5 transition-colors text-left group">
-              <div className="size-10 bg-white dark:bg-gray-700 rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
+            <button className="flex items-center gap-3 p-4 bg-background-light rounded-lg hover:bg-primary/5 transition-colors text-left group">
+              <div className="size-10 bg-white rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
                 <span className="material-symbols-outlined">inventory</span>
               </div>
               <div>

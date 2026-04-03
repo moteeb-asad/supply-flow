@@ -83,11 +83,11 @@ export default function AddItemForm({
         ) : null}
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+          <label className="text-sm font-semibold text-slate-700">
             SKU / Item Name
           </label>
           {showSearchResultMeta ? (
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-500">
               {skuOptions.length === 0
                 ? "No matching items found"
                 : `${skuOptions.length} item${skuOptions.length === 1 ? "" : "s"} found`}
@@ -98,7 +98,7 @@ export default function AddItemForm({
               search
             </span>
             <input
-              className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-slate-400"
+              className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-slate-400"
               onBlur={() => {
                 setTimeout(() => setIsResultsOpen(false), 120);
               }}
@@ -117,7 +117,7 @@ export default function AddItemForm({
             />
 
             {isResultsOpen ? (
-              <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                 {isLoadingSkus ? (
                   <p className="px-4 py-3 text-sm text-slate-500">
                     Loading items...
@@ -129,15 +129,15 @@ export default function AddItemForm({
                 ) : (
                   skuOptions.map((sku) => (
                     <button
-                      className="w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/40 border-b last:border-b-0 border-slate-100 dark:border-slate-700"
+                      className="w-full text-left px-4 py-3 hover:bg-slate-50 border-b last:border-b-0 border-slate-100"
                       key={sku.id}
                       onClick={() => handleSelectSku(sku)}
                       type="button"
                     >
-                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      <p className="text-sm font-semibold text-slate-900">
                         {sku.sku_code} - {sku.name}
                       </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-xs text-slate-500">
                         Unit: {sku.unit ?? "n/a"}
                       </p>
                     </button>
@@ -150,11 +150,11 @@ export default function AddItemForm({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            <label className="text-sm font-semibold text-slate-700">
               Quantity
             </label>
             <input
-              className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
               min={1}
               onChange={(event) =>
                 setValues((prev) => ({
@@ -170,7 +170,7 @@ export default function AddItemForm({
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            <label className="text-sm font-semibold text-slate-700">
               Unit Price
             </label>
             <div className="relative">
@@ -178,7 +178,7 @@ export default function AddItemForm({
                 $
               </span>
               <input
-                className="w-full pl-8 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                className="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
                 min={0}
                 onChange={(event) =>
                   setValues((prev) => ({
@@ -195,13 +195,13 @@ export default function AddItemForm({
           </div>
         </div>
 
-        <div className="bg-primary/5 dark:bg-primary/10 rounded-xl p-6 border border-primary/10">
+        <div className="bg-primary/5 rounded-xl p-6 border border-primary/10">
           <div className="flex justify-between items-center">
             <div className="space-y-1">
               <p className="text-xs uppercase tracking-wider font-bold text-primary/70">
                 Estimated Line Total
               </p>
-              <p className="text-slate-500 dark:text-slate-400 text-xs">
+              <p className="text-slate-500 text-xs">
                 Based on {values.quantity} units x $
                 {values.unitPrice.toFixed(2)}
               </p>
@@ -215,9 +215,9 @@ export default function AddItemForm({
         </div>
       </div>
 
-      <div className="px-8 py-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-end items-center gap-3">
+      <div className="px-8 py-6 bg-slate-50 border-t border-slate-100 flex justify-end items-center gap-3">
         <button
-          className="px-6 py-2.5 rounded-lg text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+          className="px-6 py-2.5 rounded-lg text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
           onClick={onCancel}
           type="button"
         >

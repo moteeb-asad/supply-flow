@@ -79,17 +79,17 @@ export default function LineItemsSection({
         </button>
       </div>
 
-      <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-slate-50/50 dark:bg-slate-800/30">
+      <div className="border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50">
         <table className="w-full text-left text-sm border-collapse">
           <thead>
-            <tr className="bg-slate-100 dark:bg-slate-800 text-slate-500 font-medium">
+            <tr className="bg-slate-100 text-slate-500 font-medium">
               <th className="px-4 py-3 font-semibold">SKU / Item Name</th>
               <th className="px-4 py-3 font-semibold w-24">Qty</th>
               <th className="px-4 py-3 font-semibold w-32">Unit Price</th>
               <th className="px-4 py-3 font-semibold w-12 text-center"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+          <tbody className="divide-y divide-slate-200">
             {rows.length === 0 ? (
               <tr>
                 <td
@@ -105,7 +105,7 @@ export default function LineItemsSection({
                 <tr key={`${row.skuName}-${index}`}>
                   <td className="px-4 py-3">
                     <input
-                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-400"
+                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 placeholder:text-slate-400"
                       data-index={String(index)}
                       name={`lineItems[${index}].skuName`}
                       placeholder="Search item..."
@@ -116,7 +116,7 @@ export default function LineItemsSection({
                   </td>
                   <td className="px-4 py-3">
                     <input
-                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100"
+                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900"
                       data-index={String(index)}
                       min={1}
                       name={`lineItems[${index}].quantity`}
@@ -129,7 +129,7 @@ export default function LineItemsSection({
                     <div className="flex items-center">
                       <span className="text-slate-400 mr-1">$</span>
                       <input
-                        className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 dark:text-slate-100"
+                        className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900"
                         data-index={String(index)}
                         min={0}
                         name={`lineItems[${index}].unitPrice`}
@@ -160,7 +160,7 @@ export default function LineItemsSection({
             <tr>
               <td className="px-4 py-3" colSpan={4}>
                 <button
-                  className="w-full py-2 border border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2 border border-dashed border-slate-300 rounded-lg text-slate-500 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   onClick={onAddItemClick}
                   type="button"
                 >
@@ -174,7 +174,7 @@ export default function LineItemsSection({
       </div>
 
       {error ? (
-        <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+        <p className="text-xs text-red-600">{error}</p>
       ) : null}
     </section>
   );

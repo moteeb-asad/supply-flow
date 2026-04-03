@@ -8,7 +8,7 @@ export function DataTableHeader<T, P = unknown>({
 }) {
   return (
     <thead>
-      <tr className="bg-slate-50 dark:bg-slate-900/50 border-b border-[#d0d7e7] dark:border-slate-700">
+      <tr className="bg-slate-50 border-b border-[#d0d7e7]">
         {config.columns.map((col) => (
           <th
             key={col.key}

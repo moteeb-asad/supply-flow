@@ -1,4 +1,4 @@
-export type HeaderAction =
+type HeaderAction =
   | {
       type: "button";
       label: string;
@@ -10,7 +10,7 @@ export type HeaderAction =
       placeholder?: string;
     };
 
-export type HeaderConfig = {
+type HeaderConfig = {
   title?: string;
   showSearch?: boolean;
   searchPlaceholder?: string;

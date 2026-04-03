@@ -18,7 +18,7 @@ export default function CategoryFilter({
         <span className="text-sm font-bold text-[#4e6797] mr-2">
           Filter by Category:
         </span>
-        <div className="flex bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 p-1 rounded-lg">
+        <div className="flex bg-white border border-[#d0d7e7] p-1 rounded-lg">
           {categories.map((category) => (
             <button
               key={category.value}
@@ -26,7 +26,7 @@ export default function CategoryFilter({
                 ${
                   category.value === value
                     ? "px-4 py-1.5 text-xs font-bold rounded-md bg-primary text-white"
-                    : "px-4 py-1.5 text-xs font-bold rounded-md text-[#4e6797] hover:bg-slate-100 dark:hover:bg-slate-700"
+                    : "px-4 py-1.5 text-xs font-bold rounded-md text-[#4e6797] hover:bg-slate-100"
                 } cursor-pointer`}
               onClick={() => onChange(category.value)}
               type="button"

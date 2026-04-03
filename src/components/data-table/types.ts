@@ -36,11 +36,6 @@ export type PaginationState = {
   pageSize: number;
 };
 
-export type QueryState = {
-  search?: string;
-  filters?: Record<string, unknown>;
-};
-
 export type DataTableProps<T extends { id: string | number }, P = unknown> = {
   config: DataTableConfig<T, P>;
   refreshKey?: string | number;

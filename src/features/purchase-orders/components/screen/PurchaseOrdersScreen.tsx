@@ -46,17 +46,17 @@ export default function PurchaseOrdersScreen() {
       <div className="px-8 py-6">
         <div className="flex flex-wrap justify-between items-center gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="text-[#0e121b] dark:text-white text-3xl font-black leading-tight tracking-tight">
+            <h2 className="text-[#0e121b] text-3xl font-black leading-tight tracking-tight">
               Purchase Orders
             </h2>
-            <p className="text-[#4e6797] dark:text-slate-400 text-sm">
+            <p className="text-[#4e6797] text-sm">
               Manage and track your warehouse supply orders
             </p>
           </div>
           <div className="flex gap-3">
             <button
               disabled
-              className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 text-[#0e121b] dark:text-white text-sm font-bold cursor-not-allowed opacity-50 transition-colors"
+              className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-white border border-[#d0d7e7] text-[#0e121b] text-sm font-bold cursor-not-allowed opacity-50 transition-colors"
             >
               <span className="material-symbols-outlined text-lg">
                 upload_file
