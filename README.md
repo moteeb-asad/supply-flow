@@ -45,7 +45,12 @@ Result looks like:
 
 <p align="left">
   <img src="docs/screenshots/suppliers.png" alt="Suppliers" width="45%" height="220" />
-  <img src="docs/screenshots/purchase-orders.png" alt="Purchase Orders" width="45%" height="220" />
+  <img src="docs/screenshots/create-supplier.png" alt="Purchase Orders" width="45%" height="220" />
+</p>
+
+<p align="left">
+  <img src="docs/screenshots/purchase-orders.png" alt="Suppliers" width="45%" height="220" />
+  <img src="docs/screenshots/create-purchase-order.png" alt="Purchase Orders" width="45%" height="220" />
 </p>
 
 ## Tech Stack

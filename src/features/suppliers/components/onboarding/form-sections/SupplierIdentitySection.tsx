@@ -21,7 +21,7 @@ export function SupplierIdentitySection({
             Supplier Name <span className="text-danger">*</span>
           </label>
           <Input
-            className="w-full bg-white dark:bg-background-dark border-gray-200 dark:border-gray-700 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+            className="w-full bg-white border-gray-200 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
             placeholder="e.g., North Star Distributing"
             type="text"
             {...register("name")}
@@ -33,7 +33,7 @@ export function SupplierIdentitySection({
         <div className="space-y-1.5">
           <label className="text-sm font-semibold">Status</label>
           <select
-            className="w-full bg-white dark:bg-background-dark border-gray-200 dark:border-gray-700 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+            className="w-full bg-white border-gray-200 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-2 focus:ring-primary cursor-pointer"
             {...register("status")}
           >
             <option value="active">Active</option>
@@ -45,8 +45,8 @@ export function SupplierIdentitySection({
         </div>
         <div className="space-y-1.5">
           <label className="text-sm font-semibold">Category Selection</label>
-          <div className="grid grid-cols-3 gap-0 p-1 bg-gray-100 dark:bg-[#111621] rounded-xl border border-gray-200 dark:border-gray-800">
-            <label className="relative flex items-center justify-center py-2.5 rounded-lg cursor-pointer transition-all group has-[:checked]:bg-white has-[:checked]:dark:bg-gray-800 has-[:checked]:shadow-sm">
+          <div className="grid grid-cols-3 gap-0 p-1 bg-gray-100 rounded-xl border border-gray-200">
+            <label className="relative flex items-center justify-center py-2.5 rounded-lg cursor-pointer transition-all group has-[:checked]:bg-white has-[:checked]:shadow-sm">
               <Input
                 className="hidden"
                 type="radio"
@@ -62,7 +62,7 @@ export function SupplierIdentitySection({
                 </span>
               </div>
             </label>
-            <label className="relative flex items-center justify-center py-2.5 rounded-lg cursor-pointer transition-all group has-[:checked]:bg-white has-[:checked]:dark:bg-gray-800 has-[:checked]:shadow-sm">
+            <label className="relative flex items-center justify-center py-2.5 rounded-lg cursor-pointer transition-all group has-[:checked]:bg-white has-[:checked]:shadow-sm">
               <Input
                 className="hidden"
                 type="radio"
@@ -78,7 +78,7 @@ export function SupplierIdentitySection({
                 </span>
               </div>
             </label>
-            <label className="relative flex items-center justify-center py-2.5 rounded-lg cursor-pointer transition-all group has-[:checked]:bg-white has-[:checked]:dark:bg-gray-800 has-[:checked]:shadow-sm">
+            <label className="relative flex items-center justify-center py-2.5 rounded-lg cursor-pointer transition-all group has-[:checked]:bg-white has-[:checked]:shadow-sm">
               <Input
                 className="hidden"
                 type="radio"

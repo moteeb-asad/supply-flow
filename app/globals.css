@@ -15,7 +15,6 @@
   --color-foreground: var(--foreground);
   --color-primary: #195de6;
   --color-background-light: var(--background-light);
-  --color-background-dark: var(--background-dark);
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
@@ -92,7 +91,7 @@ body {
 }
 
 .skeleton-bar {
-  @apply h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse;
+  @apply h-4 bg-gray-200 rounded animate-pulse;
 }
 
 .space-y-2 > :not([hidden]) ~ :not([hidden]) {

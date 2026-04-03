@@ -78,31 +78,31 @@ export default function OrderActivityTimeline({
   const events = buildTimelineEvents(purchaseOrder);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <h3 className="mb-6 text-base font-bold">Order Activity Timeline</h3>
 
-      <div className="relative space-y-6 before:absolute before:bottom-2 before:left-[11px] before:top-2 before:w-[2px] before:bg-slate-200 before:content-[''] dark:before:bg-slate-800">
+      <div className="relative space-y-6 before:absolute before:bottom-2 before:left-[11px] before:top-2 before:w-[2px] before:bg-slate-200 before:content-['']">
         {events.map((event) => (
           <div
             key={event.id}
             className={`relative pl-8 ${event.isPending ? "opacity-40" : ""}`}
           >
             <div
-              className={`absolute left-0 top-1 z-10 flex h-6 w-6 items-center justify-center rounded-full border-4 dark:border-slate-900 ${
+              className={`absolute left-0 top-1 z-10 flex h-6 w-6 items-center justify-center rounded-full border-4 ${
                 event.isPending
-                  ? "border-background-light bg-slate-200 dark:bg-slate-700"
+                  ? "border-background-light bg-slate-200"
                   : "border-background-light bg-primary"
               }`}
             ></div>
             <div>
-              <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              <p className="text-sm font-bold text-slate-900">
                 {event.label}
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-slate-500">
                 {event.timestamp}
               </p>
               {event.details ? (
-                <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
+                <p className="mt-1 text-xs text-slate-600">
                   {event.details}
                 </p>
               ) : null}

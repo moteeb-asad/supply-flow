@@ -18,7 +18,7 @@ export default function PurchaseOrdersStatusTabs({
   onStatusChange: (status?: string) => void;
 }) {
   return (
-    <div className="flex border-b border-[#d0d7e7] dark:border-slate-700 gap-8">
+    <div className="flex border-b border-[#d0d7e7] gap-8">
       {STATUS_TABS.map((tab) => (
         <button
           key={tab.key ?? "all"}
