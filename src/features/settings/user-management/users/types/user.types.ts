@@ -11,20 +11,6 @@ export interface User {
   roles: string[];
 }
 
-export interface UsersTableProps {
-  users?: User[];
-  total: number;
-  currentPage: number;
-  itemsPerPage: number;
-  isPending?: boolean;
-  onPageChange: (page: number) => void;
-}
-
-export interface UserManagementContainerProps {
-  initialUsers: User[];
-  initialTotal: number;
-}
-
 export type UserRoleRow = {
   user_id: string;
   role: { id: string; name: string } | { id: string; name: string }[] | null;

@@ -28,7 +28,7 @@ export default function PurchaseOrdersFilters({
           Date Range
         </h3>
         <select
-          className="w-full bg-white dark:bg-slate-800 border border-[#d0d7e7] dark:border-slate-700 rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+          className="w-full bg-white border border-[#d0d7e7] rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
           onChange={(event) => setFilter("dateRange", event.target.value)}
           value={(filters.dateRange as string | undefined) ?? ""}
         >

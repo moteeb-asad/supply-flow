@@ -32,33 +32,33 @@ export default function OrderDetailsSection({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label className="text-sm font-medium text-slate-700">
             Order Date
           </label>
           <input
-            className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
             defaultValue={orderDate || ""}
             name="orderDate"
             type="date"
           />
           {errors?.orderDate ? (
-            <p className="text-xs text-red-600 dark:text-red-400">
+            <p className="text-xs text-red-600">
               {errors.orderDate}
             </p>
           ) : null}
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label className="text-sm font-medium text-slate-700">
             Expected Delivery
           </label>
           <input
-            className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
             defaultValue={expectedDeliveryDate || ""}
             name="expectedDeliveryDate"
             type="date"
           />
           {errors?.expectedDeliveryDate ? (
-            <p className="text-xs text-red-600 dark:text-red-400">
+            <p className="text-xs text-red-600">
               {errors.expectedDeliveryDate}
             </p>
           ) : null}
@@ -66,11 +66,11 @@ export default function OrderDetailsSection({
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+        <label className="text-sm font-medium text-slate-700">
           Shipping Method
         </label>
         <select
-          className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
           defaultValue={shippingMethod || "standard"}
           name="shippingMethod"
         >
@@ -79,18 +79,18 @@ export default function OrderDetailsSection({
           <option value="economy">Economy Ground (10-14 days)</option>
         </select>
         {errors?.shippingMethod ? (
-          <p className="text-xs text-red-600 dark:text-red-400">
+          <p className="text-xs text-red-600">
             {errors.shippingMethod}
           </p>
         ) : null}
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+        <label className="text-sm font-medium text-slate-700">
           Payment Method
         </label>
         <select
-          className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
           value={paymentMethod || "cod"}
           name="paymentMethod"
           onChange={handlePaymentMethodChange}
@@ -99,18 +99,18 @@ export default function OrderDetailsSection({
           <option value="card">Card - GST 5%</option>
         </select>
         {errors?.paymentMethod ? (
-          <p className="text-xs text-red-600 dark:text-red-400">
+          <p className="text-xs text-red-600">
             {errors.paymentMethod}
           </p>
         ) : null}
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+        <label className="text-sm font-medium text-slate-700">
           Status
         </label>
         <select
-          className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
           defaultValue={status || "draft"}
           name="status"
         >
@@ -131,7 +131,7 @@ export default function OrderDetailsSection({
           )}
         </select>
         {errors?.status ? (
-          <p className="text-xs text-red-600 dark:text-red-400">
+          <p className="text-xs text-red-600">
             {errors.status}
           </p>
         ) : null}

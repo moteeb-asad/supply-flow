@@ -15,14 +15,14 @@ export function SupplierTermsSection({
           Initial Negotiated Terms
         </h4>
       </div>
-      <div className="bg-gray-50 dark:bg-[#111621] p-5 rounded-xl border border-gray-200 dark:border-gray-800 space-y-6">
+      <div className="bg-gray-50 p-5 rounded-xl border border-gray-200 space-y-6">
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-[#4e6797]">
               Payment Terms
             </label>
             <select
-              className="w-full bg-white dark:bg-[#1a1f2e] border-gray-200 dark:border-gray-700 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+              className="w-full bg-white border-gray-200 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-2 focus:ring-primary cursor-pointer"
               {...register("paymentTerms")}
             >
               <option>Net 30</option>
@@ -42,7 +42,7 @@ export function SupplierTermsSection({
               Min. Order Qty (Units)
             </label>
             <input
-              className="w-full bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-gray-700 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-2 focus:ring-primary"
+              className="w-full bg-white border border-gray-200 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-2 focus:ring-primary"
               type="number"
               {...register("minOrderQty", { valueAsNumber: true })}
             />
@@ -64,7 +64,7 @@ export function SupplierTermsSection({
           </div>
           <div className="relative pt-1">
             <input
-              className="w-full accent-primary h-1.5 bg-gray-200 dark:bg-gray-800 rounded-lg appearance-none cursor-pointer"
+              className="w-full accent-primary h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               max="30"
               min="1"
               type="range"
@@ -92,7 +92,7 @@ export function SupplierTermsSection({
       <div className="space-y-2">
         <label className="text-xs font-bold text-[#4e6797]">Notes</label>
         <textarea
-          className="w-full min-h-[96px] bg-white dark:bg-[#1a1f2e] border border-gray-200 dark:border-gray-700 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-2 focus:ring-primary resize-none"
+          className="w-full min-h-[96px] bg-white border border-gray-200 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-2 focus:ring-primary resize-none"
           placeholder="Add any supplier notes or internal context"
           {...register("notes")}
         />

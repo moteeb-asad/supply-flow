@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 
-export type MultiSelectOption = {
+type MultiSelectOption = {
   value: string;
   label: string;
 };

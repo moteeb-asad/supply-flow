@@ -19,7 +19,7 @@ export function SupplierContactSection({
         <div className="space-y-1.5">
           <label className="text-sm font-semibold">Contact Name</label>
           <Input
-            className="w-full bg-white dark:bg-background-dark border-gray-200 dark:border-gray-700 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
+            className="w-full bg-white border-gray-200 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
             placeholder="John Doe"
             type="text"
             {...register("contactName")}
@@ -30,7 +30,7 @@ export function SupplierContactSection({
         <label className="text-sm font-semibold">Email Address</label>
         <div className="relative group">
           <Input
-            className="w-full pl-10 bg-white dark:bg-background-dark border-gray-200 dark:border-gray-700 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
+            className="w-full pl-10 bg-white border-gray-200 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
             placeholder="contact@supplier.com"
             type="email"
             {...register("email")}
@@ -43,7 +43,7 @@ export function SupplierContactSection({
       <div className="space-y-1.5">
         <label className="text-sm font-semibold">Phone Number</label>
         <Input
-          className="w-full bg-white dark:bg-background-dark border-gray-200 dark:border-gray-700 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
+          className="w-full bg-white border-gray-200 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
           placeholder="+1 (555) 123-4567"
           type="tel"
           {...register("contactPhone")}

@@ -167,7 +167,7 @@ export default function DataTable<
             className={`px-4 py-2.5 border rounded-lg text-sm font-bold flex items-center gap-2 transition-colors cursor-pointer ${
               isAdvancedFiltersActive
                 ? "bg-primary/10 border-primary/30 text-primary"
-                : "bg-white dark:bg-slate-800 border-[#d0d7e7] dark:border-slate-700 text-[#4e6797] hover:bg-slate-50"
+                : "bg-white border-[#d0d7e7] text-[#4e6797] hover:bg-slate-50"
             }`}
             onClick={handleToggleFilters}
             type="button"
@@ -187,7 +187,7 @@ export default function DataTable<
 
       {/* Table */}
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-[#d0d7e7] dark:border-slate-700 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-[#d0d7e7] shadow-sm overflow-hidden">
         {loading && search ? (
           <DataTableSkeleton type="search" />
         ) : loading ? (

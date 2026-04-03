@@ -15,13 +15,13 @@ export default function AdditionalNotesSection({
         </h3>
       </div>
       <textarea
-        className="w-full min-h-[96px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg py-2.5 px-3 text-sm text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
+        className="w-full min-h-[96px] bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
         defaultValue={notes ?? ""}
         name="notes"
         placeholder="Add supplier notes or internal context"
       />
       {error ? (
-        <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+        <p className="text-xs text-red-600">{error}</p>
       ) : null}
     </section>
   );

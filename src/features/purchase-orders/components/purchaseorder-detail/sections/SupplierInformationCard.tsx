@@ -12,7 +12,7 @@ export default function SupplierInformationCard({
   const contactPhone = purchaseOrder.supplier_contact_phone ?? "No phone";
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <h3 className="mb-4 text-base font-bold">Supplier Information</h3>
 
       <div className="space-y-4">
@@ -20,21 +20,21 @@ export default function SupplierInformationCard({
           <span className="material-symbols-outlined text-slate-400">
             person
           </span>
-          <p className="text-xs text-slate-600 dark:text-slate-400">
+          <p className="text-xs text-slate-600">
             {contactName}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <span className="material-symbols-outlined text-slate-400">mail</span>
-          <p className="text-xs text-slate-600 dark:text-slate-400">
+          <p className="text-xs text-slate-600">
             {contactEmail}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <span className="material-symbols-outlined text-slate-400">call</span>
-          <p className="text-xs text-slate-600 dark:text-slate-400">
+          <p className="text-xs text-slate-600">
             {contactPhone}
           </p>
         </div>

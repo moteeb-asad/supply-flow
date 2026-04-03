@@ -1,4 +1,4 @@
-export const pageTitles: Record<string, string> = {
+const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard Overview",
   "/suppliers": "Supplier Management",
   "/inventory": "Inventory Overview",
