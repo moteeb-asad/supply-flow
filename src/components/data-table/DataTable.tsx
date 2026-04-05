@@ -187,7 +187,7 @@ export default function DataTable<
 
       {/* Table */}
 
-      <div className="bg-white rounded-xl border border-[#d0d7e7] shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-[#d0d7e7] overflow-hidden">
         {loading && search ? (
           <DataTableSkeleton type="search" />
         ) : loading ? (

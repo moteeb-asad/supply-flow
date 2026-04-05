@@ -83,7 +83,6 @@ export default function PurchaseOrdersScreen() {
           }}
         />
       </div>
-
       <div className="space-y-6">
         <ErrorBoundary>
           <PurchaseOrdersTable filters={filters} onFiltersChange={setFilters} />
@@ -92,7 +91,6 @@ export default function PurchaseOrdersScreen() {
       <div className="px-8 pb-8">
         <PurchaseOrdersMetrics />
       </div>
-
       {isCreateSidebarOpen && (
         <CreatePurchaseOrderSidebar
           onClose={() => setIsCreateSidebarOpen(false)}
