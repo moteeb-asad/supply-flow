@@ -3,14 +3,14 @@
 import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import CreatePurchaseOrderSidebar from "../create-po/CreatePurchaseOrderSidebar";
+import CreatePurchaseOrderDrawer from "../create-po/CreatePurchaseOrderDrawer";
 import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/list/PurchaseOrdersMetrics";
 import PurchaseOrdersStatusTabs from "@/src/features/purchase-orders/components/list/PurchaseOrdersStatusTabs";
 import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/PurchaseOrdersTable";
 import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
 
 export default function PurchaseOrdersScreen() {
-  const [isCreateSidebarOpen, setIsCreateSidebarOpen] = useState(false);
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const [filters, setFilters] = useState<{
     status?: string;
     dateRange?: string;
@@ -65,7 +65,7 @@ export default function PurchaseOrdersScreen() {
             </button>
             <button
               className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer"
-              onClick={() => setIsCreateSidebarOpen(true)}
+              onClick={() => setIsCreateDrawerOpen(true)}
             >
               <span className="material-symbols-outlined text-lg">add</span>
               <span role="button">Create New PO</span>
@@ -91,14 +91,14 @@ export default function PurchaseOrdersScreen() {
       <div className="px-8 pb-8">
         <PurchaseOrdersMetrics />
       </div>
-      {isCreateSidebarOpen && (
-        <CreatePurchaseOrderSidebar
-          onClose={() => setIsCreateSidebarOpen(false)}
+      {isCreateDrawerOpen && (
+        <CreatePurchaseOrderDrawer
+          onClose={() => setIsCreateDrawerOpen(false)}
           onSuccess={() => {
             void queryClient.invalidateQueries({
               queryKey: ["purchase-orders-table"],
             });
-            setIsCreateSidebarOpen(false);
+            setIsCreateDrawerOpen(false);
           }}
         />
       )}

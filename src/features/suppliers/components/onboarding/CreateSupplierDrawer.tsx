@@ -1,6 +1,6 @@
 "use client";
 
-import { SupplierDrawer } from "./SupplierDrawer";
+import { FormDrawer } from "@/src/components/ui/FormDrawer";
 import { SupplierForm, SUPPLIER_FORM_ID } from "./SupplierForm";
 import type {
   CreateSupplierDrawerProps,
@@ -33,7 +33,7 @@ export function CreateSupplierDrawer({ onClose }: CreateSupplierDrawerProps) {
   };
 
   return (
-    <SupplierDrawer
+    <FormDrawer
       title="Add New Supplier"
       description="Fill in the details to onboard a new vendor."
       submitLabel="Save & Onboard Supplier"
@@ -48,6 +48,6 @@ export function CreateSupplierDrawer({ onClose }: CreateSupplierDrawerProps) {
         onSubmit={handleSubmit}
         serverError={state?.error}
       />
-    </SupplierDrawer>
+    </FormDrawer>
   );
 }

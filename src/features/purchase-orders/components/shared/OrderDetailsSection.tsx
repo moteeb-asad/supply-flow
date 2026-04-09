@@ -1,6 +1,6 @@
 import {
   OrderDetailsSectionProps,
-  PurchaseOrderSidebarMode,
+  PurchaseOrderDrawerMode,
 } from "@/src/features/purchase-orders/types";
 
 export default function OrderDetailsSection({
@@ -12,7 +12,7 @@ export default function OrderDetailsSection({
   status,
   errors,
   mode = "create",
-}: OrderDetailsSectionProps & { mode?: PurchaseOrderSidebarMode }) {
+}: OrderDetailsSectionProps & { mode?: PurchaseOrderDrawerMode }) {
   const handlePaymentMethodChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
@@ -42,9 +42,7 @@ export default function OrderDetailsSection({
             type="date"
           />
           {errors?.orderDate ? (
-            <p className="text-xs text-red-600">
-              {errors.orderDate}
-            </p>
+            <p className="text-xs text-red-600">{errors.orderDate}</p>
           ) : null}
         </div>
         <div className="space-y-2">
@@ -79,9 +77,7 @@ export default function OrderDetailsSection({
           <option value="economy">Economy Ground (10-14 days)</option>
         </select>
         {errors?.shippingMethod ? (
-          <p className="text-xs text-red-600">
-            {errors.shippingMethod}
-          </p>
+          <p className="text-xs text-red-600">{errors.shippingMethod}</p>
         ) : null}
       </div>
 
@@ -99,16 +95,12 @@ export default function OrderDetailsSection({
           <option value="card">Card - GST 5%</option>
         </select>
         {errors?.paymentMethod ? (
-          <p className="text-xs text-red-600">
-            {errors.paymentMethod}
-          </p>
+          <p className="text-xs text-red-600">{errors.paymentMethod}</p>
         ) : null}
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-700">
-          Status
-        </label>
+        <label className="text-sm font-medium text-slate-700">Status</label>
         <select
           className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
           defaultValue={status || "draft"}
@@ -131,9 +123,7 @@ export default function OrderDetailsSection({
           )}
         </select>
         {errors?.status ? (
-          <p className="text-xs text-red-600">
-            {errors.status}
-          </p>
+          <p className="text-xs text-red-600">{errors.status}</p>
         ) : null}
       </div>
     </section>

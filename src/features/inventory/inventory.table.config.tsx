@@ -1,8 +1,8 @@
 import type { DataTableConfig } from "@/src/components/data-table/types";
 
-export type StockStatus = "good" | "low" | "critical";
+type StockStatus = "good" | "low" | "critical";
 
-export type InventoryItem = {
+type InventoryItem = {
   id: string;
   sku: string;
   item_name: string;
@@ -14,7 +14,7 @@ export type InventoryItem = {
   unit_price: number;
 };
 
-export type InventoryQueryParams = {
+type InventoryQueryParams = {
   search?: string;
   page?: number;
   pageSize?: number;

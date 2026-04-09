@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PurchaseOrderDetailScreenProps } from "../../types";
-import EditPurchaseOrderSidebar from "../edit-po/EditPurchaseOrderSidebar";
+import EditPurchaseOrderDrawer from "../edit-po/EditPurchaseOrderDrawer";
 import PurchaseOrderHeader from "./header/PurchaseOrderHeader";
 import LineItemsTable from "./sections/LineItemsTable";
 import OrderActivityTimeline from "./sections/OrderActivityTimeline";
@@ -15,12 +15,12 @@ export default function PurchaseOrderDetailScreen({
   purchaseOrder,
 }: PurchaseOrderDetailScreenProps) {
   const router = useRouter();
-  const [isEditSidebarOpen, setIsEditSidebarOpen] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
 
   return (
     <>
       <PurchaseOrderHeader
-        onEditClick={() => setIsEditSidebarOpen(true)}
+        onEditClick={() => setIsEditDrawerOpen(true)}
         purchaseOrder={purchaseOrder}
       />
       <div className="flex-1 overflow-y-auto p-8">
@@ -38,11 +38,11 @@ export default function PurchaseOrderDetailScreen({
         </div>
       </div>
 
-      {isEditSidebarOpen ? (
-        <EditPurchaseOrderSidebar
-          onClose={() => setIsEditSidebarOpen(false)}
+      {isEditDrawerOpen ? (
+        <EditPurchaseOrderDrawer
+          onClose={() => setIsEditDrawerOpen(false)}
           onSuccess={() => {
-            setIsEditSidebarOpen(false);
+            setIsEditDrawerOpen(false);
             router.refresh();
           }}
           purchaseOrder={purchaseOrder}

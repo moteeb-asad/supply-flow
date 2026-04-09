@@ -1,54 +1,64 @@
 "use client";
 
+import { FormDrawer } from "@/src/components/ui/FormDrawer";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState, useTransition } from "react";
-import { updatePurchaseOrderAction } from "../../actions/update-purchaseorder.action";
+import { createPurchaseOrderAction } from "../../actions/create-purchaseorder.action";
 import type {
   AddItemFormValues,
-  EditPurchaseOrderSidebarProps,
+  CreatePurchaseOrderDrawerProps,
   PurchaseOrderFormValues,
 } from "../../types";
 import AddItemModal from "../shared/add-item-modal/AddItemModal";
 import PurchaseOrderForm from "../shared/PurchaseOrderForm";
-import { useQueryClient } from "@tanstack/react-query";
-import PurchaseOrderSidebarShell from "../shared/PurchaseOrderSidebarShell";
 
-export default function EditPurchaseOrderSidebar({
-  purchaseOrder,
+export default function CreatePurchaseOrderDrawer({
   onClose,
-  onAddItemClick: _onAddItemClick,
+  onAddItemClick,
   onSuccess,
-}: EditPurchaseOrderSidebarProps) {
+}: CreatePurchaseOrderDrawerProps) {
   const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitValidationErrors, setSubmitValidationErrors] = useState<
+    string[]
+  >([]);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
   const [addItemSubmitError, setAddItemSubmitError] = useState<string | null>(
     null,
   );
   const [lineItems, setLineItems] = useState<
     PurchaseOrderFormValues["lineItems"]
-  >(
-    purchaseOrder.lineItems?.map((item) => ({
-      skuName: item.sku_name,
-      quantity: item.ordered_qty,
-      unitPrice: item.unit_price,
-    })) ?? [],
-  );
+  >([]);
 
-  const initialValues: Partial<PurchaseOrderFormValues> = {
-    supplierId: purchaseOrder.supplier_id,
-    supplierName: purchaseOrder.supplier_name,
-    orderDate: purchaseOrder.order_date ?? "",
-    expectedDeliveryDate: purchaseOrder.expected_delivery_date ?? "",
-    paymentMethod: purchaseOrder.payment_method,
-    status: purchaseOrder.status,
-    notes: purchaseOrder.notes ?? "",
-    lineItems,
+  const handleSubmit = (values: PurchaseOrderFormValues) => {
+    startTransition(async () => {
+      setSubmitError(null);
+      setSubmitValidationErrors([]);
+
+      const result = await createPurchaseOrderAction(values);
+
+      if (!result.success) {
+        setSubmitError(result.error ?? "Failed to create purchase order.");
+        setSubmitValidationErrors(result.validationErrors ?? []);
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["purchase-orders-table"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["purchase-orders-metrics"],
+      });
+      onSuccess?.();
+      onClose?.();
+    });
   };
 
   const handleAddItemClick = () => {
+    if (isPending) return;
     setAddItemSubmitError(null);
-    _onAddItemClick?.();
+    onAddItemClick?.();
     setIsAddItemModalOpen(true);
   };
 
@@ -70,58 +80,40 @@ export default function EditPurchaseOrderSidebar({
     setIsAddItemModalOpen(false);
   };
 
-  const handleSubmit = (values: PurchaseOrderFormValues) => {
-    startTransition(async () => {
-      setSubmitError(null);
-
-      const result = await updatePurchaseOrderAction({
-        purchaseOrderId: purchaseOrder.id,
-        values,
-      });
-
-      if (!result.success) {
-        setSubmitError(result.error ?? "Failed to update purchase order.");
-        return;
-      }
-
-      // Invalidate purchase orders table and metrics queries
-      await queryClient.invalidateQueries({
-        queryKey: ["purchase-orders-table"],
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["purchase-orders-metrics"],
-      });
-
-      onSuccess?.();
-      onClose?.();
-    });
-  };
-
   return (
     <>
-      <PurchaseOrderSidebarShell
-        description="Update purchase order details and save changes."
+      <FormDrawer
+        description="Drafting a new order for procurement"
         onClose={onClose}
-        title="Edit Purchase Order"
+        showFooter={false}
+        title="Create New Purchase Order"
+        widthClassName="max-w-[580px]"
       >
         {submitError ? (
           <div className="px-6 pt-4">
-            <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm px-3 py-2">
               {submitError}
             </p>
+            {submitValidationErrors.length > 0 ? (
+              <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                {submitValidationErrors.map((message) => (
+                  <p key={message}>{message}</p>
+                ))}
+              </div>
+            ) : null}
           </div>
         ) : null}
 
         <PurchaseOrderForm
-          initialValues={initialValues}
+          initialValues={{ lineItems }}
           isSubmitting={isPending}
-          mode="edit"
+          mode="create"
           onAddItemClick={handleAddItemClick}
           onCancel={onClose}
           onLineItemsChange={setLineItems}
           onSubmit={handleSubmit}
         />
-      </PurchaseOrderSidebarShell>
+      </FormDrawer>
 
       <AddItemModal
         onAddItem={handleAddItem}
