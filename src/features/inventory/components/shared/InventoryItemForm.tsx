@@ -13,7 +13,6 @@ export type InventoryItemFormValues = {
   skuCode: string;
   category: string;
   initialStock: number;
-  reorderPoint: number;
   unitPrice: number;
   primarySupplier: string;
 };
@@ -29,7 +28,6 @@ const defaultValues: InventoryItemFormValues = {
   skuCode: "",
   category: "",
   initialStock: 0,
-  reorderPoint: 10,
   unitPrice: 0,
   primarySupplier: "",
 };

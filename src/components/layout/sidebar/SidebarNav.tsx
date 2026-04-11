@@ -1,27 +1,21 @@
 "use client";
 
-import { sidebarMenu } from "./menu.config";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { isActivePath } from "@/src/lib/navigation";
+import type { SidebarMenuItem } from "@/src/types/navigation";
 
-const menuIcons: Record<string, string> = {
-  Dashboard: "dashboard",
-  Suppliers: "local_shipping",
-  Inventory: "package_2",
-  Orders: "description",
-  Reports: "analytics",
-  "SKU Receiving": "inventory_2",
+type SidebarNavProps = {
+  items: SidebarMenuItem[];
 };
 
-export default function SidebarNav() {
+export default function SidebarNav({ items }: SidebarNavProps) {
   const pathname = usePathname();
 
   return (
     <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
-      {sidebarMenu.map((item) => {
+      {items.map((item) => {
         const isActive = isActivePath(pathname, item.path);
-        const iconName = menuIcons[item.label] ?? "dashboard";
 
         return (
           <Link
@@ -39,7 +33,7 @@ export default function SidebarNav() {
                 isActive ? { fontVariationSettings: '"FILL" 1' } : undefined
               }
             >
-              {iconName}
+              {item.icon}
             </span>
             <span>{item.label}</span>
           </Link>

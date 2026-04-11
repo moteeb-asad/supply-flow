@@ -10,7 +10,6 @@ type InventoryItem = {
   stock_quantity: number;
   stock_status: StockStatus;
   stock_max: number;
-  reorder_point: number;
   unit_price: number;
 };
 
@@ -97,12 +96,6 @@ export const InventoryTableConfig: DataTableConfig<
           </div>
         );
       },
-    },
-    {
-      key: "reorder_point",
-      header: "Reorder Point",
-      className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
-      cell: (row) => `${row.reorder_point} Units`,
     },
     {
       key: "unit_price",

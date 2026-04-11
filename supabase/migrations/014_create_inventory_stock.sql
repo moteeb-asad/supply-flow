@@ -4,11 +4,8 @@
 CREATE TABLE IF NOT EXISTS public.inventory_stock (
   sku_id uuid PRIMARY KEY REFERENCES public.skus(id) ON DELETE CASCADE,
   on_hand_qty numeric(12,2) NOT NULL DEFAULT 0 CHECK (on_hand_qty >= 0),
-  reserved_qty numeric(12,2) NOT NULL DEFAULT 0 CHECK (reserved_qty >= 0),
-  damaged_qty numeric(12,2) NOT NULL DEFAULT 0 CHECK (damaged_qty >= 0),
   created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now(),
-  CONSTRAINT inventory_stock_reserved_le_on_hand CHECK (reserved_qty <= on_hand_qty)
+  updated_at timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE INDEX IF NOT EXISTS inventory_stock_updated_at_idx
@@ -73,7 +70,7 @@ FOR SELECT
 TO authenticated
 USING (
   public.current_user_has_any_role(
-    ARRAY['super_admin', 'operations_manager', 'store_keeper']
+    ARRAY['super_admin', 'operations_manager']
   )
 );
 
@@ -83,7 +80,7 @@ FOR INSERT
 TO authenticated
 WITH CHECK (
   public.current_user_has_any_role(
-    ARRAY['super_admin', 'operations_manager', 'store_keeper']
+    ARRAY['super_admin', 'operations_manager']
   )
 );
 
@@ -93,12 +90,12 @@ FOR UPDATE
 TO authenticated
 USING (
   public.current_user_has_any_role(
-    ARRAY['super_admin', 'operations_manager', 'store_keeper']
+    ARRAY['super_admin', 'operations_manager']
   )
 )
 WITH CHECK (
   public.current_user_has_any_role(
-    ARRAY['super_admin', 'operations_manager', 'store_keeper']
+    ARRAY['super_admin', 'operations_manager']
   )
 );
 

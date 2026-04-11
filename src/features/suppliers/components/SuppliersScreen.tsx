@@ -13,15 +13,11 @@ import type {
 import { useSuppliers } from "@/src/features/suppliers/hooks/useSuppliers";
 import SupplierGridSkeleton from "./supplier-grid/SupplierGridSkeleton";
 import { Button } from "@/src/components/ui/Button";
-import { useUser } from "@/src/providers/UserProvider";
 
 export default function SuppliersScreen({}: SuppliersScreenProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [category, setCategory] = useState<CategoryFilterValue>("all");
   const [searchTerm, setSearchTerm] = useState("");
-
-  const { user } = useUser();
-  const userRole = user?.primaryRole;
 
   const { suppliers, fetchNextPage, hasNextPage, isFetching, isLoading } =
     useSuppliers({ category, search: searchTerm });
@@ -47,15 +43,13 @@ export default function SuppliersScreen({}: SuppliersScreenProps) {
           </p>
         </div>
 
-        {(userRole === "super_admin" || userRole === "operations_manager") && (
-          <Button
-            className="flex items-center justify-center gap-2 rounded-lg w-auto h-11 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-colors cursor-pointer"
-            onClick={() => setDrawerOpen(true)}
-          >
-            <span className="material-symbols-outlined text-xl">add</span>
-            <span>Add Supplier</span>
-          </Button>
-        )}
+        <Button
+          className="flex items-center justify-center gap-2 rounded-lg w-auto h-11 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-colors cursor-pointer"
+          onClick={() => setDrawerOpen(true)}
+        >
+          <span className="material-symbols-outlined text-xl">add</span>
+          <span>Add Supplier</span>
+        </Button>
       </div>
 
       <SupplierMetrics />

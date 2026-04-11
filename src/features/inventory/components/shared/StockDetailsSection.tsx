@@ -24,7 +24,7 @@ export default function StockDetailsSection({
           Stock Details
         </h3>
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-[#0e121b]">
             Initial Stock
@@ -36,20 +36,6 @@ export default function StockDetailsSection({
             value={values.initialStock}
             onChange={(event) =>
               onChange("initialStock", Number(event.target.value || 0))
-            }
-          />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-[#0e121b]">
-            Reorder Point
-          </label>
-          <input
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none focus:ring-2 focus:ring-primary"
-            type="number"
-            min={0}
-            value={values.reorderPoint}
-            onChange={(event) =>
-              onChange("reorderPoint", Number(event.target.value || 0))
             }
           />
         </div>

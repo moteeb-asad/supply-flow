@@ -17,12 +17,12 @@ export const sidebarMenu: SidebarMenuItem[] = [
     label: "Inventory",
     path: "/inventory",
     icon: "package_2",
-    roles: ["super_admin", "operations_manager", "store_keeper"],
+    roles: ["super_admin", "operations_manager"],
   },
   {
     label: "Purchase Orders",
     path: "/purchase-orders",
-    icon: "package_2",
+    icon: "description",
     roles: ["super_admin", "operations_manager"],
   },
   {
@@ -33,8 +33,8 @@ export const sidebarMenu: SidebarMenuItem[] = [
   },
   {
     label: "SKU Receiving",
-    path: "/inventory/receive",
+    path: "/sku-receiving",
     icon: "inventory_2",
-    roles: ["store_keeper"],
+    roles: ["super_admin", "operations_manager", "store_keeper"],
   },
 ];
