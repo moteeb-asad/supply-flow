@@ -20,23 +20,23 @@ export default function OrderDetailsSection({
   };
 
   return (
-    <section className="space-y-4">
-      <div className="flex items-center gap-2 text-primary">
-        <span className="material-symbols-outlined !text-[20px]">
+    <section className="space-y-5">
+      <div className="mb-1 flex items-center gap-2">
+        <span className="material-symbols-outlined text-primary text-lg">
           calendar_today
         </span>
-        <h3 className="font-semibold text-sm uppercase tracking-wider">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-[#4e6797]">
           Order Details
         </h3>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700">
+        <div className="space-y-1.5">
+          <label className="text-sm font-semibold text-[#0e121b]">
             Order Date
           </label>
           <input
-            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
             defaultValue={orderDate || ""}
             name="orderDate"
             type="date"
@@ -45,12 +45,12 @@ export default function OrderDetailsSection({
             <p className="text-xs text-red-600">{errors.orderDate}</p>
           ) : null}
         </div>
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700">
+        <div className="space-y-1.5">
+          <label className="text-sm font-semibold text-[#0e121b]">
             Expected Delivery
           </label>
           <input
-            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
             defaultValue={expectedDeliveryDate || ""}
             name="expectedDeliveryDate"
             type="date"
@@ -63,12 +63,12 @@ export default function OrderDetailsSection({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-700">
+      <div className="space-y-1.5">
+        <label className="text-sm font-semibold text-[#0e121b]">
           Shipping Method
         </label>
         <select
-          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:ring-2 focus:ring-primary"
           defaultValue={shippingMethod || "standard"}
           name="shippingMethod"
         >
@@ -81,12 +81,12 @@ export default function OrderDetailsSection({
         ) : null}
       </div>
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-700">
+      <div className="space-y-1.5">
+        <label className="text-sm font-semibold text-[#0e121b]">
           Payment Method
         </label>
         <select
-          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:ring-2 focus:ring-primary"
           value={paymentMethod || "cod"}
           name="paymentMethod"
           onChange={handlePaymentMethodChange}
@@ -99,10 +99,10 @@ export default function OrderDetailsSection({
         ) : null}
       </div>
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-700">Status</label>
+      <div className="space-y-1.5">
+        <label className="text-sm font-semibold text-[#0e121b]">Status</label>
         <select
-          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:ring-2 focus:ring-primary"
           defaultValue={status || "draft"}
           name="status"
         >

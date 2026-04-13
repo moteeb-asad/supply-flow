@@ -87,7 +87,6 @@ export default function CreatePurchaseOrderDrawer({
         onClose={onClose}
         showFooter={false}
         title="Create New Purchase Order"
-        widthClassName="max-w-[580px]"
       >
         {submitError ? (
           <div className="px-6 pt-4">

@@ -64,18 +64,18 @@ export default function InventoryItemForm({
 
   return (
     <form
-      className="flex-1 overflow-y-auto p-8 space-y-8"
+      className="flex-1 overflow-y-auto p-6 space-y-8"
       id={formId}
       noValidate
       onSubmit={handleSubmit}
     >
+      <SupplierAssignmentSection values={values} onChange={updateField} />
       <GeneralInformationSection values={values} onChange={updateField} />
       <StockDetailsSection
         values={values}
         estimatedValue={estimatedValue}
         onChange={updateField}
       />
-      <SupplierAssignmentSection values={values} onChange={updateField} />
     </form>
   );
 }

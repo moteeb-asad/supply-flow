@@ -104,7 +104,6 @@ export default function EditPurchaseOrderDrawer({
         onClose={onClose}
         showFooter={false}
         title="Edit Purchase Order"
-        widthClassName="max-w-[580px]"
       >
         {submitError ? (
           <div className="px-6 pt-4">
