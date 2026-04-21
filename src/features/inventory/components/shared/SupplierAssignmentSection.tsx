@@ -4,6 +4,7 @@ import type { SupplierAssignmentSectionProps } from "../../types/form.types";
 export default function SupplierAssignmentSection({
   values,
   onChange,
+  error,
 }: SupplierAssignmentSectionProps) {
   return (
     <section className="space-y-5">
@@ -23,6 +24,7 @@ export default function SupplierAssignmentSection({
         onSupplierChange={(supplier) =>
           onChange("primarySupplier", supplier?.name ?? "")
         }
+        error={error}
       />
     </section>
   );

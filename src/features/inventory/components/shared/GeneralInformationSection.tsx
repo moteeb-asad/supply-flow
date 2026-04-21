@@ -1,16 +1,11 @@
-import type { InventoryItemFormValues } from "./InventoryItemForm";
-
-type GeneralInformationSectionProps = {
-  values: InventoryItemFormValues;
-  onChange: <K extends keyof InventoryItemFormValues>(
-    key: K,
-    value: InventoryItemFormValues[K],
-  ) => void;
-};
-
+import type { InventoryItemFormValues } from "../../types/form.types";
+import type { GeneralInformationSectionProps } from "../../types/form.types";
 export default function GeneralInformationSection({
   values,
   onChange,
+  itemNameError,
+  skuCodeError,
+  categoryError,
 }: GeneralInformationSectionProps) {
   return (
     <section className="space-y-5">
@@ -35,6 +30,9 @@ export default function GeneralInformationSection({
             onChange={(event) => onChange("itemName", event.target.value)}
             required
           />
+          {itemNameError ? (
+            <p className="text-xs text-red-600">{itemNameError}</p>
+          ) : null}
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
@@ -47,6 +45,9 @@ export default function GeneralInformationSection({
               onChange={(event) => onChange("skuCode", event.target.value)}
               required
             />
+            {skuCodeError ? (
+              <p className="text-xs text-red-600">{skuCodeError}</p>
+            ) : null}
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-semibold text-[#0e121b]">
@@ -69,6 +70,9 @@ export default function GeneralInformationSection({
                 expand_more
               </span>
             </div>
+            {categoryError ? (
+              <p className="text-xs text-red-600">{categoryError}</p>
+            ) : null}
           </div>
         </div>
       </div>

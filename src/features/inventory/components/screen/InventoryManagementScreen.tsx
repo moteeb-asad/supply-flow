@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import InventoryMetrics from "../InventoryMetrics";
 import InventoryTable from "../list/InventoryTable";
-import CreateInventoryItemDrawer from "@/src/features/inventory/components/create-item/CreateInventoryItemDrawer";
+import AddInventoryItemDrawer from "@/src/features/inventory/components/create-item/AddInventoryItemDrawer";
 
 export default function InventoryManagementScreen() {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   return (
     <>
@@ -45,10 +47,19 @@ export default function InventoryManagementScreen() {
 
       <InventoryMetrics />
       <InventoryTable />
-      <CreateInventoryItemDrawer
-        open={isCreateDrawerOpen}
-        onClose={() => setIsCreateDrawerOpen(false)}
-      />
+
+      {isCreateDrawerOpen && (
+        <AddInventoryItemDrawer
+          open={isCreateDrawerOpen}
+          onClose={() => setIsCreateDrawerOpen(false)}
+          onSuccess={() => {
+            void queryClient.invalidateQueries({
+              queryKey: ["inventory-items-table"],
+            });
+            setIsCreateDrawerOpen(false);
+          }}
+        />
+      )}
     </>
   );
 }

@@ -1,18 +1,9 @@
-import type { InventoryItemFormValues } from "./InventoryItemForm";
-
-type StockDetailsSectionProps = {
-  values: InventoryItemFormValues;
-  estimatedValue: number;
-  onChange: <K extends keyof InventoryItemFormValues>(
-    key: K,
-    value: InventoryItemFormValues[K],
-  ) => void;
-};
-
+import type { StockDetailsSectionProps } from "../../types/form.types";
 export default function StockDetailsSection({
   values,
-  estimatedValue,
   onChange,
+  initialStockError,
+  unitPriceError,
 }: StockDetailsSectionProps) {
   return (
     <section className="space-y-5">
@@ -38,6 +29,9 @@ export default function StockDetailsSection({
               onChange("initialStock", Number(event.target.value || 0))
             }
           />
+          {initialStockError ? (
+            <p className="text-xs text-red-600">{initialStockError}</p>
+          ) : null}
         </div>
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-[#0e121b]">
@@ -54,6 +48,9 @@ export default function StockDetailsSection({
               onChange("unitPrice", Number(event.target.value || 0))
             }
           />
+          {unitPriceError ? (
+            <p className="text-xs text-red-600">{unitPriceError}</p>
+          ) : null}
         </div>
       </div>
       <div className="mt-2 rounded-xl border border-gray-200 bg-gray-50 p-5">
@@ -61,7 +58,7 @@ export default function StockDetailsSection({
           Estimated Initial Inventory Value
         </p>
         <p className="mt-1 text-sm font-bold text-[#0e121b]">
-          ${estimatedValue.toFixed(2)}
+          ${(values.initialStock * values.unitPrice).toFixed(2)}
         </p>
       </div>
     </section>

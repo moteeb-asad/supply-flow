@@ -76,7 +76,6 @@ export default function PurchaseOrderForm({
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-
     const supplierId = String(formData.get("supplierId") ?? "").trim();
     const supplierName = String(formData.get("supplierName") ?? "").trim();
     const orderDate = String(formData.get("orderDate") ?? "").trim();
