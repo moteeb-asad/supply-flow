@@ -1,4 +1,5 @@
 import type { UserRole } from "@/src/features/auth/types";
+export type { UserRole } from "@/src/features/auth/types";
 
 export interface User {
   id: string;
@@ -6,7 +7,7 @@ export interface User {
   avatar_url: string | null;
   created_at: string;
   email: string;
-  last_sign_in_at: string | null;
+  last_login_at: string | null;
   primary_role_label: UserRole | null;
   roles: string[];
 }

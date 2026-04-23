@@ -1,14 +1,21 @@
 "use client";
 
 import { getUsersAction } from "../actions/get-users.actions";
+import { Filters } from "../types/filters";
 
 export async function usersFetcher(params: {
   page: number;
   pageSize: number;
   search?: string;
-  filters?: Record<string, unknown>;
+  filters?: Filters;
 }) {
-  const result = await getUsersAction(params);
+  const { page, pageSize, search, filters } = params;
+  const result = await getUsersAction({
+    page,
+    pageSize,
+    search,
+    filters: filters?.filters, // Only pass the nested UserFilters
+  });
 
   if (result.success) {
     return {
@@ -17,6 +24,7 @@ export async function usersFetcher(params: {
     };
   }
 
+  console.log("fetcher", result);
   return {
     data: [],
     total: 0,

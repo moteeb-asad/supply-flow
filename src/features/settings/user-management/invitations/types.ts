@@ -27,3 +27,8 @@ export type InvitationsTableQueryParams = {
   search?: string;
   filters?: Record<string, unknown>;
 };
+
+export type InvitationsFiltersProps = {
+  value: Record<string, unknown>;
+  onChange: (filters: Record<string, unknown>) => void;
+};

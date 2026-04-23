@@ -27,11 +27,6 @@ export default function AddInventoryItemDrawer({
       const result = await addInventoryItemAction(values);
 
       if (!result.success) {
-        console.log(
-          "Failed to add inventory item:",
-          result.error,
-          result.validationErrors,
-        );
         setSubmitError(result.error ?? "Failed to add new inventory item.");
         setSubmitValidationErrors(result.validationErrors ?? []);
         return;

@@ -9,5 +9,6 @@ export const usersTableConfig = {
   fetcher: usersFetcher,
   columns: usersColumns,
   filters: UsersFilters,
+  searchPlaceholder: "Search users...",
   queryKey: (params: UsersTableQueryParams) => ["users-table", params],
 };

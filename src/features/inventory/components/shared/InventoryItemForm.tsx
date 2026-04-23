@@ -51,7 +51,6 @@ export default function InventoryItemForm({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("moteeb Form submitted with values:", values);
 
     const formData = new FormData(event.currentTarget);
     const ItemName = String(formData.get("itemName") ?? "").trim();
