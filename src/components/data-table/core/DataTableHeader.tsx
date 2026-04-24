@@ -1,4 +1,3 @@
-import React from "react";
 import type { DataTableConfig } from "../types";
 
 export function DataTableHeader<T, P = unknown>({

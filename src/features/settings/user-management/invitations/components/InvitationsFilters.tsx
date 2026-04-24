@@ -2,18 +2,18 @@ import type { InvitationsFiltersProps } from "../types";
 import { ROLES } from "@/src/constants/roles";
 
 export function InvitationsFilters({
-  value,
+  values,
   onChange,
 }: InvitationsFiltersProps) {
-  const roleIds: string[] = Array.isArray(value.roleIds)
-    ? (value.roleIds as string[])
+  const roleIds: string[] = Array.isArray(values.roleIds)
+    ? (values.roleIds as string[])
     : [];
 
   const handleRoleChange = (roleId: string) => {
     const newRoles = roleIds.includes(roleId)
       ? roleIds.filter((id) => id !== roleId)
       : [...roleIds, roleId];
-    onChange({ ...value, roleIds: newRoles });
+    onChange({ ...values, roleIds: newRoles });
   };
 
   return (

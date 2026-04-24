@@ -3,14 +3,15 @@
 import { useMemo, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-import { DataTableHeader } from "././components/DataTableHeader";
-import { DataTableBody } from "./components/DataTableBody";
-import { DataTableFilters } from "././components/DataTableFilters";
-import { DataTableSearchBar } from "././components/DataTableSearchBar";
-import { DataTablePaginationBar } from "././components/DataTablePaginationBar";
-import DataTableSkeleton from "./components/DataTableSkeleton";
+import { DataTableHeader } from "@/src/components/data-table/core/DataTableHeader";
+import { DataTableBody } from "@/src/components/data-table/core/DataTableBody";
+import { DataTableFilters } from "@/src/components/data-table/filters/DataTableFilters";
+import { DataTableSearchBar } from "@/src/components/data-table/core/DataTableSearchBar";
+import { DataTablePaginationBar } from "@/src/components/data-table/core/DataTablePaginationBar";
+import DataTableSkeleton from "@/src/components/data-table/core/DataTableSkeleton";
 
-import type { DataTableProps, PaginationState } from "./types";
+import type { DataTableProps, PaginationState } from "../types";
+import useDataTable from "../hooks/useDataTable";
 
 /**
  * Generic DataTable Engine
@@ -39,17 +40,15 @@ export default function DataTable<
   refreshKey,
   onRowClick,
   filters,
-  onFiltersChange,
 }: DataTableProps<T, P> & {
   filters: Record<string, unknown>;
   onFiltersChange: (filters: Record<string, unknown>) => void;
 }) {
   /** ---------------- STATE ---------------- */
 
+  const table = useDataTable(filters);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [draftFilters, setDraftFilters] =
-    useState<Record<string, unknown>>(filters);
   const [pagination, setPagination] = useState<PaginationState>({
     page: 1,
     pageSize: 6,
@@ -64,9 +63,9 @@ export default function DataTable<
         page: pagination.page,
         pageSize: pagination.pageSize,
         search,
-        filters,
+        filters: table.appliedFilters, // ← Use appliedFilters, not the prop
       }) as P,
-    [pagination.page, pagination.pageSize, search, filters],
+    [pagination.page, pagination.pageSize, search, table.appliedFilters],
   );
 
   /** ---------------- QUERY KEY ---------------- */
@@ -79,7 +78,7 @@ export default function DataTable<
           pagination.page,
           pagination.pageSize,
           search,
-          JSON.stringify(filters),
+          JSON.stringify(table.appliedFilters),
         ];
 
     return refreshKey === undefined ? baseKey : [...baseKey, refreshKey];
@@ -90,7 +89,7 @@ export default function DataTable<
     pagination.page,
     pagination.pageSize,
     search,
-    filters,
+    table.appliedFilters,
   ]);
 
   /** ---------------- QUERY ---------------- */
@@ -106,6 +105,7 @@ export default function DataTable<
   });
 
   const data = queryData?.data ?? [];
+  console.log("DataTable data:", data);
   const total = queryData?.total ?? 0;
   const loading = isPending;
 
@@ -117,37 +117,17 @@ export default function DataTable<
 
   const handleApplySearch = (value: string) => {
     setSearch(value);
-  }; // Controlled search bar handler
-
-  const handleToggleFilters = () => {
-    if (!filtersOpen) {
-      setDraftFilters(filters);
-    }
-    setFiltersOpen((prev) => !prev);
   };
 
   const handleApplyFilters = () => {
-    onFiltersChange(draftFilters);
-    setPage(1);
+    table.applyFilters();
     setFiltersOpen(false);
   };
 
   const handleClearFilters = () => {
-    const statusValue = filters["status"];
-    const preservedFilters =
-      typeof statusValue === "string" ? { status: statusValue } : {};
-
-    setDraftFilters(preservedFilters);
-    onFiltersChange(preservedFilters);
-    setPage(1);
+    table.clearFilters();
     setFiltersOpen(false);
   };
-
-  const activeAdvancedFiltersCount = Object.entries(filters).filter(
-    ([key, value]) => key !== "status" && Boolean(value),
-  ).length;
-
-  const isAdvancedFiltersActive = activeAdvancedFiltersCount > 0;
 
   /** ---------------- RENDER ---------------- */
 
@@ -164,23 +144,17 @@ export default function DataTable<
 
         {config.filters && (
           <button
-            className={`px-4 py-2.5 border rounded-lg text-sm font-bold flex items-center gap-2 transition-colors cursor-pointer ${
-              isAdvancedFiltersActive
-                ? "bg-primary/10 border-primary/30 text-primary"
-                : "bg-white border-[#d0d7e7] text-[#4e6797] hover:bg-slate-50"
-            }`}
-            onClick={handleToggleFilters}
+            className={`px-4 py-2.5 border rounded-lg text-sm font-bold flex items-center gap-2 transition-colors cursor-pointer
+              bg-white border-[#d0d7e7] text-[#4e6797] hover:bg-slate-50
+            `}
+            onClick={() => setFiltersOpen((prev) => !prev)}
             type="button"
           >
             <span className="material-symbols-outlined text-lg">
               filter_alt
             </span>
             <span>Advanced Filters</span>
-            {isAdvancedFiltersActive ? (
-              <span className="inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-primary text-white text-[11px] px-1.5">
-                {activeAdvancedFiltersCount}
-              </span>
-            ) : null}
+            <span className="inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-primary text-white text-[11px] px-1.5"></span>
           </button>
         )}
       </div>
@@ -218,9 +192,10 @@ export default function DataTable<
 
       <DataTableFilters
         filtersOpen={filtersOpen}
+        setFiltersOpen={setFiltersOpen}
         config={config}
-        value={draftFilters}
-        onChange={setDraftFilters}
+        values={table.draftFilters}
+        onChange={table.setDraftFilters}
         onApply={handleApplyFilters}
         onClear={handleClearFilters}
       />

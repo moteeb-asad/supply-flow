@@ -3,7 +3,6 @@ import { DataTableSkeletonProps } from "../../data-table/types";
 export default function DataTableSkeleton({
   type = "loading",
 }: DataTableSkeletonProps) {
-  // Show 3 skeleton rows only, and a searching/loading overlay
   return (
     <>
       <div className="absolute inset-x-0 top-[140px] z-10 flex flex-col items-center justify-center pointer-events-none">

@@ -1,20 +1,25 @@
 import React from "react";
-import DataTableFiltersPanel from "../../data-table/components/DataTableFiltersPanel";
+import DataTableFiltersPanel from "@/src/components/data-table/filters/DataTableFiltersPanel";
 import type { DataTableFiltersProps } from "../../data-table/types";
 
 export function DataTableFilters({
   filtersOpen,
+  setFiltersOpen,
   config,
-  value,
+  values,
   onChange,
   onApply,
   onClear,
-}: DataTableFiltersProps) {
+}: DataTableFiltersProps & {
+  onApply: () => void;
+  onClear: () => void;
+}) {
   if (!filtersOpen || !config.filters) return null;
+
   return (
     <DataTableFiltersPanel onApply={onApply} onClear={onClear}>
       {React.createElement(config.filters, {
-        value,
+        values,
         onChange,
       })}
     </DataTableFiltersPanel>

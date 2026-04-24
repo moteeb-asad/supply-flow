@@ -3,10 +3,10 @@ import { Filters } from "../../users/types/filters";
 
 export function buildInvitationsQuery(
   adminClient: SupabaseClient,
-  { page = 1, itemsPerPage = 10, search, filters }: Filters,
+  { page = 1, pageSize = 10, search, filters }: Filters,
 ) {
-  const from = (page - 1) * itemsPerPage;
-  const to = from + itemsPerPage - 1;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
 
   let query = adminClient
     .from("invitations")

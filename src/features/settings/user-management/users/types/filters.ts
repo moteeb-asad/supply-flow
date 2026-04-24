@@ -1,13 +1,13 @@
 import type { FilterPeriod } from "@/src/lib/date-range-utils";
 
-export type UserFilters = {
+export type UserFiltersValue = {
   lastLogin?: FilterPeriod;
   roleIds?: string[];
 };
+
 export type Filters = {
   page?: number;
-  itemsPerPage?: number;
+  pageSize?: number;
   search?: string;
-  filters?: UserFilters;
+  filters?: UserFiltersValue;
 };
-export type ValuesProps = UserFilters;

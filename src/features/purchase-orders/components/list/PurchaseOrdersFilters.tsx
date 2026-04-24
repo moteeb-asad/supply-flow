@@ -7,13 +7,16 @@ import type {
 } from "../../types";
 
 export default function PurchaseOrdersFilters({
-  value,
+  values,
   onChange,
-}: PurchaseOrdersFiltersProps) {
-  const filters = value as PurchaseOrdersFiltersValue;
+}: {
+  values: Record<string, unknown>;
+  onChange: (filters: Record<string, unknown>) => void;
+}) {
+  const filters = values as PurchaseOrdersFiltersValue;
 
   const setFilter = (key: string, nextValue: string) => {
-    const next = { ...value };
+    const next = { ...values };
     if (!nextValue) {
       delete next[key];
     } else {

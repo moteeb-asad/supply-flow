@@ -1,5 +1,4 @@
-import React from "react";
-import DataTablePagination from "../../data-table/components/DataTablePagination";
+import DataTablePagination from "@/src/components/data-table/core/DataTablePagination";
 import type { PaginationState } from "../types";
 
 export function DataTablePaginationBar({

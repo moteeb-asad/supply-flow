@@ -1,13 +1,17 @@
 "use client";
 
-import DataTable from "@/src/components/data-table/DataTable";
+import DataTable from "@/src/components/data-table/core/DataTable";
 import { usersTableConfig } from "../users.table.config";
 import { User } from "../types/user.types";
 import { useState } from "react";
-import { Filters } from "../types/filters";
+import { UserFiltersValue } from "../types/filters";
 
 export default function UsersTableView() {
-  const [filters, setFilters] = useState<Filters>({});
+  const [filters, setFilters] = useState<UserFiltersValue>({});
+
+  const handleFiltersChange = (filterValues: UserFiltersValue) => {
+    setFilters(filterValues);
+  };
   return (
     <DataTable<
       User,
@@ -15,13 +19,13 @@ export default function UsersTableView() {
         page: number;
         pageSize: number;
         search?: string;
-        filters?: Filters;
+        filters?: UserFiltersValue;
       }
     >
       key="users-table"
       config={usersTableConfig}
       filters={filters}
-      onFiltersChange={setFilters}
+      onFiltersChange={handleFiltersChange}
     />
   );
 }

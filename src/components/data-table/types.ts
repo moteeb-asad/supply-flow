@@ -1,12 +1,13 @@
 export type DataTableFiltersProps = {
   filtersOpen: boolean;
+  setFiltersOpen: (open: boolean) => void;
   config: {
     filters?: React.ComponentType<{
-      value: Record<string, unknown>;
+      values: Record<string, unknown>;
       onChange: (filters: Record<string, unknown>) => void;
     }>;
   };
-  value: Record<string, unknown>;
+  values: Record<string, unknown>;
   onChange: (filters: Record<string, unknown>) => void;
   onApply?: () => void;
   onClear?: () => void;
@@ -18,7 +19,7 @@ export type DataTableConfig<T, P = unknown> = {
   columns: DataTableColumn<T>[];
   rowHref?: (row: T) => string;
   filters?: React.ComponentType<{
-    value: Record<string, unknown>;
+    values: Record<string, unknown>;
     onChange: (filters: Record<string, unknown>) => void;
   }>;
   searchPlaceholder?: string;

@@ -1,9 +1,6 @@
-import DataTable from "@/src/components/data-table/DataTable";
+import DataTable from "@/src/components/data-table/core/DataTable";
 import { PurchaseOrdersTableConfig } from "@/src/features/purchase-orders/purchase-orders.table.config";
-import type {
-  PurchaseOrder,
-  PurchaseOrdersQueryParams,
-} from "../../types";
+import type { PurchaseOrder, PurchaseOrdersQueryParams } from "../../types";
 import { useRouter } from "next/navigation";
 
 export default function PurchaseOrdersTable({

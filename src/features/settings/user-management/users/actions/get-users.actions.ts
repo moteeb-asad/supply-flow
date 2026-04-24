@@ -7,6 +7,8 @@ import type { Filters } from "@/src/features/settings/user-management/users/type
 import { mapUser } from "../mappers/user.mapper";
 
 export async function getUsersAction(params: Filters) {
+  console.log("getUsersAction params:", params);
+
   await requireSuperAdmin();
 
   const adminClient = createAdminClient();
