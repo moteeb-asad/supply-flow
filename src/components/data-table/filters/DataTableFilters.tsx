@@ -4,7 +4,6 @@ import type { DataTableFiltersProps } from "../../data-table/types";
 
 export function DataTableFilters({
   filtersOpen,
-  setFiltersOpen,
   config,
   values,
   onChange,

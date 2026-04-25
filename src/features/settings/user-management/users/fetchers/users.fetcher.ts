@@ -9,7 +9,6 @@ export async function usersFetcher(params: {
   search?: string;
   filters?: UserFiltersValue;
 }) {
-  console.log("Fetcher params:", params);
   const { page, pageSize, search, filters } = params;
   const result = await getUsersAction({
     page,

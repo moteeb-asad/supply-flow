@@ -6,7 +6,6 @@ export function buildUsersQuery(
   adminClient: SupabaseClient,
   { page = 1, pageSize = 10, search, filters }: Filters,
 ) {
-  console.log("Building query with filters:", filters);
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
@@ -45,15 +44,8 @@ export function buildUsersQuery(
 
   // Last login filter
   const lastLoginDate = getFilterDate(filters?.lastLogin);
-  console.log(
-    "lastLoginDate for filter:",
-    filters?.lastLogin,
-    "is",
-    lastLoginDate,
-  );
   if (lastLoginDate) {
     query = query.gte("last_login_at", lastLoginDate);
-    console.log("Applying last login filter, date:", lastLoginDate);
   }
 
   return { query, from, to };

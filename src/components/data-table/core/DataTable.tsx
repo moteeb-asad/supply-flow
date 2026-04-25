@@ -6,21 +6,21 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { DataTableHeader } from "@/src/components/data-table/core/DataTableHeader";
 import { DataTableBody } from "@/src/components/data-table/core/DataTableBody";
 import { DataTableFilters } from "@/src/components/data-table/filters/DataTableFilters";
-import { DataTableSearchBar } from "@/src/components/data-table/core/DataTableSearchBar";
-import { DataTablePaginationBar } from "@/src/components/data-table/core/DataTablePaginationBar";
+import { DataTableSearchBar } from "@/src/components/data-table/search/DataTableSearchBar";
+import { DataTablePaginationBar } from "@/src/components/data-table/pagination/DataTablePaginationBar";
 import DataTableSkeleton from "@/src/components/data-table/core/DataTableSkeleton";
 
 import type { DataTableProps, PaginationState } from "../types";
 import useDataTable from "../hooks/useDataTable";
 
 /**
- * Generic DataTable Engine
  *
- * - Feature agnostic
- * - Driven by DataTableConfig
+ * - Generic DataTable Engine
+ * - Feature agnostic Driven by DataTableConfig
  * - Supports search, pagination, filters
  * - Used by Users, Invitations, and future modules
- */
+ *
+ **/
 
 export default function DataTable<
   T extends { id: string | number },
@@ -44,8 +44,6 @@ export default function DataTable<
   filters: Record<string, unknown>;
   onFiltersChange: (filters: Record<string, unknown>) => void;
 }) {
-  /** ---------------- STATE ---------------- */
-
   const table = useDataTable(filters);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -55,20 +53,18 @@ export default function DataTable<
   });
   const setPage = (page: number) => setPagination((p) => ({ ...p, page }));
 
-  /** ---------------- FETCH PARAMS ---------------- */
-
   const params = useMemo(
     () =>
       ({
         page: pagination.page,
         pageSize: pagination.pageSize,
         search,
-        filters: table.appliedFilters, // ← Use appliedFilters, not the prop
+        filters: table.appliedFilters,
       }) as P,
     [pagination.page, pagination.pageSize, search, table.appliedFilters],
   );
 
-  /** ---------------- QUERY KEY ---------------- */
+  // -------- QUERY KEY --------
 
   const queryKey = useMemo(() => {
     const baseKey = config.queryKey
@@ -92,7 +88,7 @@ export default function DataTable<
     table.appliedFilters,
   ]);
 
-  /** ---------------- QUERY ---------------- */
+  // -------- QUERY --------
 
   const {
     data: queryData,
@@ -105,7 +101,6 @@ export default function DataTable<
   });
 
   const data = queryData?.data ?? [];
-  console.log("DataTable data:", data);
   const total = queryData?.total ?? 0;
   const loading = isPending;
 
@@ -113,7 +108,7 @@ export default function DataTable<
     console.error("DataTable fetch error:", error);
   }
 
-  /** ---------------- HANDLERS ---------------- */
+  // -------- HANDLERS --------
 
   const handleApplySearch = (value: string) => {
     setSearch(value);

@@ -1,4 +1,4 @@
-import DataTablePagination from "@/src/components/data-table/core/DataTablePagination";
+import DataTablePagination from "@/src/components/data-table/pagination/DataTablePagination";
 import type { PaginationState } from "../types";
 
 export function DataTablePaginationBar({

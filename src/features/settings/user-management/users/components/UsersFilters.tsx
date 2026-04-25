@@ -12,7 +12,6 @@ export function UsersFilters({
 }) {
   const handleLastLoginChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value as FilterPeriod | "";
-    console.log("Selected last login filter:", value);
 
     // Pass the updated values, preserving other filters
     onChange({
@@ -32,8 +31,6 @@ export function UsersFilters({
       roleIds: newRoleIds.length > 0 ? newRoleIds : undefined,
     });
   };
-
-  console.log("Dropdown value:", values?.lastLogin);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import DataTableSearch from "@/src/components/data-table/core/DataTableSearch";
+import DataTableSearch from "@/src/components/data-table/search/DataTableSearch";
 
 export function DataTableSearchBar({
   search,
