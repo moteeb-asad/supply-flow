@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Filters } from "@/src/features/settings/user-management/users/types/filters";
-import { getFilterDate } from "@/src//lib/date-range-utils";
+import { FilterPeriod, getFilterDate } from "@/src//lib/date-range-utils";
 
 export function buildUsersQuery(
   adminClient: SupabaseClient,
@@ -43,7 +43,9 @@ export function buildUsersQuery(
   }
 
   // Last login filter
-  const lastLoginDate = getFilterDate(filters?.lastLogin);
+  const lastLoginDate = getFilterDate(
+    filters?.lastLogin as FilterPeriod | undefined,
+  );
   if (lastLoginDate) {
     query = query.gte("last_login_at", lastLoginDate);
   }

@@ -11,14 +11,11 @@ export interface User {
   primary_role_label: UserRole | null;
   roles: string[];
 }
-
 export type UserRoleRow = {
   user_id: string;
   role: { id: string; name: string } | { id: string; name: string }[] | null;
 };
-
 export type RoleMap = Map<string, string[]>;
-
 export type Profile = {
   id: string;
   full_name: string;

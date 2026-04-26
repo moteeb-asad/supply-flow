@@ -1,14 +1,23 @@
+import type { FilterPeriod } from "@/src/lib/date-range-utils";
+
+export type Filters = {
+  lastLogin?: FilterPeriod | string;
+  roleIds?: string[];
+  status?: string;
+  dateRange?: string;
+};
+
 export type DataTableFiltersProps = {
   filtersOpen: boolean;
   setFiltersOpen: (open: boolean) => void;
   config: {
     filters?: React.ComponentType<{
-      values: Record<string, unknown>;
-      onChange: (filters: Record<string, unknown>) => void;
+      values: Filters;
+      onChange: (filters: Filters) => void;
     }>;
   };
-  values: Record<string, unknown>;
-  onChange: (filters: Record<string, unknown>) => void;
+  values: Filters;
+  onChange: (filters: Filters) => void;
   onApply?: () => void;
   onClear?: () => void;
 };
@@ -19,8 +28,8 @@ export type DataTableConfig<T, P = unknown> = {
   columns: DataTableColumn<T>[];
   rowHref?: (row: T) => string;
   filters?: React.ComponentType<{
-    values: Record<string, unknown>;
-    onChange: (filters: Record<string, unknown>) => void;
+    values: Filters;
+    onChange: (filters: Filters) => void;
   }>;
   searchPlaceholder?: string;
 };
@@ -37,10 +46,17 @@ export type PaginationState = {
   pageSize: number;
 };
 
-export type DataTableProps<T extends { id: string | number }, P = unknown> = {
+export type DataTableProps<
+  T extends { id: string | number },
+  P = unknown,
+  TFilters = unknown,
+> = {
   config: DataTableConfig<T, P>;
   refreshKey?: string | number;
   onRowClick?: (row: T, event: React.MouseEvent) => void;
+
+  filters: TFilters;
+  onFiltersChange: (filters: TFilters) => void;
 };
 
 export type DataTableSearchProps = {

@@ -3,7 +3,7 @@
 import { usersColumns } from "./components/UsersColumns";
 import { UsersFilters } from "./components/UsersFilters";
 import { usersFetcher } from "./fetchers/users.fetcher";
-import type { UsersTableQueryParams } from "./types";
+import type { UsersTableQueryParams } from "./types/filters";
 
 export const usersTableConfig = {
   fetcher: usersFetcher,

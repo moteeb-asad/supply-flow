@@ -4,24 +4,13 @@ import DataTable from "@/src/components/data-table/core/DataTable";
 import { usersTableConfig } from "../users.table.config";
 import { User } from "../types/user.types";
 import { useState } from "react";
-import { UserFiltersValue } from "../types/filters";
+import { UserFiltersValue, UsersTableQueryParams } from "../types/filters";
 
 export default function UsersTableView() {
   const [filters, setFilters] = useState<UserFiltersValue>({});
-
-  const handleFiltersChange = (filterValues: UserFiltersValue) => {
-    setFilters(filterValues);
-  };
+  const handleFiltersChange = setFilters;
   return (
-    <DataTable<
-      User,
-      {
-        page: number;
-        pageSize: number;
-        search?: string;
-        filters?: UserFiltersValue;
-      }
-    >
+    <DataTable<User, UsersTableQueryParams, UserFiltersValue>
       key="users-table"
       config={usersTableConfig}
       filters={filters}

@@ -36,7 +36,7 @@ export type InvitationsFiltersProps = {
 };
 
 export type InvitationsFiltersValue = {
-  lastLogin?: FilterPeriod;
+  lastLogin?: FilterPeriod | string;
   roleIds?: string[];
 };
 

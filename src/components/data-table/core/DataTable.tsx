@@ -10,48 +10,42 @@ import { DataTableSearchBar } from "@/src/components/data-table/search/DataTable
 import { DataTablePaginationBar } from "@/src/components/data-table/pagination/DataTablePaginationBar";
 import DataTableSkeleton from "@/src/components/data-table/core/DataTableSkeleton";
 
-import type { DataTableProps, PaginationState } from "../types";
-import useDataTable from "../hooks/useDataTable";
+import type { DataTableProps, Filters, PaginationState } from "../types";
+import useDataTableState from "../hooks/useDataTableState";
 
 /**
- *
  * - Generic DataTable Engine
  * - Feature agnostic Driven by DataTableConfig
  * - Supports search, pagination, filters
  * - Used by Users, Invitations, and future modules
- *
  **/
+
+const INITIAL_FILTERS: Filters = {
+  roleIds: [],
+  lastLogin: undefined,
+};
 
 export default function DataTable<
   T extends { id: string | number },
-  P extends {
-    page: number;
-    pageSize: number;
-    search?: string;
-    filters?: Record<string, unknown>;
-  } = {
-    page: number;
-    pageSize: number;
-    search?: string;
-    filters?: Record<string, unknown>;
-  },
+  P = unknown,
+  TFilters = unknown,
 >({
   config,
-  refreshKey,
   onRowClick,
+  refreshKey,
   filters,
-}: DataTableProps<T, P> & {
-  filters: Record<string, unknown>;
-  onFiltersChange: (filters: Record<string, unknown>) => void;
-}) {
-  const table = useDataTable(filters);
+  onFiltersChange,
+}: DataTableProps<T, P, TFilters>) {
+  const table = useDataTableState<Filters>(INITIAL_FILTERS);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
     page: 1,
     pageSize: 6,
   });
-  const setPage = (page: number) => setPagination((p) => ({ ...p, page }));
+  const setPage = (page: number) => {
+    setPagination((p) => ({ ...p, page }));
+  };
 
   const params = useMemo(
     () =>
@@ -74,7 +68,7 @@ export default function DataTable<
           pagination.page,
           pagination.pageSize,
           search,
-          JSON.stringify(table.appliedFilters),
+          table.appliedFilters,
         ];
 
     return refreshKey === undefined ? baseKey : [...baseKey, refreshKey];
