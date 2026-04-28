@@ -1,4 +1,4 @@
-import { SupplierDrawer } from "./SupplierDrawer";
+import { FormDrawer } from "@/src/components/ui/FormDrawer";
 import { SupplierForm, SUPPLIER_FORM_ID } from "./SupplierForm";
 import type {
   EditSupplierDrawerProps,
@@ -54,7 +54,7 @@ export function EditSupplierDrawer({
   };
 
   return (
-    <SupplierDrawer
+    <FormDrawer
       title="Edit Supplier"
       description="Update supplier details and save changes."
       submitLabel="Save Changes"
@@ -69,6 +69,6 @@ export function EditSupplierDrawer({
         onSubmit={handleSubmit}
         serverError={serverError}
       />
-    </SupplierDrawer>
+    </FormDrawer>
   );
 }

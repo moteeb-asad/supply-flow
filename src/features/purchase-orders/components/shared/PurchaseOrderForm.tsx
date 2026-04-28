@@ -51,18 +51,15 @@ export default function PurchaseOrderForm({
     lineItems: initialValues?.lineItems ?? defaultValues.lineItems,
   };
 
-  const [lineItems, setLineItems] = useState<
-    PurchaseOrderFormValues["lineItems"]
-  >(merged.lineItems);
-
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     PurchaseOrderFormValues["paymentMethod"]
   >(merged.paymentMethod);
 
+  const lineItems = merged.lineItems;
+
   const handleLineItemsChange = (
     nextItems: PurchaseOrderFormValues["lineItems"],
   ) => {
-    setLineItems(nextItems);
     onLineItemsChange?.(nextItems);
   };
 
@@ -79,7 +76,6 @@ export default function PurchaseOrderForm({
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-
     const supplierId = String(formData.get("supplierId") ?? "").trim();
     const supplierName = String(formData.get("supplierName") ?? "").trim();
     const orderDate = String(formData.get("orderDate") ?? "").trim();
@@ -156,12 +152,12 @@ export default function PurchaseOrderForm({
       onSubmit={handleSubmit}
     >
       <div
-        className={`flex-1 min-h-0 overflow-y-auto px-6 py-6 space-y-8 transition-opacity ${
+        className={`flex-1 min-h-0 overflow-y-auto p-6 space-y-8 transition-opacity ${
           isSubmitting ? "opacity-60" : "opacity-100"
         }`}
       >
         {validationErrors.length > 0 ? (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <div className="rounded-xl border border-danger/20 bg-danger/10 p-4 text-sm text-danger">
             {validationErrors.map((message) => (
               <p key={message}>{message}</p>
             ))}

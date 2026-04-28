@@ -1,5 +1,7 @@
 // Invitation types
 
+import { FilterPeriod } from "@/src/lib/date-range-utils";
+
 export interface Invitation {
   id: string;
   email: string;
@@ -25,5 +27,22 @@ export type InvitationsTableQueryParams = {
   page: number;
   pageSize: number;
   search?: string;
-  filters?: Record<string, unknown>;
+  filters?: InvitationsFiltersValue;
+};
+
+export type InvitationsFiltersProps = {
+  values: Record<string, unknown>;
+  onChange: (filters: Record<string, unknown>) => void;
+};
+
+export type InvitationsFiltersValue = {
+  lastLogin?: FilterPeriod | string;
+  roleIds?: string[];
+};
+
+export type InvitationsFilters = {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  filters?: InvitationsFiltersValue;
 };

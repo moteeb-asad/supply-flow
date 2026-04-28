@@ -1,10 +1,21 @@
 import SidebarNav from "./SidebarNav";
+import { sidebarMenu } from "./menu.config";
 import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
+import { getMenuByRole } from "@/src/lib/navigation";
 import { formatRole } from "@/src/lib/utils";
+import type { UserRole } from "@/src/types/layout";
 import SettingsLink from "./SettingsLink";
 
 export default async function Sidebar() {
   const user = await getCurrentUser();
+  const primaryRole = user?.user_metadata?.primary_role;
+  const userRole: UserRole | null =
+    primaryRole === "super_admin" ||
+    primaryRole === "operations_manager" ||
+    primaryRole === "store_keeper"
+      ? primaryRole
+      : null;
+  const filteredMenuItems = getMenuByRole(userRole, sidebarMenu);
   // Extract name from user metadata
   const userName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
@@ -25,7 +36,7 @@ export default async function Sidebar() {
           </div>
         </div>
       </div>
-      <SidebarNav />
+      <SidebarNav items={filteredMenuItems} />
       <div className="p-4 border-t border-[#e7ebf3]">
         <SettingsLink />
         <div className="mt-4 flex items-center gap-3 px-3">

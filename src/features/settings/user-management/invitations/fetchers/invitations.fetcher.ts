@@ -8,9 +8,17 @@ export async function invitationsFetcher(params: {
   search?: string;
   filters?: Record<string, unknown>;
 }) {
-  const result = await getInvitationsAction();
+  const result = await getInvitationsAction(params);
+
+  if (result.success) {
+    return {
+      data: result.users,
+      total: result.total,
+    };
+  }
+
   return {
-    data: Array.isArray(result) ? result : [],
-    total: Array.isArray(result) ? result.length : 0,
+    data: [],
+    total: 0,
   };
 }

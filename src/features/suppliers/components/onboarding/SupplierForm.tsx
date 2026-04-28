@@ -52,7 +52,7 @@ export function SupplierForm({
 
   return (
     <form
-      className="flex-1 overflow-y-auto p-8 space-y-8"
+      className="flex-1 overflow-y-auto p-6 space-y-8"
       id={formId}
       noValidate
       onSubmit={handleSubmit((values) => onSubmit?.(values))}

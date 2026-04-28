@@ -1,6 +1,5 @@
 // Drawer
 
-import { ReactNode } from "react";
 import type { SupplierFormInput } from "@/src/features/suppliers/validators/suppliers.schema";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 
@@ -70,17 +69,6 @@ export type Supplier = {
   lead_time_days: number | null;
   notes: string | null;
   created_at: string | null;
-};
-
-export type SupplierDrawerProps = {
-  title: string;
-  description: string;
-  submitLabel: string;
-  submittingLabel?: string;
-  formId: string;
-  isSubmitting?: boolean;
-  onClose?: () => void;
-  children: ReactNode;
 };
 
 export type SupplierFormValues = SupplierFormInput;

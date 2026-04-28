@@ -1,14 +1,13 @@
-// users/lib/build-users-query.ts
-
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Filters } from "@/src/features/settings/user-management/users/types/filters";
+import { FilterPeriod, getFilterDate } from "@/src//lib/date-range-utils";
 
 export function buildUsersQuery(
   adminClient: SupabaseClient,
-  { page = 1, itemsPerPage = 10, roleIds, search, lastLoginRange }: Filters,
+  { page = 1, pageSize = 10, search, filters }: Filters,
 ) {
-  const from = (page - 1) * itemsPerPage;
-  const to = from + itemsPerPage - 1;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
 
   let query = adminClient
     .from("profiles")
@@ -27,20 +26,28 @@ export function buildUsersQuery(
     )
     .order("created_at", { ascending: false });
 
-  // role filter
-  if (roleIds?.length) {
-    query = query.in("primary_role_id", roleIds);
-  }
-
-  // search filter
+  // Search filter
   if (search?.trim()) {
     const value = `%${search.trim()}%`;
     query = query.or(`full_name.ilike.${value},email.ilike.${value}`);
   }
 
-  // future date filters live here
-  if (lastLoginRange) {
-    // date logic later
+  // Role filter
+  if (
+    filters?.roleIds &&
+    Array.isArray(filters.roleIds) &&
+    filters.roleIds.length > 0
+  ) {
+    const numericRoleIds = filters.roleIds.map((id) => Number(id));
+    query = query.in("primary_role_id", numericRoleIds);
+  }
+
+  // Last login filter
+  const lastLoginDate = getFilterDate(
+    filters?.lastLogin as FilterPeriod | undefined,
+  );
+  if (lastLoginDate) {
+    query = query.gte("last_login_at", lastLoginDate);
   }
 
   return { query, from, to };
