@@ -1,20 +1,13 @@
-export type SupplierAssignmentSectionProps = {
-  values: InventoryItemFormValues;
-  onChange: <K extends keyof InventoryItemFormValues>(
-    key: K,
-    value: InventoryItemFormValues[K],
-  ) => void;
-  error?: string;
-};
+import {
+  Control,
+  FieldErrors,
+  UseFormClearErrors,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
+import { InventoryItemFormInput } from "../validators/inventory-item.schema";
 
-export type InventoryItemFormValues = {
-  itemName: string;
-  skuCode: string;
-  category: string;
-  initialStock: number;
-  unitPrice: number;
-  primarySupplier: string;
-};
+export type InventoryItemFormValues = InventoryItemFormInput;
 
 export type InventoryItemFormProps = {
   formId?: string;
@@ -22,25 +15,22 @@ export type InventoryItemFormProps = {
   onSubmit?: (values: InventoryItemFormValues) => void;
   onCancel?: () => void;
   isSubmitting?: boolean;
+  serverError?: string;
 };
-
+export type SupplierAssignmentSectionProps = {
+  errors: FieldErrors<InventoryItemFormValues>;
+  register: UseFormRegister<InventoryItemFormValues>;
+  setValue: UseFormSetValue<InventoryItemFormValues>;
+  clearErrors: UseFormClearErrors<InventoryItemFormValues>;
+};
 export type GeneralInformationSectionProps = {
-  values: InventoryItemFormValues;
-  onChange: <K extends keyof InventoryItemFormValues>(
-    key: K,
-    value: InventoryItemFormValues[K],
-  ) => void;
-  itemNameError?: string;
-  skuCodeError?: string;
-  categoryError?: string;
+  register: UseFormRegister<InventoryItemFormValues>;
+  errors: FieldErrors<InventoryItemFormValues>;
+  setValue: UseFormSetValue<InventoryItemFormValues>;
+  clearErrors: UseFormClearErrors<InventoryItemFormValues>;
 };
-
 export type StockDetailsSectionProps = {
-  values: InventoryItemFormValues;
-  onChange: <K extends keyof InventoryItemFormValues>(
-    key: K,
-    value: InventoryItemFormValues[K],
-  ) => void;
-  initialStockError?: string;
-  unitPriceError?: string;
+  register: UseFormRegister<InventoryItemFormValues>;
+  errors: FieldErrors<InventoryItemFormValues>;
+  control: Control<InventoryItemFormValues>;
 };

@@ -1,11 +1,11 @@
+import CategoryPicker from "@/src/features/shared/categories/components/CategoryPicker";
 import type { InventoryItemFormValues } from "../../types/form.types";
 import type { GeneralInformationSectionProps } from "../../types/form.types";
 export default function GeneralInformationSection({
-  values,
-  onChange,
-  itemNameError,
-  skuCodeError,
-  categoryError,
+  errors,
+  register,
+  setValue,
+  clearErrors,
 }: GeneralInformationSectionProps) {
   return (
     <section className="space-y-5">
@@ -26,13 +26,12 @@ export default function GeneralInformationSection({
             className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
             placeholder="e.g. Ergonomic Office Chair"
             type="text"
-            value={values.itemName}
-            onChange={(event) => onChange("itemName", event.target.value)}
+            {...register("itemName")}
             required
           />
-          {itemNameError ? (
-            <p className="text-xs text-red-600">{itemNameError}</p>
-          ) : null}
+          {errors.itemName && (
+            <p className="text-xs text-red-600">{errors.itemName.message}</p>
+          )}
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
@@ -41,38 +40,44 @@ export default function GeneralInformationSection({
               className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-[#0e121b] uppercase outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
               placeholder="SKU-0000"
               type="text"
-              value={values.skuCode}
-              onChange={(event) => onChange("skuCode", event.target.value)}
+              {...register("skuCode")}
               required
             />
-            {skuCodeError ? (
-              <p className="text-xs text-red-600">{skuCodeError}</p>
-            ) : null}
+            {errors.skuCode && (
+              <p className="text-xs text-red-600">{errors.skuCode.message}</p>
+            )}
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-[#0e121b]">
-              Category
-            </label>
-            <div className="relative">
-              <select
-                className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:ring-2 focus:ring-primary"
-                value={values.category}
-                onChange={(event) => onChange("category", event.target.value)}
-                required
-              >
-                <option value="">Select Category</option>
-                <option value="equipment">Equipment</option>
-                <option value="maintenance">Maintenance</option>
-                <option value="facilities">Facilities</option>
-                <option value="raw_materials">Raw Materials</option>
-              </select>
-              <span className="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#4e6797]">
-                expand_more
-              </span>
-            </div>
-            {categoryError ? (
-              <p className="text-xs text-red-600">{categoryError}</p>
-            ) : null}
+            <label className="text-sm font-semibold text-[#0e121b]">Unit</label>
+            <select
+              className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+              {...register("unit")}
+              required
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Select unit
+              </option>
+              <option value="kg">kg</option>
+              <option value="litre">litre</option>
+              <option value="pcs">pcs</option>
+              <option value="g">g</option>
+              <option value="ml">ml</option>
+            </select>
+            {errors.unit && (
+              <p className="text-xs text-red-600">{errors.unit.message}</p>
+            )}
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <div className="relative">
+            <CategoryPicker
+              error={errors.category?.message}
+              onCategoryChange={(category) => {
+                setValue("category", category?.id ?? "");
+                if (category) clearErrors("category");
+              }}
+            />
           </div>
         </div>
       </div>

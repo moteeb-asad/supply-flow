@@ -2,9 +2,9 @@ import SupplierPicker from "@/src/features/shared/suppliers/components/SupplierP
 import type { SupplierAssignmentSectionProps } from "../../types/form.types";
 
 export default function SupplierAssignmentSection({
-  values,
-  onChange,
-  error,
+  errors,
+  setValue,
+  clearErrors,
 }: SupplierAssignmentSectionProps) {
   return (
     <section className="space-y-5">
@@ -16,15 +16,12 @@ export default function SupplierAssignmentSection({
           Supplier Assignment
         </h3>
       </div>
-
       <SupplierPicker
-        initialSupplierName={values.primarySupplier}
-        label="Primary Supplier"
-        placeholder="Search for a supplier"
-        onSupplierChange={(supplier) =>
-          onChange("primarySupplier", supplier?.name ?? "")
-        }
-        error={error}
+        error={errors.primarySupplier?.message}
+        onSupplierChange={(supplier) => {
+          setValue("primarySupplier", supplier?.id ?? "");
+          if (supplier) clearErrors("primarySupplier");
+        }}
       />
     </section>
   );

@@ -1,10 +1,13 @@
+import { useWatch } from "react-hook-form";
 import type { StockDetailsSectionProps } from "../../types/form.types";
 export default function StockDetailsSection({
-  values,
-  onChange,
-  initialStockError,
-  unitPriceError,
+  errors,
+  register,
+  control,
 }: StockDetailsSectionProps) {
+  const initialStock = useWatch({ control, name: "initialStock" }) ?? 0;
+  const unitPrice = useWatch({ control, name: "unitPrice" }) ?? 0;
+  const estimatedValue = Number(initialStock) * Number(unitPrice);
   return (
     <section className="space-y-5">
       <div className="mb-1 flex items-center gap-2">
@@ -24,14 +27,13 @@ export default function StockDetailsSection({
             className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none focus:ring-2 focus:ring-primary"
             type="number"
             min={0}
-            value={values.initialStock}
-            onChange={(event) =>
-              onChange("initialStock", Number(event.target.value || 0))
-            }
+            {...register("initialStock", { valueAsNumber: true })}
           />
-          {initialStockError ? (
-            <p className="text-xs text-red-600">{initialStockError}</p>
-          ) : null}
+          {errors.initialStock && (
+            <p className="text-xs text-red-600">
+              {errors.initialStock.message}
+            </p>
+          )}
         </div>
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-[#0e121b]">
@@ -43,14 +45,11 @@ export default function StockDetailsSection({
             type="number"
             min={0}
             step="0.01"
-            value={values.unitPrice}
-            onChange={(event) =>
-              onChange("unitPrice", Number(event.target.value || 0))
-            }
+            {...register("unitPrice", { valueAsNumber: true })}
           />
-          {unitPriceError ? (
-            <p className="text-xs text-red-600">{unitPriceError}</p>
-          ) : null}
+          {errors.unitPrice && (
+            <p className="text-xs text-red-600">{errors.unitPrice.message}</p>
+          )}
         </div>
       </div>
       <div className="mt-2 rounded-xl border border-gray-200 bg-gray-50 p-5">
@@ -58,7 +57,7 @@ export default function StockDetailsSection({
           Estimated Initial Inventory Value
         </p>
         <p className="mt-1 text-sm font-bold text-[#0e121b]">
-          ${(values.initialStock * values.unitPrice).toFixed(2)}
+          ${estimatedValue.toFixed(2)}
         </p>
       </div>
     </section>

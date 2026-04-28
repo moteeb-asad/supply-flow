@@ -1,42 +1,32 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useActionState, useState, useTransition } from "react";
 import { FormDrawer } from "@/src/components/ui/FormDrawer";
 import type { InventoryItemFormValues } from "@/src/features/inventory/types/form.types";
-import InventoryItemForm from "@/src/features/inventory/components/shared/InventoryItemForm";
+import InventoryItemForm, {
+  INVENTORY_FORM_ID,
+} from "@/src/features/inventory/components/shared/InventoryItemForm";
 import addInventoryItemAction from "../../actions/add-inventory-item.actions";
 import type { AddInventoryItemDrawerProps } from "../../types/component-props.types";
 
 export default function AddInventoryItemDrawer({
   onClose,
-  onSuccess,
 }: AddInventoryItemDrawerProps) {
-  const queryClient = useQueryClient();
+  const [state, formAction] = useActionState(addInventoryItemAction, undefined);
   const [isPending, startTransition] = useTransition();
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitValidationErrors, setSubmitValidationErrors] = useState<
-    string[]
-  >([]);
+  const formKey = state?.resetKey ?? "initial";
 
-  const handleSubmit = (values: InventoryItemFormValues) => {
-    startTransition(async () => {
-      setSubmitError(null);
-      setSubmitValidationErrors([]);
-
-      const result = await addInventoryItemAction(values);
-
-      if (!result.success) {
-        setSubmitError(result.error ?? "Failed to add new inventory item.");
-        setSubmitValidationErrors(result.validationErrors ?? []);
-        return;
-      }
-
-      await queryClient.invalidateQueries({
-        queryKey: ["inventory-items-table"],
-      });
-      onSuccess?.();
-      onClose?.();
+  const handleDrawerSubmit = (values: InventoryItemFormValues) => {
+    const formData = new FormData();
+    formData.append("itemName", values.itemName);
+    formData.append("skuCode", values.skuCode);
+    formData.append("unit", values.unit);
+    formData.append("category", values.category);
+    formData.append("initialStock", String(values.initialStock));
+    formData.append("unitPrice", String(values.unitPrice));
+    formData.append("primarySupplier", values.primarySupplier);
+    startTransition(() => {
+      formAction(formData);
     });
   };
 
@@ -48,25 +38,14 @@ export default function AddInventoryItemDrawer({
       submitLabel="Add Item"
       submittingLabel="Adding..."
       isSubmitting={isPending}
+      formId={INVENTORY_FORM_ID}
     >
-      {submitError ? (
-        <div className="px-6 pt-4">
-          <p className="rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm px-3 py-2">
-            {submitError}
-          </p>
-          {submitValidationErrors.length > 0 ? (
-            <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-              {submitValidationErrors.map((message) => (
-                <p key={message}>{message}</p>
-              ))}
-            </div>
-          ) : null}
-        </div>
-      ) : null}
       <InventoryItemForm
-        onSubmit={handleSubmit}
+        key={formKey}
+        formId={INVENTORY_FORM_ID}
+        onSubmit={handleDrawerSubmit}
+        serverError={state?.error}
         isSubmitting={isPending}
-        onCancel={onClose}
       />
     </FormDrawer>
   );

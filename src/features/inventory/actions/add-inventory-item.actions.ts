@@ -1,15 +1,36 @@
 "use server";
 
 import { createClient } from "@/src/db/supabaseClient";
-import type { InventoryItemFormValues } from "../types/form.types";
+import { randomUUID } from "crypto";
+import { AddInventoryItemSchema } from "../validators/inventory-item.schema";
 
 type AddInventoryItemResult =
-  | { success: true; skuId: string }
-  | { success: false; error: string; validationErrors?: string[] };
+  | { error?: string; success?: string; resetKey: string }
+  | undefined;
 
 export default async function addInventoryItemAction(
-  values: InventoryItemFormValues,
+  _prevState: AddInventoryItemResult,
+  formData: FormData,
 ): Promise<AddInventoryItemResult> {
+  const raw = {
+    itemName: formData.get("itemName"),
+    skuCode: formData.get("skuCode"),
+    unit: formData.get("unit"),
+    category: formData.get("category"),
+    initialStock: Number(formData.get("initialStock")),
+    unitPrice: Number(formData.get("unitPrice")),
+    primarySupplier: formData.get("primarySupplier"),
+  };
+
+  const validation = AddInventoryItemSchema.safeParse(raw);
+  if (!validation.success) {
+    const firstError = validation.error.issues[0];
+    return {
+      error: firstError?.message ?? "Invalid inventory item data",
+      resetKey: randomUUID(),
+    };
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -17,52 +38,34 @@ export default async function addInventoryItemAction(
 
   if (!user) {
     return {
-      success: false,
-      error: "You must be logged in to create an Inventory Item.",
+      error: "You must be logged in to create inventory items.",
+      resetKey: randomUUID(),
     };
   }
 
-  // Start transaction
-  const { data: sku, error: skuError } = await supabase
-    .from("skus")
-    .insert({
-      sku_code: values.skuCode,
-      name: values.itemName,
-      unit: values.category, // Adjust if you have a separate unit field
-      created_by: user.id,
-    })
-    .select("id")
-    .single();
+  // Single atomic transaction via RPC
+  const { data, error } = await supabase.rpc("add_inventory_item_transaction", {
+    p_sku_code: validation.data.skuCode,
+    p_name: validation.data.itemName,
+    p_unit: validation.data.unit,
+    p_category_id: validation.data.category,
+    p_unit_price: validation.data.unitPrice,
+    p_supplier_id: validation.data.primarySupplier,
+    p_initial_stock: validation.data.initialStock,
+    p_user_id: user.id,
+  });
+  console.log("RPC result:", { data, error });
 
-  if (skuError || !sku) {
+  if (error) {
+    console.error("Transaction failed:", error);
     return {
-      success: false,
-      error: skuError?.message ?? "Failed to create SKU.",
+      error: `Failed: ${error.message} | Code: ${error.code} | Details: ${JSON.stringify(error.details || {})}`,
+      resetKey: randomUUID(),
     };
   }
 
-  const skuId = sku.id;
-
-  // Insert into inventory_stock
-  const { error: stockError } = await supabase.from("inventory_stock").insert({
-    sku_id: skuId,
-    on_hand_qty: values.initialStock,
-  });
-
-  if (stockError) {
-    return { success: false, error: stockError.message };
-  }
-
-  // Insert into sku_suppliers
-  const { error: supplierError } = await supabase.from("sku_suppliers").insert({
-    sku_id: skuId,
-    supplier_id: values.primarySupplier,
-    is_primary: true,
-  });
-
-  if (supplierError) {
-    return { success: false, error: supplierError.message };
-  }
-
-  return { success: true, skuId };
+  return {
+    success: "Inventory item successfully created",
+    resetKey: randomUUID(),
+  };
 }
