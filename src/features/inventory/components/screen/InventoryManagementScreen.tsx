@@ -5,8 +5,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import InventoryMetrics from "../InventoryMetrics";
 import InventoryTable from "../list/InventoryTable";
 import AddInventoryItemDrawer from "@/src/features/inventory/components/create-item/AddInventoryItemDrawer";
+import type { InventoryItemFiltersValue } from "../../types/query.types";
+import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
 
 export default function InventoryManagementScreen() {
+  const [filters, setFilters] = useState<InventoryItemFiltersValue>({});
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -46,7 +49,10 @@ export default function InventoryManagementScreen() {
       </div>
 
       <InventoryMetrics />
-      <InventoryTable />
+
+      <ErrorBoundary>
+        <InventoryTable filters={filters} onFiltersChange={setFilters} />
+      </ErrorBoundary>
 
       {isCreateDrawerOpen && (
         <AddInventoryItemDrawer

@@ -54,7 +54,6 @@ export default async function addInventoryItemAction(
     p_initial_stock: validation.data.initialStock,
     p_user_id: user.id,
   });
-  console.log("RPC result:", { data, error });
 
   if (error) {
     console.error("Transaction failed:", error);

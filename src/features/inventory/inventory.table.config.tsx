@@ -1,23 +1,9 @@
 import type { DataTableConfig } from "@/src/components/data-table/types";
+import type { InventoryItem } from "./types/domain.types";
+import type { InventoryItemQueryParams } from "./types/query.types";
+import { inventoryItemsFetcher } from "./fetchers/inventoryitems.fetcher";
 
 type StockStatus = "good" | "low" | "critical";
-
-type InventoryItem = {
-  id: string;
-  sku: string;
-  item_name: string;
-  category: string;
-  stock_quantity: number;
-  stock_status: StockStatus;
-  stock_max: number;
-  unit_price: number;
-};
-
-type InventoryQueryParams = {
-  search?: string;
-  page?: number;
-  pageSize?: number;
-};
 
 const stockStatusStyles: Record<
   StockStatus,
@@ -40,30 +26,24 @@ const stockStatusStyles: Record<
   },
 };
 
-async function inventoryFetcher(
-  _params: InventoryQueryParams,
-): Promise<{ data: InventoryItem[]; total: number }> {
-  return { data: [], total: 0 };
-}
-
 export const InventoryTableConfig: DataTableConfig<
   InventoryItem,
-  InventoryQueryParams
+  InventoryItemQueryParams
 > = {
-  fetcher: inventoryFetcher,
+  fetcher: inventoryItemsFetcher,
   queryKey: (params) => ["inventory-table", params],
   columns: [
     {
       key: "sku",
       header: "SKU",
       className: "px-6 py-4 text-sm font-bold text-primary whitespace-nowrap",
-      cell: (row) => row.sku,
+      cell: (row) => row.skuCode,
     },
     {
       key: "item_name",
       header: "Item Name",
       className: "px-6 py-4 text-sm font-medium",
-      cell: (row) => row.item_name,
+      cell: (row) => row.itemName,
     },
     {
       key: "category",
@@ -75,33 +55,13 @@ export const InventoryTableConfig: DataTableConfig<
       key: "stock_level",
       header: "Stock Level",
       className: "px-6 py-4",
-      cell: (row) => {
-        const style = stockStatusStyles[row.stock_status];
-        const pct = Math.min(
-          100,
-          Math.round((row.stock_quantity / row.stock_max) * 100),
-        );
-        return (
-          <div className="space-y-1 min-w-[140px]">
-            <div className="flex items-center gap-2 text-sm">
-              <span>{row.stock_quantity} Units</span>
-              <span className={style.className}>{style.label}</span>
-            </div>
-            <div className="h-1.5 w-full rounded-full bg-slate-200">
-              <div
-                className={`h-1.5 rounded-full ${style.barClass}`}
-                style={{ width: `${pct}%` }}
-              />
-            </div>
-          </div>
-        );
-      },
+      cell: (row) => row.initialStock,
     },
     {
       key: "unit_price",
       header: "Unit Price",
       className: "px-6 py-4 text-sm font-semibold whitespace-nowrap",
-      cell: (row) => `$${row.unit_price.toFixed(2)}`,
+      cell: (row) => `$${row.unitPrice.toFixed(2)}`,
     },
     {
       key: "actions",
