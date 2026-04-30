@@ -1,3 +1,5 @@
+export type StockStatus = "good" | "low" | "critical";
+
 export type InventoryItemQueryParams = {
   page: number;
   pageSize: number;
@@ -6,7 +8,8 @@ export type InventoryItemQueryParams = {
 };
 
 export type InventoryItemFiltersValue = {
-  status?: string;
+  category?: string;
+  stockStatus?: StockStatus;
 };
 
 export type InventoryItemRow = {

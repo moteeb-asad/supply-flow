@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import InventoryMetrics from "../InventoryMetrics";
+import InventoryMetrics from "../list/InventoryMetrics";
 import InventoryTable from "../list/InventoryTable";
 import AddInventoryItemDrawer from "@/src/features/inventory/components/create-item/AddInventoryItemDrawer";
 import type { InventoryItemFiltersValue } from "../../types/query.types";

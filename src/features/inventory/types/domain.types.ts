@@ -1,3 +1,4 @@
+// domain.types.ts
 export type InventoryItem = {
   id: string;
   itemName: string;
@@ -7,8 +8,6 @@ export type InventoryItem = {
   unitPrice: number;
   category: string;
   primarySupplier: string;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type RawInventoryItemRow = {
@@ -16,10 +15,11 @@ export type RawInventoryItemRow = {
   sku_code: string;
   name: string;
   unit: string;
-  categories?: { name: string }[];
-  inventory_stock?: { on_hand_qty: number }[];
-  unit_price?: number;
-  primary_supplier?: string;
-  created_at?: string;
-  updated_at?: string;
+  standard_unit_price?: number;
+  // Supabase can return these as either objects OR arrays
+  categories?: { name: string }[] | { name: string } | null;
+  inventory_stock?: { on_hand_qty: number }[] | { on_hand_qty: number } | null;
+  sku_suppliers?: {
+    supplier?: { name: string }[] | { name: string } | null;
+  }[];
 };

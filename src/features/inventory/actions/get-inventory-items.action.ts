@@ -22,7 +22,9 @@ export default async function getInventoryItemsAction(
         sku_code,
         name,
         unit,
+        standard_unit_price,
         categories:category_id (name),
+        sku_suppliers(supplier:supplier_id(name)),
         inventory_stock(on_hand_qty)
       `,
       { count: "exact" },
