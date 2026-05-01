@@ -55,7 +55,7 @@ export const usersColumns: DataTableColumn<User>[] = [
     header: "Last Login",
     cell: (user) => (
       <span className="text-sm text-[#4e6797]">
-        {formatLastLogin(user.last_sign_in_at)}
+        {formatLastLogin(user.last_login_at)}
       </span>
     ),
   },

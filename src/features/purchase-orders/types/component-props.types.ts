@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import type {
   CreatePurchaseOrderStatus,
   PaymentMethod,
@@ -9,18 +8,11 @@ import type {
 } from "./domain.types";
 import type {
   PurchaseOrderFormValues,
-  PurchaseOrderSidebarMode,
+  PurchaseOrderDrawerMode,
 } from "./form.types";
 
-export type PurchaseOrderSidebarShellProps = {
-  title: string;
-  description: string;
-  onClose?: () => void;
-  children: ReactNode;
-};
-
 export type PurchaseOrderFormProps = {
-  mode: PurchaseOrderSidebarMode;
+  mode: PurchaseOrderDrawerMode;
   initialValues?: Partial<PurchaseOrderFormValues>;
   onSubmit?: (values: PurchaseOrderFormValues) => void;
   onCancel?: () => void;
@@ -29,13 +21,13 @@ export type PurchaseOrderFormProps = {
   isSubmitting?: boolean;
 };
 
-export type CreatePurchaseOrderSidebarProps = {
+export type CreatePurchaseOrderDrawerProps = {
   onClose?: () => void;
   onAddItemClick?: () => void;
   onSuccess?: () => void;
 };
 
-export type EditPurchaseOrderSidebarProps = {
+export type EditPurchaseOrderDrawerProps = {
   purchaseOrder: PurchaseOrder;
   onClose?: () => void;
   onAddItemClick?: () => void;

@@ -47,6 +47,6 @@ export type PurchaseOrderFormValues = {
   lineItems: PurchaseOrderLineItemFormValue[];
 };
 
-export type PurchaseOrderSidebarMode = "create" | "edit";
+export type PurchaseOrderDrawerMode = "create" | "edit";
 
 export type AddItemFormValues = PurchaseOrderLineItemFormValue;

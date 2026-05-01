@@ -5,24 +5,22 @@ export default function AdditionalNotesSection({
   error,
 }: AdditionalNotesSectionProps) {
   return (
-    <section className="space-y-2">
-      <div className="flex items-center gap-2 text-primary">
-        <span className="material-symbols-outlined text-[20px]">
+    <section className="space-y-5">
+      <div className="mb-1 flex items-center gap-2">
+        <span className="material-symbols-outlined text-primary text-lg">
           sticky_note_2
         </span>
-        <h3 className="font-semibold text-sm uppercase tracking-wider">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-[#4e6797]">
           Additional Notes
         </h3>
       </div>
       <textarea
-        className="w-full min-h-[96px] bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
+        className="min-h-[96px] w-full resize-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
         defaultValue={notes ?? ""}
         name="notes"
         placeholder="Add supplier notes or internal context"
       />
-      {error ? (
-        <p className="text-xs text-red-600">{error}</p>
-      ) : null}
+      {error ? <p className="text-xs text-red-600">{error}</p> : null}
     </section>
   );
 }

@@ -15,7 +15,7 @@ export default function SupplierCard({ supplier }: SupplierCardProps) {
   return (
     <>
       <Link href={`/suppliers/${supplier.id}`} className="block">
-        <div className="bg-white rounded-xl border border-[#d0d7e7] shadow-sm hover:shadow-md transition-shadow group cursor-pointer p-5">
+        <div className="bg-white rounded-xl border border-[#d0d7e7] hover:shadow-md transition-shadow group cursor-pointer p-5">
           <div className="flex justify-between items-start mb-4">
             <div className="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
               <span className="material-symbols-outlined text-2xl">
