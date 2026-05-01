@@ -35,5 +35,3 @@ export const createPurchaseOrderSchema = z.object({
     .array(purchaseOrderLineItemSchema)
     .min(1, "Add at least one valid line item"),
 });
-
-type CreatePurchaseOrderSchemaInput = z.infer<typeof createPurchaseOrderSchema>;

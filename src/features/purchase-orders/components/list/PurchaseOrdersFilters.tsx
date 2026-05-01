@@ -1,18 +1,22 @@
 "use client";
 
+import { DATE_RANGE_OPTIONS } from "@/src/constants/dateRangeOptions";
 import type {
   PurchaseOrdersFiltersValue,
   PurchaseOrdersFiltersProps,
 } from "../../types";
 
 export default function PurchaseOrdersFilters({
-  value,
+  values,
   onChange,
-}: PurchaseOrdersFiltersProps) {
-  const filters = value as PurchaseOrdersFiltersValue;
+}: {
+  values: Record<string, unknown>;
+  onChange: (filters: Record<string, unknown>) => void;
+}) {
+  const filters = values as PurchaseOrdersFiltersValue;
 
   const setFilter = (key: string, nextValue: string) => {
-    const next = { ...value };
+    const next = { ...values };
     if (!nextValue) {
       delete next[key];
     } else {
@@ -32,12 +36,11 @@ export default function PurchaseOrdersFilters({
           onChange={(event) => setFilter("dateRange", event.target.value)}
           value={(filters.dateRange as string | undefined) ?? ""}
         >
-          <option value="">All Dates</option>
-          <option value="last_24_hours">Last 24 Hours</option>
-          <option value="last_7_days">Last 7 Days</option>
-          <option value="last_30_days">Last 30 Days</option>
-          <option value="this_month">This Month</option>
-          <option value="this_quarter">This Quarter</option>
+          {DATE_RANGE_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
         </select>
       </div>
     </>

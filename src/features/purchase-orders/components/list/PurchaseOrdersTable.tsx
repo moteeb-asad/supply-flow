@@ -1,7 +1,8 @@
-import DataTable from "@/src/components/data-table/DataTable";
+import DataTable from "@/src/components/data-table/core/DataTable";
 import { PurchaseOrdersTableConfig } from "@/src/features/purchase-orders/purchase-orders.table.config";
 import type {
   PurchaseOrder,
+  PurchaseOrdersFiltersValue,
   PurchaseOrdersQueryParams,
 } from "../../types";
 import { useRouter } from "next/navigation";
@@ -10,14 +11,16 @@ export default function PurchaseOrdersTable({
   filters,
   onFiltersChange,
 }: {
-  filters: { status?: string; dateRange?: string };
-  onFiltersChange: (filters: { status?: string; dateRange?: string }) => void;
+  filters: PurchaseOrdersFiltersValue;
+  onFiltersChange: (filters: PurchaseOrdersFiltersValue) => void;
 }) {
-  // if (true) throw new Error("Test error boundary");
   const router = useRouter();
-  // Pass filters as refreshKey to force update
   return (
-    <DataTable<PurchaseOrder, PurchaseOrdersQueryParams>
+    <DataTable<
+      PurchaseOrder,
+      PurchaseOrdersQueryParams,
+      PurchaseOrdersFiltersValue
+    >
       config={PurchaseOrdersTableConfig}
       refreshKey={JSON.stringify(filters)}
       filters={filters}

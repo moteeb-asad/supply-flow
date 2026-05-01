@@ -59,18 +59,18 @@ export default function LineItemsSection({
   };
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-5">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-primary">
-          <span className="material-symbols-outlined text-[20px]">
+        <div className="mb-1 flex items-center gap-2">
+          <span className="material-symbols-outlined text-primary text-lg">
             list_alt
           </span>
-          <h3 className="font-semibold text-sm uppercase tracking-wider">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-[#4e6797]">
             Line Items
           </h3>
         </div>
         <button
-          className="text-primary hover:text-primary/80 text-sm font-semibold flex items-center gap-1"
+          className="flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
           onClick={onAddItemClick}
           type="button"
         >
@@ -79,21 +79,21 @@ export default function LineItemsSection({
         </button>
       </div>
 
-      <div className="border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50">
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50/50">
         <table className="w-full text-left text-sm border-collapse">
           <thead>
-            <tr className="bg-slate-100 text-slate-500 font-medium">
+            <tr className="bg-gray-100 text-[#4e6797] font-medium">
               <th className="px-4 py-3 font-semibold">SKU / Item Name</th>
               <th className="px-4 py-3 font-semibold w-24">Qty</th>
               <th className="px-4 py-3 font-semibold w-32">Unit Price</th>
               <th className="px-4 py-3 font-semibold w-12 text-center"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200">
+          <tbody className="divide-y divide-gray-200">
             {rows.length === 0 ? (
               <tr>
                 <td
-                  className="px-4 py-6 text-sm text-slate-500 text-center"
+                  className="px-4 py-6 text-center text-sm text-[#4e6797]"
                   colSpan={4}
                 >
                   No line items yet. Click &quot;Add Item&quot; to add your
@@ -105,7 +105,7 @@ export default function LineItemsSection({
                 <tr key={`${row.skuName}-${index}`}>
                   <td className="px-4 py-3">
                     <input
-                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900 placeholder:text-slate-400"
+                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all placeholder:text-[#4e6797] focus:border-transparent focus:ring-2 focus:ring-primary"
                       data-index={String(index)}
                       name={`lineItems[${index}].skuName`}
                       placeholder="Search item..."
@@ -116,7 +116,7 @@ export default function LineItemsSection({
                   </td>
                   <td className="px-4 py-3">
                     <input
-                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900"
+                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
                       data-index={String(index)}
                       min={1}
                       name={`lineItems[${index}].quantity`}
@@ -127,9 +127,9 @@ export default function LineItemsSection({
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center">
-                      <span className="text-slate-400 mr-1">$</span>
+                      <span className="mr-1 text-[#4e6797]">$</span>
                       <input
-                        className="w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900"
+                        className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
                         data-index={String(index)}
                         min={0}
                         name={`lineItems[${index}].unitPrice`}
@@ -144,7 +144,7 @@ export default function LineItemsSection({
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
-                      className="text-slate-400 hover:text-red-500 transition-colors"
+                      className="text-[#4e6797] transition-colors hover:text-red-500"
                       data-index={String(index)}
                       onClick={handleRemoveItem}
                       type="button"
@@ -160,7 +160,7 @@ export default function LineItemsSection({
             <tr>
               <td className="px-4 py-3" colSpan={4}>
                 <button
-                  className="w-full py-2 border border-dashed border-slate-300 rounded-lg text-slate-500 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-gray-300 py-2 text-[#4e6797] transition-all hover:bg-gray-50"
                   onClick={onAddItemClick}
                   type="button"
                 >
@@ -173,9 +173,7 @@ export default function LineItemsSection({
         </table>
       </div>
 
-      {error ? (
-        <p className="text-xs text-red-600">{error}</p>
-      ) : null}
+      {error ? <p className="text-xs text-red-600">{error}</p> : null}
     </section>
   );
 }

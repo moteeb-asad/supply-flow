@@ -1,25 +1,25 @@
 import type {
   PaymentMethod,
   PurchaseOrderStatus,
-  PurchaseOrdersDateRangeFilter,
   PurchaseOrderSupplierRelation,
 } from "./domain.types";
+import { FilterPeriod } from "@/src/lib/date-range-utils";
 
 export type PurchaseOrdersQueryParams = {
   page: number;
   pageSize: number;
   search?: string;
-  filters?: Record<string, unknown>;
+  filters?: PurchaseOrdersFiltersValue;
 };
 
 export type PurchaseOrdersFiltersValue = {
   status?: PurchaseOrderStatus;
-  dateRange?: PurchaseOrdersDateRangeFilter;
+  dateRange?: FilterPeriod | string;
 };
 
 export type PurchaseOrdersFiltersProps = {
-  value: Record<string, unknown>;
-  onChange: (filters: Record<string, unknown>) => void;
+  value: PurchaseOrdersFiltersValue;
+  onChange: (filters: PurchaseOrdersFiltersValue) => void;
 };
 
 export type PurchaseOrderRow = {
