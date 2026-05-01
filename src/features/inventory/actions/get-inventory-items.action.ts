@@ -32,7 +32,9 @@ export default async function getInventoryItemsAction(
     .order("created_at", { ascending: false });
 
   if (searchTerm) {
-    query = query.ilike("name", `%${searchTerm}%`);
+    query = query.or(
+      `name.ilike.%${searchTerm}%,sku_code.ilike.%${searchTerm}%`,
+    );
   }
 
   const { data, count, error } = await query.range(from, to);

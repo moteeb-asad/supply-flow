@@ -81,7 +81,7 @@ export const InventoryTableConfig: DataTableConfig<
               <span>{stock} Units</span>
               <span className={styles.className}>{styles.label}</span>
             </div>
-            <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
               <div
                 className={styles.barClass + " h-full"}
                 style={{ width: `${percent}%` }}

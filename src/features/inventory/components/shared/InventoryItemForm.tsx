@@ -8,6 +8,9 @@ import type {
   InventoryItemFormProps,
   InventoryItemFormValues,
 } from "../../types/form.types";
+import FormErrorBanner, {
+  getValidationSummaryMessage,
+} from "@/src/components/ui/FormErrorBanner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -43,9 +46,12 @@ export default function InventoryItemForm({
     resolver: zodResolver(AddInventoryItemSchema),
     defaultValues: getInventoryItemDefaultValues(initialValues),
   });
-  const firstFieldError = Object.values(errors).find(
-    (e) => e?.message,
-  )?.message;
+  const fieldErrorCount = Object.values(errors).reduce(
+    (count, error) => count + (error?.message ? 1 : 0),
+    0,
+  );
+  const bannerMessage =
+    serverError || getValidationSummaryMessage(fieldErrorCount);
 
   return (
     <form
@@ -59,16 +65,7 @@ export default function InventoryItemForm({
           isSubmitting ? "opacity-60" : "opacity-100"
         }`}
       >
-        {(serverError || firstFieldError) && (
-          <div className="p-4 bg-danger/10 border border-danger/20 rounded-xl flex gap-3 items-start">
-            <span className="material-symbols-outlined text-danger text-xl">
-              error
-            </span>
-            <div className="text-sm text-danger font-medium">
-              {serverError || firstFieldError}
-            </div>
-          </div>
-        )}
+        <FormErrorBanner align="center" message={bannerMessage} />
         <SupplierAssignmentSection
           register={register}
           errors={errors}
