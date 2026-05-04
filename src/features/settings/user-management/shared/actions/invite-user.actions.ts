@@ -3,6 +3,7 @@
 import { createAdminClient } from "@/src/db/supabaseAdmin";
 import { inviteUserSchema } from "../../users/validators/invite-user.schema";
 import { createClient } from "@/src/db/supabaseClient";
+import { requireSuperAdmin } from "@/src/features/auth/server/require-super-admin";
 
 type InviteUserResult =
   | { success: true; message: string }
@@ -15,6 +16,7 @@ export async function inviteUserAction(
   roleNames: string[],
   primaryRoleName: string,
 ): Promise<InviteUserResult> {
+  await requireSuperAdmin();
   try {
     // Validate input
     const validation = inviteUserSchema.safeParse({

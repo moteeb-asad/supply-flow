@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/src/db/supabaseClient";
+import { randomBytes } from "crypto";
 import type {
   CreatePurchaseOrderActionResult,
   CreatePurchaseOrderInput,
@@ -9,8 +10,12 @@ import type {
 import { createPurchaseOrderSchema } from "../validators/purchase-order.schema";
 
 function buildPurchaseOrderNumber(): string {
-  const stamp = Date.now().toString().slice(-8);
-  return `PO-${stamp}`;
+  const timestamp = new Date()
+    .toISOString()
+    .replace(/[-:.TZ]/g, "")
+    .slice(0, 14);
+  const entropy = randomBytes(3).toString("hex").toUpperCase();
+  return `PO-${timestamp}-${entropy}`;
 }
 
 function normalizeLineItems(
@@ -128,30 +133,58 @@ export async function createPurchaseOrderAction(
   const taxAmount = Number((subtotal * taxRate).toFixed(2));
   const totalAmount = Number((subtotal + taxAmount).toFixed(2));
 
-  const { data: purchaseOrder, error: insertPoError } = await supabase
-    .from("purchase_orders")
-    .insert({
-      po_number: buildPurchaseOrderNumber(),
-      supplier_id: supplier.id,
-      created_by: user.id,
-      status: validatedInput.status,
-      order_date: validatedInput.orderDate,
-      expected_delivery_date: validatedInput.expectedDeliveryDate || null,
-      payment_method: validatedInput.paymentMethod,
-      notes: validatedInput.notes || null,
-      currency: "USD",
-      subtotal,
-      tax_amount: taxAmount,
-      total_amount: totalAmount,
-    })
-    .select("id")
-    .single();
+  const maxAttempts = 3;
+  let purchaseOrderId: string | null = null;
 
-  if (insertPoError) {
-    return { success: false, error: insertPoError.message };
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const { data: purchaseOrder, error: insertPoError } = await supabase
+      .from("purchase_orders")
+      .insert({
+        po_number: buildPurchaseOrderNumber(),
+        supplier_id: supplier.id,
+        created_by: user.id,
+        status: validatedInput.status,
+        order_date: validatedInput.orderDate,
+        expected_delivery_date: validatedInput.expectedDeliveryDate || null,
+        payment_method: validatedInput.paymentMethod,
+        notes: validatedInput.notes || null,
+        currency: "USD",
+        subtotal,
+        tax_amount: taxAmount,
+        total_amount: totalAmount,
+      })
+      .select("id")
+      .single();
+
+    if (!insertPoError && purchaseOrder?.id) {
+      purchaseOrderId = purchaseOrder.id;
+      break;
+    }
+
+    const isUniquePoNumberCollision =
+      insertPoError?.code === "23505" &&
+      (`${insertPoError.message} ${insertPoError.details ?? ""}`.includes(
+        "po_number",
+      ) ||
+        `${insertPoError.message} ${insertPoError.details ?? ""}`.includes(
+          "purchase_orders_po_number_key",
+        ));
+
+    if (!isUniquePoNumberCollision || attempt === maxAttempts) {
+      return {
+        success: false,
+        error: insertPoError?.message ?? "Failed to create purchase order.",
+      };
+    }
   }
 
-  const purchaseOrderId = purchaseOrder.id;
+  if (!purchaseOrderId) {
+    return {
+      success: false,
+      error:
+        "Failed to create purchase order after retrying PO number generation.",
+    };
+  }
 
   const itemRows = lineItems.map((item) => ({
     purchase_order_id: purchaseOrderId,
