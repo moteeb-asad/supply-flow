@@ -56,9 +56,8 @@ export default async function addInventoryItemAction(
   });
 
   if (error) {
-    console.error("Transaction failed:", error);
     return {
-      error: `Failed: ${error.message} | Code: ${error.code} | Details: ${JSON.stringify(error.details || {})}`,
+      error: "Failed to create inventory item. Please try again.",
       resetKey: randomUUID(),
     };
   }
