@@ -12,7 +12,7 @@ const purchaseOrderLineItemSchema = z.object({
 
 export const createPurchaseOrderSchema = z.object({
   supplierId: z.string().trim().min(1, "Supplier is required"),
-  supplierName: z.string().trim().min(1, "Supplier is required"),
+  supplierName: z.string().trim().optional().default(""),
   orderDate: z.string().trim().min(1, "Order date is required"),
   expectedDeliveryDate: z.string().trim().optional().default(""),
   shippingMethod: z.enum(["standard", "express", "economy"]),
@@ -35,3 +35,10 @@ export const createPurchaseOrderSchema = z.object({
     .array(purchaseOrderLineItemSchema)
     .min(1, "Add at least one valid line item"),
 });
+
+export type CreatePurchaseOrderFormInput = z.input<
+  typeof createPurchaseOrderSchema
+>;
+export type CreatePurchaseOrderFormOutput = z.output<
+  typeof createPurchaseOrderSchema
+>;
