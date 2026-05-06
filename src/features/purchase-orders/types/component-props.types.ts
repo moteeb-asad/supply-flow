@@ -6,20 +6,6 @@ import type {
   PurchaseOrderLineItemFormValue,
   ShippingMethod,
 } from "./domain.types";
-import type {
-  PurchaseOrderFormValues,
-  PurchaseOrderDrawerMode,
-} from "./form.types";
-
-export type PurchaseOrderFormProps = {
-  mode: PurchaseOrderDrawerMode;
-  initialValues?: Partial<PurchaseOrderFormValues>;
-  onSubmit?: (values: PurchaseOrderFormValues) => void;
-  onCancel?: () => void;
-  onAddItemClick?: () => void;
-  onLineItemsChange?: (items: PurchaseOrderLineItemFormValue[]) => void;
-  isSubmitting?: boolean;
-};
 
 export type CreatePurchaseOrderDrawerProps = {
   onClose?: () => void;
@@ -32,19 +18,6 @@ export type EditPurchaseOrderDrawerProps = {
   onClose?: () => void;
   onAddItemClick?: () => void;
   onSuccess?: () => void;
-};
-
-export type SupplierSelectionSectionProps = {
-  supplierId?: string;
-  supplierName?: string;
-  error?: string;
-};
-
-export type LineItemsSectionProps = {
-  onAddItemClick?: () => void;
-  initialItems?: PurchaseOrderLineItemFormValue[];
-  onLineItemsChange?: (items: PurchaseOrderLineItemFormValue[]) => void;
-  error?: string;
 };
 
 export type AddItemFormProps = {
@@ -62,22 +35,6 @@ export type AddItemModalProps = {
   submitError?: string | null;
 };
 
-export type OrderDetailsSectionProps = {
-  orderDate?: string;
-  expectedDeliveryDate?: string;
-  shippingMethod?: ShippingMethod;
-  paymentMethod?: PaymentMethod;
-  onPaymentMethodChange?: (value: PaymentMethod) => void;
-  status?: CreatePurchaseOrderStatus;
-  errors?: {
-    orderDate?: string;
-    expectedDeliveryDate?: string;
-    shippingMethod?: string;
-    paymentMethod?: string;
-    status?: string;
-  };
-};
-
 export type TotalAmountSectionProps = {
   subtotal: number;
   taxAmount: number;
@@ -86,11 +43,6 @@ export type TotalAmountSectionProps = {
   submitLabel: string;
   onCancel?: () => void;
   isSubmitting?: boolean;
-};
-
-export type AdditionalNotesSectionProps = {
-  notes?: string;
-  error?: string;
 };
 
 export type PurchaseOrderDetailScreenProps = {

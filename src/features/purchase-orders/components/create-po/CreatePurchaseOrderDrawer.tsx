@@ -2,7 +2,13 @@
 
 import { FormDrawer } from "@/src/components/ui/FormDrawer";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState, useTransition } from "react";
+import {
+  useActionState,
+  useState,
+  useTransition,
+  useRef,
+  useEffect,
+} from "react";
 import { createPurchaseOrderAction } from "../../actions/create-purchaseorder.action";
 import type {
   AddItemFormValues,
@@ -10,48 +16,56 @@ import type {
   PurchaseOrderFormValues,
 } from "../../types";
 import AddItemModal from "../shared/add-item-modal/AddItemModal";
-import PurchaseOrderForm from "../shared/PurchaseOrderForm";
+import PurchaseOrderForm, {
+  PURCHASE_ORDER_FORM_ID,
+} from "../shared/PurchaseOrderForm";
+import type { UseFieldArrayAppend } from "react-hook-form";
 
 export default function CreatePurchaseOrderDrawer({
   onClose,
   onAddItemClick,
-  onSuccess,
 }: CreatePurchaseOrderDrawerProps) {
   const queryClient = useQueryClient();
+  const [state, formAction] = useActionState(
+    createPurchaseOrderAction,
+    undefined,
+  );
   const [isPending, startTransition] = useTransition();
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitValidationErrors, setSubmitValidationErrors] = useState<
-    string[]
-  >([]);
+
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
   const [addItemSubmitError, setAddItemSubmitError] = useState<string | null>(
     null,
   );
-  const [lineItems, setLineItems] = useState<
-    PurchaseOrderFormValues["lineItems"]
-  >([]);
+  const appendLineItemRef = useRef<UseFieldArrayAppend<
+    PurchaseOrderFormValues,
+    "lineItems"
+  > | null>(null);
 
-  const handleSubmit = (values: PurchaseOrderFormValues) => {
-    startTransition(async () => {
-      setSubmitError(null);
-      setSubmitValidationErrors([]);
-
-      const result = await createPurchaseOrderAction(values);
-
-      if (!result.success) {
-        setSubmitError(result.error ?? "Failed to create purchase order.");
-        setSubmitValidationErrors(result.validationErrors ?? []);
-        return;
-      }
-
-      await queryClient.invalidateQueries({
+  useEffect(() => {
+    if (state?.success && state?.purchaseOrderId) {
+      void queryClient.invalidateQueries({
         queryKey: ["purchase-orders-table"],
       });
-      await queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({
         queryKey: ["purchase-orders-metrics"],
       });
-      onSuccess?.();
       onClose?.();
+    }
+  }, [state?.success, state?.purchaseOrderId, queryClient, onClose]);
+
+  const handleDrawerSubmit = async (values: PurchaseOrderFormValues) => {
+    const formData = new FormData();
+    formData.append("supplierId", values.supplierId);
+    formData.append("supplierName", values.supplierName ?? "");
+    formData.append("orderDate", values.orderDate);
+    formData.append("expectedDeliveryDate", values.expectedDeliveryDate ?? "");
+    formData.append("shippingMethod", values.shippingMethod);
+    formData.append("status", values.status);
+    formData.append("paymentMethod", values.paymentMethod);
+    formData.append("notes", values.notes ?? "");
+    formData.append("lineItems", JSON.stringify(values.lineItems));
+    startTransition(() => {
+      formAction(formData);
     });
   };
 
@@ -63,19 +77,9 @@ export default function CreatePurchaseOrderDrawer({
   };
 
   const handleAddItem = (item: AddItemFormValues) => {
-    const normalizedSkuName = item.skuName.trim().toLowerCase();
-    const alreadyExists = lineItems.some(
-      (lineItem) => lineItem.skuName.trim().toLowerCase() === normalizedSkuName,
-    );
+    if (!appendLineItemRef.current) return;
 
-    if (alreadyExists) {
-      setAddItemSubmitError(
-        "This item already exists in line items. Edit its quantity or unit price instead.",
-      );
-      return;
-    }
-
-    setLineItems((prev) => [...prev, item]);
+    appendLineItemRef.current(item);
     setAddItemSubmitError(null);
     setIsAddItemModalOpen(false);
   };
@@ -83,34 +87,24 @@ export default function CreatePurchaseOrderDrawer({
   return (
     <>
       <FormDrawer
+        title="Create New Purchase Order"
         description="Drafting a new order for procurement"
         onClose={onClose}
-        showFooter={false}
-        title="Create New Purchase Order"
+        submitLabel="Create Purchase Order"
+        submittingLabel="Creating..."
+        isSubmitting={isPending}
+        formId={PURCHASE_ORDER_FORM_ID}
       >
-        {submitError ? (
-          <div className="px-6 pt-4">
-            <p className="rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm px-3 py-2">
-              {submitError}
-            </p>
-            {submitValidationErrors.length > 0 ? (
-              <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-                {submitValidationErrors.map((message) => (
-                  <p key={message}>{message}</p>
-                ))}
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-
         <PurchaseOrderForm
-          initialValues={{ lineItems }}
-          isSubmitting={isPending}
           mode="create"
+          formId={PURCHASE_ORDER_FORM_ID}
+          serverError={state?.error}
+          isSubmitting={isPending}
+          onSubmit={handleDrawerSubmit}
           onAddItemClick={handleAddItemClick}
-          onCancel={onClose}
-          onLineItemsChange={setLineItems}
-          onSubmit={handleSubmit}
+          onFieldArrayReady={(methods) => {
+            appendLineItemRef.current = methods.append;
+          }}
         />
       </FormDrawer>
 

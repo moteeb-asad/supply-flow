@@ -4,13 +4,9 @@ import {
 } from "@/src/features/purchase-orders/types";
 
 export default function OrderDetailsSection({
-  orderDate,
-  expectedDeliveryDate,
-  shippingMethod,
-  paymentMethod,
-  onPaymentMethodChange,
-  status,
+  register,
   errors,
+  onPaymentMethodChange,
   mode = "create",
 }: OrderDetailsSectionProps & { mode?: PurchaseOrderDrawerMode }) {
   const handlePaymentMethodChange = (
@@ -37,12 +33,12 @@ export default function OrderDetailsSection({
           </label>
           <input
             className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-            defaultValue={orderDate || ""}
+            {...register("orderDate")}
             name="orderDate"
             type="date"
           />
           {errors?.orderDate ? (
-            <p className="text-xs text-red-600">{errors.orderDate}</p>
+            <p className="text-xs text-red-600">{errors.orderDate.message}</p>
           ) : null}
         </div>
         <div className="space-y-1.5">
@@ -51,59 +47,65 @@ export default function OrderDetailsSection({
           </label>
           <input
             className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-            defaultValue={expectedDeliveryDate || ""}
+            {...register("expectedDeliveryDate")}
             name="expectedDeliveryDate"
             type="date"
           />
           {errors?.expectedDeliveryDate ? (
             <p className="text-xs text-red-600">
-              {errors.expectedDeliveryDate}
+              {errors.expectedDeliveryDate.message}
+            </p>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <label className="text-sm font-semibold text-[#0e121b]">
+            Shipping Method
+          </label>
+          <select
+            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:ring-2 focus:ring-primary"
+            {...register("shippingMethod")}
+            name="shippingMethod"
+          >
+            <option value="standard">Standard Freight (5-7 days)</option>
+            <option value="express">Express Air (1-2 days)</option>
+            <option value="economy">Economy Ground (10-14 days)</option>
+          </select>
+          {errors?.shippingMethod ? (
+            <p className="text-xs text-red-600">
+              {errors.shippingMethod.message}
+            </p>
+          ) : null}
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-sm font-semibold text-[#0e121b]">
+            Payment Method
+          </label>
+          <select
+            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:ring-2 focus:ring-primary"
+            {...register("paymentMethod")}
+            name="paymentMethod"
+            onChange={handlePaymentMethodChange}
+          >
+            <option value="cod">COD (Cash) - GST 16%</option>
+            <option value="card">Card - GST 5%</option>
+          </select>
+          {errors?.paymentMethod ? (
+            <p className="text-xs text-red-600">
+              {errors.paymentMethod.message}
             </p>
           ) : null}
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-sm font-semibold text-[#0e121b]">
-          Shipping Method
-        </label>
-        <select
-          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:ring-2 focus:ring-primary"
-          defaultValue={shippingMethod || "standard"}
-          name="shippingMethod"
-        >
-          <option value="standard">Standard Freight (5-7 days)</option>
-          <option value="express">Express Air (1-2 days)</option>
-          <option value="economy">Economy Ground (10-14 days)</option>
-        </select>
-        {errors?.shippingMethod ? (
-          <p className="text-xs text-red-600">{errors.shippingMethod}</p>
-        ) : null}
-      </div>
-
-      <div className="space-y-1.5">
-        <label className="text-sm font-semibold text-[#0e121b]">
-          Payment Method
-        </label>
-        <select
-          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:ring-2 focus:ring-primary"
-          value={paymentMethod || "cod"}
-          name="paymentMethod"
-          onChange={handlePaymentMethodChange}
-        >
-          <option value="cod">COD (Cash) - GST 16%</option>
-          <option value="card">Card - GST 5%</option>
-        </select>
-        {errors?.paymentMethod ? (
-          <p className="text-xs text-red-600">{errors.paymentMethod}</p>
-        ) : null}
-      </div>
-
-      <div className="space-y-1.5">
         <label className="text-sm font-semibold text-[#0e121b]">Status</label>
         <select
           className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:ring-2 focus:ring-primary"
-          defaultValue={status || "draft"}
+          {...register("status")}
           name="status"
         >
           {mode === "create" ? (
@@ -123,7 +125,7 @@ export default function OrderDetailsSection({
           )}
         </select>
         {errors?.status ? (
-          <p className="text-xs text-red-600">{errors.status}</p>
+          <p className="text-xs text-red-600">{errors.status.message}</p>
         ) : null}
       </div>
     </section>
