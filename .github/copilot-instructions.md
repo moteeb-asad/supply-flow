@@ -169,6 +169,23 @@ See [src/components/layout/sidebar/menu.config.ts](src/components/layout/sidebar
 
 ## Development Workflow
 
+### Commit Message Format
+
+- Use a conventional commit subject: `<type>(<scope>): <summary>`.
+- Use a compact bullet list in the commit body with no blank lines between bullets.
+- Keep bullets action-oriented and specific to changed areas.
+- Prefer one logical change per commit.
+
+Example:
+
+```text
+feat(purchase-orders): align create and edit drawer flow
+- Refactor create PO action to parse FormData and validate with shared schema
+- Refactor update PO action to use useActionState-compatible signature
+- Sync edit drawer behavior with create drawer for cache invalidation and close-on-success
+- Replace supplier selection wiring with SupplierAssignmentSection and single supplier error source
+```
+
 ### Commands
 
 ```bash

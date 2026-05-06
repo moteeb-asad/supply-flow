@@ -1,8 +1,8 @@
-import type { AdditionalNotesSectionProps } from "../../types";
+import type { AdditionalNotesSectionProps } from "@/src/features/purchase-orders/types/form.types";
 
 export default function AdditionalNotesSection({
-  notes,
-  error,
+  register,
+  errors,
 }: AdditionalNotesSectionProps) {
   return (
     <section className="space-y-5">
@@ -16,11 +16,14 @@ export default function AdditionalNotesSection({
       </div>
       <textarea
         className="min-h-[96px] w-full resize-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-        defaultValue={notes ?? ""}
+        // defaultValue={notes ?? ""}
+        {...register("notes")}
         name="notes"
         placeholder="Add supplier notes or internal context"
       />
-      {error ? <p className="text-xs text-red-600">{error}</p> : null}
+      {errors.notes ? (
+        <p className="text-xs text-red-600">{errors.notes.message}</p>
+      ) : null}
     </section>
   );
 }

@@ -1,61 +1,40 @@
-import type { LineItemsSectionProps } from "../../types";
+import type { LineItemsSectionProps } from "@/src/features/purchase-orders/types/form.types";
 
 export default function LineItemsSection({
+  register,
+  errors,
   onAddItemClick,
-  initialItems,
+  fields,
+  update,
+  remove,
   onLineItemsChange,
-  error,
 }: LineItemsSectionProps) {
-  const rows = initialItems ?? [];
+  const handleSkuNameChange = (index: number, value: string) => {
+    update(index, { ...fields[index], skuName: value });
+    onLineItemsChange?.();
+  };
 
-  const getIndex = (value: string | undefined): number => {
-    if (!value) return -1;
+  const handleQuantityChange = (index: number, value: string) => {
     const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : -1;
-  };
-
-  const updateRow = (
-    index: number,
-    updater: (row: (typeof rows)[number]) => (typeof rows)[number],
-  ) => {
-    if (index < 0 || index >= rows.length) return;
-    const next = rows.map((row, rowIndex) =>
-      rowIndex === index ? updater(row) : row,
-    );
-    onLineItemsChange?.(next);
-  };
-
-  const handleSkuNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const index = getIndex(event.currentTarget.dataset.index);
-    const value = event.currentTarget.value;
-    updateRow(index, (row) => ({ ...row, skuName: value }));
-  };
-
-  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const index = getIndex(event.currentTarget.dataset.index);
-    const parsed = Number(event.currentTarget.value);
-    updateRow(index, (row) => ({
-      ...row,
+    update(index, {
+      ...fields[index],
       quantity: Number.isFinite(parsed) ? parsed : 0,
-    }));
+    });
+    onLineItemsChange?.();
   };
 
-  const handleUnitPriceChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const index = getIndex(event.currentTarget.dataset.index);
-    const parsed = Number(event.currentTarget.value);
-    updateRow(index, (row) => ({
-      ...row,
+  const handleUnitPriceChange = (index: number, value: string) => {
+    const parsed = Number(value);
+    update(index, {
+      ...fields[index],
       unitPrice: Number.isFinite(parsed) ? parsed : 0,
-    }));
+    });
+    onLineItemsChange?.();
   };
 
-  const handleRemoveItem = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const index = getIndex(event.currentTarget.dataset.index);
-    if (index < 0 || index >= rows.length) return;
-    const next = rows.filter((_, rowIndex) => rowIndex !== index);
-    onLineItemsChange?.(next);
+  const handleRemoveItem = (index: number) => {
+    remove(index);
+    onLineItemsChange?.();
   };
 
   return (
@@ -90,7 +69,7 @@ export default function LineItemsSection({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {rows.length === 0 ? (
+            {fields.length === 0 ? (
               <tr>
                 <td
                   className="px-4 py-6 text-center text-sm text-[#4e6797]"
@@ -101,61 +80,94 @@ export default function LineItemsSection({
                 </td>
               </tr>
             ) : (
-              rows.map((row, index) => (
-                <tr key={`${row.skuName}-${index}`}>
-                  <td className="px-4 py-3">
-                    <input
-                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all placeholder:text-[#4e6797] focus:border-transparent focus:ring-2 focus:ring-primary"
-                      data-index={String(index)}
-                      name={`lineItems[${index}].skuName`}
-                      placeholder="Search item..."
-                      type="text"
-                      value={row.skuName}
-                      onChange={handleSkuNameChange}
-                    />
-                  </td>
-                  <td className="px-4 py-3">
-                    <input
-                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-                      data-index={String(index)}
-                      min={1}
-                      name={`lineItems[${index}].quantity`}
-                      type="number"
-                      value={Number.isFinite(row.quantity) ? row.quantity : 0}
-                      onChange={handleQuantityChange}
-                    />
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center">
-                      <span className="mr-1 text-[#4e6797]">$</span>
+              fields.map((field, index) => {
+                const skuNameField = register(
+                  `lineItems.${index}.skuName` as const,
+                );
+                const quantityField = register(
+                  `lineItems.${index}.quantity` as const,
+                  {
+                    valueAsNumber: true,
+                  },
+                );
+                const unitPriceField = register(
+                  `lineItems.${index}.unitPrice` as const,
+                  {
+                    valueAsNumber: true,
+                  },
+                );
+
+                return (
+                  <tr key={field.id}>
+                    <td className="px-4 py-3">
+                      <input
+                        className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all placeholder:text-[#4e6797] focus:border-transparent focus:ring-2 focus:ring-primary"
+                        placeholder="Search item..."
+                        type="text"
+                        {...skuNameField}
+                        value={field.skuName}
+                        onChange={(event) => {
+                          skuNameField.onChange(event);
+                          handleSkuNameChange(index, event.currentTarget.value);
+                        }}
+                      />
+                    </td>
+                    <td className="px-4 py-3">
                       <input
                         className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-                        data-index={String(index)}
-                        min={0}
-                        name={`lineItems[${index}].unitPrice`}
-                        step="0.01"
+                        min={1}
                         type="number"
+                        {...quantityField}
                         value={
-                          Number.isFinite(row.unitPrice) ? row.unitPrice : 0
+                          Number.isFinite(field.quantity) ? field.quantity : 0
                         }
-                        onChange={handleUnitPriceChange}
+                        onChange={(event) => {
+                          quantityField.onChange(event);
+                          handleQuantityChange(
+                            index,
+                            event.currentTarget.value,
+                          );
+                        }}
                       />
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <button
-                      className="text-[#4e6797] transition-colors hover:text-red-500"
-                      data-index={String(index)}
-                      onClick={handleRemoveItem}
-                      type="button"
-                    >
-                      <span className="material-symbols-outlined text-[20px]">
-                        delete
-                      </span>
-                    </button>
-                  </td>
-                </tr>
-              ))
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center">
+                        <span className="mr-1 text-[#4e6797]">$</span>
+                        <input
+                          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+                          min={0}
+                          step="0.01"
+                          type="number"
+                          {...unitPriceField}
+                          value={
+                            Number.isFinite(field.unitPrice)
+                              ? field.unitPrice
+                              : 0
+                          }
+                          onChange={(event) => {
+                            unitPriceField.onChange(event);
+                            handleUnitPriceChange(
+                              index,
+                              event.currentTarget.value,
+                            );
+                          }}
+                        />
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        className="text-[#4e6797] transition-colors hover:text-red-500"
+                        onClick={() => handleRemoveItem(index)}
+                        type="button"
+                      >
+                        <span className="material-symbols-outlined text-[20px]">
+                          delete
+                        </span>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
             )}
             <tr>
               <td className="px-4 py-3" colSpan={4}>
@@ -173,7 +185,9 @@ export default function LineItemsSection({
         </table>
       </div>
 
-      {error ? <p className="text-xs text-red-600">{error}</p> : null}
+      {errors ? (
+        <p className="text-xs text-red-600">{errors.lineItems?.message}</p>
+      ) : null}
     </section>
   );
 }

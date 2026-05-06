@@ -1,69 +1,51 @@
 "use server";
 
 import { createClient } from "@/src/db/supabaseClient";
-import type {
-  PurchaseOrderLineItemFormValue,
-  UpdatePurchaseOrderActionResult,
-  UpdatePurchaseOrderInput,
-} from "../types";
 import { createPurchaseOrderSchema } from "../validators/purchase-order.schema";
+
+type UpdatePurchaseOrderActionResult =
+  | { error?: string; success?: string; purchaseOrderId?: string }
+  | undefined;
 
 const isUuid = (value: string) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
     value,
   );
 
-function normalizeLineItems(
-  lineItems: PurchaseOrderLineItemFormValue[],
-): PurchaseOrderLineItemFormValue[] {
-  return lineItems
-    .map((item) => ({
-      skuName: item.skuName.trim(),
-      quantity: Number(item.quantity),
-      unitPrice: Number(item.unitPrice),
-    }))
-    .filter(
-      (item) =>
-        item.skuName.length > 0 &&
-        Number.isFinite(item.quantity) &&
-        item.quantity > 0 &&
-        Number.isFinite(item.unitPrice) &&
-        item.unitPrice > 0,
-    );
-}
-
 export async function updatePurchaseOrderAction(
-  input: UpdatePurchaseOrderInput,
+  _prevState: UpdatePurchaseOrderActionResult,
+  formData: FormData,
 ): Promise<UpdatePurchaseOrderActionResult> {
-  const purchaseOrderId = input.purchaseOrderId.trim();
+  const purchaseOrderId = formData.get("purchaseOrderId") as string;
 
   if (!purchaseOrderId || !isUuid(purchaseOrderId)) {
-    return { success: false, error: "Invalid purchase order id." };
+    return { error: "Invalid purchase order id." };
   }
 
-  const schemaResult = createPurchaseOrderSchema.safeParse(input.values);
+  const lineItemsRaw = formData.get("lineItems");
+  const lineItems = lineItemsRaw ? JSON.parse(lineItemsRaw as string) : [];
 
-  if (!schemaResult.success) {
-    const validationErrors = Object.values(
-      schemaResult.error.flatten().fieldErrors,
-    )
-      .flat()
-      .filter((message): message is string => Boolean(message));
+  const raw = {
+    supplierId: formData.get("supplierId"),
+    supplierName: formData.get("supplierName"),
+    orderDate: formData.get("orderDate"),
+    expectedDeliveryDate: formData.get("expectedDeliveryDate"),
+    shippingMethod: formData.get("shippingMethod"),
+    paymentMethod: formData.get("paymentMethod"),
+    status: formData.get("status"),
+    notes: formData.get("notes"),
+    lineItems,
+  };
 
+  const validation = createPurchaseOrderSchema.safeParse(raw);
+  if (!validation.success) {
+    const firstError = validation.error.issues[0];
     return {
-      success: false,
-      error: validationErrors[0] ?? "Invalid purchase order payload.",
-      validationErrors,
+      error: firstError?.message ?? "Invalid purchase order data",
     };
   }
 
-  const values = schemaResult.data;
-  const supplierId = values.supplierId.trim();
-  const lineItems = normalizeLineItems(values.lineItems);
-
-  if (lineItems.length === 0) {
-    return { success: false, error: "Add at least one valid line item." };
-  }
+  const values = validation.data;
 
   const supabase = await createClient();
   const {
@@ -71,54 +53,43 @@ export async function updatePurchaseOrderAction(
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { success: false, error: "You must be logged in to edit a PO." };
+    return { error: "You must be logged in to edit a PO." };
   }
 
   const { data: supplier, error: supplierError } = await supabase
     .from("suppliers")
     .select("id, status")
-    .eq("id", supplierId)
+    .eq("id", values.supplierId)
     .maybeSingle();
 
-  if (supplierError) {
-    return { success: false, error: supplierError.message };
-  }
-
-  if (!supplier?.id) {
-    return {
-      success: false,
-      error: "Selected supplier was not found. Please select a valid supplier.",
-    };
+  if (supplierError || !supplier?.id) {
+    return { error: "Selected supplier not found." };
   }
 
   if (supplier.status !== "active") {
-    return {
-      success: false,
-      error: "Selected supplier is inactive. Please choose an active supplier.",
-    };
+    return { error: "Selected supplier is inactive." };
   }
 
-  const skuNames = [...new Set(lineItems.map((item) => item.skuName))];
+  const skuNames = [...new Set(values.lineItems.map((item) => item.skuName))];
   const { data: skus, error: skusError } = await supabase
     .from("skus")
     .select("id, name")
     .in("name", skuNames);
 
   if (skusError) {
-    return { success: false, error: skusError.message };
+    return { error: skusError.message };
   }
 
   const skuIdByName = new Map((skus ?? []).map((sku) => [sku.name, sku.id]));
+  const missingSku = values.lineItems.find(
+    (item) => !skuIdByName.has(item.skuName),
+  );
 
-  const missingSku = lineItems.find((item) => !skuIdByName.has(item.skuName));
   if (missingSku) {
-    return {
-      success: false,
-      error: `SKU not found: ${missingSku.skuName}`,
-    };
+    return { error: `SKU not found: ${missingSku.skuName}` };
   }
 
-  const subtotal = lineItems.reduce(
+  const subtotal = values.lineItems.reduce(
     (sum, item) => sum + item.quantity * item.unitPrice,
     0,
   );
@@ -143,7 +114,7 @@ export async function updatePurchaseOrderAction(
     .eq("id", purchaseOrderId);
 
   if (updateError) {
-    return { success: false, error: updateError.message };
+    return { error: updateError.message };
   }
 
   const { data: existingItems, error: existingItemsError } = await supabase
@@ -152,7 +123,7 @@ export async function updatePurchaseOrderAction(
     .eq("purchase_order_id", purchaseOrderId);
 
   if (existingItemsError) {
-    return { success: false, error: existingItemsError.message };
+    return { error: existingItemsError.message };
   }
 
   const receivedQtyBySkuId = new Map(
@@ -162,7 +133,7 @@ export async function updatePurchaseOrderAction(
     ]),
   );
 
-  const skuIdsInPayload = lineItems.map(
+  const skuIdsInPayload = values.lineItems.map(
     (item) => skuIdByName.get(item.skuName) as string,
   );
 
@@ -178,11 +149,11 @@ export async function updatePurchaseOrderAction(
       .in("sku_id", staleSkuIds);
 
     if (deleteStaleItemsError) {
-      return { success: false, error: deleteStaleItemsError.message };
+      return { error: deleteStaleItemsError.message };
     }
   }
 
-  const upsertRows = lineItems.map((item) => {
+  const upsertRows = values.lineItems.map((item) => {
     const skuId = skuIdByName.get(item.skuName) as string;
     return {
       purchase_order_id: purchaseOrderId,
@@ -198,8 +169,11 @@ export async function updatePurchaseOrderAction(
     .upsert(upsertRows, { onConflict: "purchase_order_id,sku_id" });
 
   if (upsertItemsError) {
-    return { success: false, error: upsertItemsError.message };
+    return { error: upsertItemsError.message };
   }
 
-  return { success: true };
+  return {
+    success: "Purchase order updated successfully.",
+    purchaseOrderId,
+  };
 }
