@@ -13,7 +13,6 @@ export function UsersFilters({
   const handleLastLoginChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value as FilterPeriod | "";
 
-    // Pass the updated values, preserving other filters
     onChange({
       ...values,
       lastLogin: value || undefined,

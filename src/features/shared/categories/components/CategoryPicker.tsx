@@ -1,9 +1,8 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
-import { getCategoriesAction } from "../actions/get-categories.action";
+import { useEffect, useState } from "react";
 import type { CategoryPickerProps, SharedCategoryOption } from "../types";
+import useCategoriesOptions from "../hooks/useCategoriesOptions";
 
 const PAGE_SIZE = 8;
 
@@ -40,24 +39,8 @@ export default function CategoryPicker({
     return () => clearTimeout(handle);
   }, [query]);
 
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useInfiniteQuery({
-      queryKey: ["category-picker", debouncedQuery],
-      initialPageParam: 0,
-      queryFn: ({ pageParam }) =>
-        getCategoriesAction({
-          search: debouncedQuery,
-          limit: PAGE_SIZE,
-          offset: pageParam,
-        }),
-      getNextPageParam: (lastPage) => lastPage.nextOffset ?? undefined,
-      staleTime: 60_000,
-    });
-
-  const options = useMemo(
-    () => data?.pages.flatMap((page) => page.items) ?? [],
-    [data],
-  );
+  const { options, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useCategoriesOptions({ search: debouncedQuery, pageSize: PAGE_SIZE });
 
   const handleSelectCategory = (category: SharedCategoryOption) => {
     setSelectedCategory(category);

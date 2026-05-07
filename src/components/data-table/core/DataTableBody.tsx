@@ -2,12 +2,16 @@ import React from "react";
 import type { DataTableConfig } from "../types";
 type RowWithId = { id: string | number };
 
-export function DataTableBody<T extends RowWithId, P = unknown>({
+export function DataTableBody<
+  T extends RowWithId,
+  P = unknown,
+  TFilters extends object = Record<string, never>,
+>({
   config,
   data,
   onRowClick,
 }: {
-  config: DataTableConfig<T, P>;
+  config: DataTableConfig<T, P, TFilters>;
   data: T[];
   onRowClick?: (row: T, event: React.MouseEvent) => void;
 }) {

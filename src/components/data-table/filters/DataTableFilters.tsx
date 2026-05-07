@@ -1,15 +1,15 @@
 import React from "react";
 import DataTableFiltersPanel from "@/src/components/data-table/filters/DataTableFiltersPanel";
-import type { DataTableFiltersProps } from "../../data-table/types";
+import type { DataTableFiltersPropsGeneric } from "../../data-table/types";
 
-export function DataTableFilters({
+export function DataTableFilters<TFilters extends object>({
   filtersOpen,
   config,
   values,
   onChange,
   onApply,
   onClear,
-}: DataTableFiltersProps & {
+}: DataTableFiltersPropsGeneric<TFilters> & {
   onApply: () => void;
   onClear: () => void;
 }) {

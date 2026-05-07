@@ -10,7 +10,7 @@ import { DataTableSearchBar } from "@/src/components/data-table/search/DataTable
 import { DataTablePaginationBar } from "@/src/components/data-table/pagination/DataTablePaginationBar";
 import DataTableSkeleton from "@/src/components/data-table/core/DataTableSkeleton";
 
-import type { DataTableProps, Filters, PaginationState } from "../types";
+import type { DataTableProps, PaginationState } from "../types";
 import useDataTableState from "../hooks/useDataTableState";
 
 /**
@@ -20,15 +20,10 @@ import useDataTableState from "../hooks/useDataTableState";
  * - Used by Users, Invitations, and future modules
  **/
 
-const INITIAL_FILTERS: Filters = {
-  roleIds: [],
-  lastLogin: undefined,
-};
-
 export default function DataTable<
   T extends { id: string | number },
   P = unknown,
-  TFilters = unknown,
+  TFilters extends object = Record<string, never>,
 >({
   config,
   onRowClick,
@@ -36,7 +31,7 @@ export default function DataTable<
   filters,
   onFiltersChange,
 }: DataTableProps<T, P, TFilters>) {
-  const table = useDataTableState<Filters>(INITIAL_FILTERS);
+  const table = useDataTableState<TFilters>(filters);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
@@ -159,7 +154,7 @@ export default function DataTable<
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <DataTableHeader config={config} />
-              <DataTableBody<T, P>
+              <DataTableBody<T, P, TFilters>
                 config={config}
                 data={data}
                 onRowClick={onRowClick}
@@ -179,7 +174,7 @@ export default function DataTable<
 
       {/* Filters */}
 
-      <DataTableFilters
+      <DataTableFilters<TFilters>
         filtersOpen={filtersOpen}
         setFiltersOpen={setFiltersOpen}
         config={config}

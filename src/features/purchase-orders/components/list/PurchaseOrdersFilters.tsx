@@ -1,26 +1,23 @@
 "use client";
 
 import { DATE_RANGE_OPTIONS } from "@/src/constants/dateRangeOptions";
-import type {
-  PurchaseOrdersFiltersValue,
-  PurchaseOrdersFiltersProps,
-} from "../../types";
+import type { PurchaseOrdersFiltersValue } from "../../types";
 
 export default function PurchaseOrdersFilters({
   values,
   onChange,
 }: {
-  values: Record<string, unknown>;
-  onChange: (filters: Record<string, unknown>) => void;
+  values: PurchaseOrdersFiltersValue;
+  onChange: (filters: PurchaseOrdersFiltersValue) => void;
 }) {
-  const filters = values as PurchaseOrdersFiltersValue;
+  const filters = values;
 
-  const setFilter = (key: string, nextValue: string) => {
+  const setDateRangeFilter = (nextValue: string) => {
     const next = { ...values };
     if (!nextValue) {
-      delete next[key];
+      delete next.dateRange;
     } else {
-      next[key] = nextValue;
+      next.dateRange = nextValue;
     }
     onChange(next);
   };
@@ -33,7 +30,7 @@ export default function PurchaseOrdersFilters({
         </h3>
         <select
           className="w-full bg-white border border-[#d0d7e7] rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
-          onChange={(event) => setFilter("dateRange", event.target.value)}
+          onChange={(event) => setDateRangeFilter(event.target.value)}
           value={(filters.dateRange as string | undefined) ?? ""}
         >
           {DATE_RANGE_OPTIONS.map((opt) => (

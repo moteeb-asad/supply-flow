@@ -22,14 +22,33 @@ export type DataTableFiltersProps = {
   onClear?: () => void;
 };
 
-export type DataTableConfig<T, P = unknown> = {
+export type DataTableFiltersPropsGeneric<TFilters extends object> = {
+  filtersOpen: boolean;
+  setFiltersOpen: (open: boolean) => void;
+  config: {
+    filters?: React.ComponentType<{
+      values: TFilters;
+      onChange: (filters: TFilters) => void;
+    }>;
+  };
+  values: TFilters;
+  onChange: (filters: TFilters) => void;
+  onApply?: () => void;
+  onClear?: () => void;
+};
+
+export type DataTableConfig<
+  T,
+  P = unknown,
+  TFilters extends object = Filters,
+> = {
   fetcher: (params: P) => Promise<{ data: T[]; total: number }>;
   queryKey?: (params: P) => readonly unknown[];
   columns: DataTableColumn<T>[];
   rowHref?: (row: T) => string;
   filters?: React.ComponentType<{
-    values: Filters;
-    onChange: (filters: Filters) => void;
+    values: TFilters;
+    onChange: (filters: TFilters) => void;
   }>;
   searchPlaceholder?: string;
 };
@@ -49,9 +68,9 @@ export type PaginationState = {
 export type DataTableProps<
   T extends { id: string | number },
   P = unknown,
-  TFilters = unknown,
+  TFilters extends object = Filters,
 > = {
-  config: DataTableConfig<T, P>;
+  config: DataTableConfig<T, P, TFilters>;
   refreshKey?: string | number;
   onRowClick?: (row: T, event: React.MouseEvent) => void;
 
