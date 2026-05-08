@@ -54,12 +54,8 @@ export const inventoryTableColumns: DataTableColumn<InventoryItem>[] = [
     header: "Stock Level",
     className: "px-6 py-4",
     cell: (row) => {
-      // Normalize stock value
       const stock = typeof row.initialStock === "number" ? row.initialStock : 0;
-      // Define thresholds
-      let status: StockStatus = "good";
-      if (stock <= 20) status = "critical";
-      else if (stock <= 50) status = "low";
+      const status: StockStatus = row.stockStatus;
 
       const percent = Math.min(100, Math.round((stock / 300) * 100)); // 300 is arbitrary max for bar
       const styles = stockStatusStyles[status];

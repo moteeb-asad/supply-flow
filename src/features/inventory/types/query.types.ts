@@ -9,7 +9,10 @@ export type InventoryItemQueryParams = {
 
 export type InventoryItemFiltersValue = {
   category?: string;
+  categoryName?: string;
   stockStatus?: StockStatus;
+  unitPriceMin?: number;
+  unitPriceMax?: number;
 };
 
 export type InventoryItemRow = {

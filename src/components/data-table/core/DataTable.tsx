@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { DataTableHeader } from "@/src/components/data-table/core/DataTableHeader";
@@ -12,6 +13,19 @@ import DataTableSkeleton from "@/src/components/data-table/core/DataTableSkeleto
 
 import type { DataTableProps, PaginationState } from "../types";
 import useDataTableState from "../hooks/useDataTableState";
+
+const isFilterValueActive = (value: unknown): boolean => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === "string") return value.trim().length > 0;
+  if (Array.isArray(value)) return value.length > 0;
+  return true;
+};
+
+const shouldCountFilter = (key: string): boolean => {
+  // Exclude helper fields that are used for URL display but represent the same filter
+  // e.g., "categoryName" is a helper for "category", should not be counted separately
+  return !key.endsWith("Name");
+};
 
 /**
  * - Generic DataTable Engine
@@ -31,8 +45,23 @@ export default function DataTable<
   filters,
   onFiltersChange,
 }: DataTableProps<T, P, TFilters>) {
-  const table = useDataTableState<TFilters>(filters);
+  // Filters
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  // Parse URL filters synchronously during render
+  const initialFilters = useMemo(() => {
+    if (!config.parseFiltersFromUrl) return filters;
+    return config.parseFiltersFromUrl(
+      new URLSearchParams(searchParams.toString()),
+    );
+  }, [config, filters, searchParams]);
+
+  const table = useDataTableState<TFilters>(initialFilters);
+
+  // Search + Pagination
   const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
     page: 1,
@@ -51,6 +80,16 @@ export default function DataTable<
         filters: table.appliedFilters,
       }) as P,
     [pagination.page, pagination.pageSize, search, table.appliedFilters],
+  );
+
+  const activeFilterCount = useMemo(
+    () =>
+      Object.entries(
+        (table.appliedFilters ?? {}) as Record<string, unknown>,
+      ).filter(
+        ([key, value]) => shouldCountFilter(key) && isFilterValueActive(value),
+      ).length,
+    [table.appliedFilters],
   );
 
   // -------- QUERY KEY --------
@@ -105,11 +144,28 @@ export default function DataTable<
 
   const handleApplyFilters = () => {
     table.applyFilters();
+
+    const params = new URLSearchParams(searchParams.toString());
+    config.writeFiltersToUrl?.(table.draftFilters, params);
+    params.set("page", "1");
+
+    router.replace(`${pathname}?${params.toString()}`);
     setFiltersOpen(false);
   };
 
   const handleClearFilters = () => {
-    table.clearFilters();
+    // Explicitly reset to the original empty filters prop
+    table.setDraftFilters(filters);
+    table.setAppliedFilters(filters);
+
+    const params = new URLSearchParams(searchParams.toString());
+    config.writeFiltersToUrl?.(filters, params);
+    params.delete("page");
+
+    const nextUrl = params.toString()
+      ? `${pathname}?${params.toString()}`
+      : pathname;
+    router.replace(nextUrl);
     setFiltersOpen(false);
   };
 
@@ -138,7 +194,11 @@ export default function DataTable<
               filter_alt
             </span>
             <span>Advanced Filters</span>
-            <span className="inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-primary text-white text-[11px] px-1.5"></span>
+            {activeFilterCount > 0 ? (
+              <span className="inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-primary text-white text-[11px] px-1.5">
+                {activeFilterCount}
+              </span>
+            ) : null}
           </button>
         )}
       </div>

@@ -5,6 +5,7 @@ import {
   InventoryItemFiltersValue,
   StockStatus,
 } from "@/src/features/inventory/types/query.types";
+import type { SharedCategoryOption } from "@/src/features/shared/categories/types";
 
 export default function InventoryTableFilters({
   onChange,
@@ -21,10 +22,30 @@ export default function InventoryTableFilters({
 
   const handleStockStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value as StockStatus | "";
-
     onChange({
       ...values,
       stockStatus: value || undefined,
+    });
+  };
+
+  const handleCategoryChange = (category: SharedCategoryOption | null) => {
+    onChange({
+      ...values,
+      category: category?.id || undefined,
+      categoryName: category?.name || undefined,
+    });
+  };
+
+  const handlePriceRangeChange = (
+    key: "unitPriceMin" | "unitPriceMax",
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const rawValue = e.target.value.trim();
+    const nextValue = rawValue === "" ? undefined : Number(rawValue);
+
+    onChange({
+      ...values,
+      [key]: Number.isFinite(nextValue) ? nextValue : undefined,
     });
   };
   return (
@@ -34,7 +55,12 @@ export default function InventoryTableFilters({
         <h3 className="text-xs font-bold text-[#4e6797] uppercase tracking-wider mb-3">
           Category
         </h3>
-        <CategoryPicker label="" />
+        <CategoryPicker
+          label=""
+          initialCategoryId={values?.category}
+          initialCategoryName={values?.categoryName}
+          onCategoryChange={handleCategoryChange}
+        />
       </div>
       {/* Unit Price Range  */}
       <div>
@@ -50,6 +76,10 @@ export default function InventoryTableFilters({
               className="w-full bg-surface-variant border-[#d0d7e7] rounded-lg py-2 pl-6 pr-2 text-sm focus:ring-2 focus:ring-primary/20"
               placeholder="Min"
               type="number"
+              value={values?.unitPriceMin ?? ""}
+              onChange={(event) =>
+                handlePriceRangeChange("unitPriceMin", event)
+              }
             />
           </div>
           <span className="text-on-surface-variant text-xs font-bold">-</span>
@@ -61,6 +91,10 @@ export default function InventoryTableFilters({
               className="w-full bg-surface-variant border-[#d0d7e7] rounded-lg py-2 pl-6 pr-2 text-sm focus:ring-2 focus:ring-primary/20"
               placeholder="Max"
               type="number"
+              value={values?.unitPriceMax ?? ""}
+              onChange={(event) =>
+                handlePriceRangeChange("unitPriceMax", event)
+              }
             />
           </div>
         </div>

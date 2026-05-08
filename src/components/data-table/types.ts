@@ -51,6 +51,8 @@ export type DataTableConfig<
     onChange: (filters: TFilters) => void;
   }>;
   searchPlaceholder?: string;
+  parseFiltersFromUrl?: (searchParams: URLSearchParams) => TFilters;
+  writeFiltersToUrl?: (filters: TFilters, params: URLSearchParams) => void;
 };
 
 export type DataTableColumn<T> = {
