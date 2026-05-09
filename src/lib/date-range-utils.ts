@@ -8,12 +8,21 @@
  *   query.gte("order_date", filterDate);
  */
 
-export type FilterPeriod =
-  | "last_24_hours"
-  | "last_7_days"
-  | "last_30_days"
-  | "this_month"
-  | "this_quarter";
+export const FILTER_PERIOD_VALUES = [
+  "last_24_hours",
+  "last_7_days",
+  "last_30_days",
+  "this_month",
+  "this_quarter",
+] as const;
+
+export type FilterPeriod = (typeof FILTER_PERIOD_VALUES)[number];
+
+export function isFilterPeriod(
+  value: string | null | undefined,
+): value is FilterPeriod {
+  return !!value && FILTER_PERIOD_VALUES.includes(value as FilterPeriod);
+}
 
 /**
  * Returns the ISO date string for the start of the selected filter period.

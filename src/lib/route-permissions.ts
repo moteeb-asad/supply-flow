@@ -1,5 +1,6 @@
 export const routePermissions: Record<string, string[]> = {
   "/dashboard": ["super_admin", "operations_manager", "store_keeper"],
+  "/inventory": ["super_admin", "operations_manager"],
   "/suppliers": ["super_admin", "operations_manager"],
   "/purchase-orders": ["super_admin", "operations_manager"],
   "/sku-receiving": ["super_admin", "operations_manager", "store_keeper"],
