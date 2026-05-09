@@ -1,14 +1,14 @@
 import { DATE_RANGE_OPTIONS } from "@/src/constants/dateRangeOptions";
 import { ROLES } from "@/src/constants/roles";
-import { UserFiltersValue } from "../types/filters";
+import { UsersFiltersValue } from "../types/filters";
 import { FilterPeriod } from "@/src/lib/date-range-utils";
 
 export function UsersFilters({
   onChange,
   values,
 }: {
-  onChange: (filters: UserFiltersValue) => void;
-  values?: UserFiltersValue;
+  onChange: (filters: UsersFiltersValue) => void;
+  values?: UsersFiltersValue;
 }) {
   const handleLastLoginChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value as FilterPeriod | "";

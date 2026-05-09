@@ -183,23 +183,35 @@ export default function DataTable<
         />
 
         {config.filters && (
-          <button
-            className={`px-4 py-2.5 border rounded-lg text-sm font-bold flex items-center gap-2 transition-colors cursor-pointer
-              bg-white border-[#d0d7e7] text-[#4e6797] hover:bg-slate-50
-            `}
-            onClick={() => setFiltersOpen((prev) => !prev)}
-            type="button"
-          >
-            <span className="material-symbols-outlined text-lg">
-              filter_alt
-            </span>
-            <span>Advanced Filters</span>
-            {activeFilterCount > 0 ? (
-              <span className="inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-primary text-white text-[11px] px-1.5">
-                {activeFilterCount}
+          <div className="relative">
+            <button
+              className={`px-4 py-2.5 border rounded-lg text-sm font-bold flex items-center gap-2 transition-colors cursor-pointer
+                bg-white border-[#d0d7e7] text-[#4e6797] hover:bg-slate-50
+              `}
+              onClick={() => setFiltersOpen((prev) => !prev)}
+              type="button"
+            >
+              <span className="material-symbols-outlined text-lg">
+                filter_alt
               </span>
-            ) : null}
-          </button>
+              <span>Advanced Filters</span>
+              {activeFilterCount > 0 ? (
+                <span className="inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-primary text-white text-[11px] px-1.5">
+                  {activeFilterCount}
+                </span>
+              ) : null}
+            </button>
+
+            <DataTableFilters<TFilters>
+              filtersOpen={filtersOpen}
+              setFiltersOpen={setFiltersOpen}
+              config={config}
+              values={table.draftFilters}
+              onChange={table.setDraftFilters}
+              onApply={handleApplyFilters}
+              onClear={handleClearFilters}
+            />
+          </div>
         )}
       </div>
 
@@ -231,18 +243,6 @@ export default function DataTable<
           onPageChange={setPage}
         />
       </div>
-
-      {/* Filters */}
-
-      <DataTableFilters<TFilters>
-        filtersOpen={filtersOpen}
-        setFiltersOpen={setFiltersOpen}
-        config={config}
-        values={table.draftFilters}
-        onChange={table.setDraftFilters}
-        onApply={handleApplyFilters}
-        onClear={handleClearFilters}
-      />
     </div>
   );
 }
