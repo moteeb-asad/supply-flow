@@ -1,13 +1,13 @@
 "use client";
 
 import { getUsersAction } from "../actions/get-users.actions";
-import { UserFiltersValue } from "../types/filters";
+import { UsersFiltersValue } from "../types/filters";
 
 export async function usersFetcher(params: {
   page: number;
   pageSize: number;
   search?: string;
-  filters?: UserFiltersValue;
+  filters?: UsersFiltersValue;
 }) {
   const { page, pageSize, search, filters } = params;
   const result = await getUsersAction({

@@ -8,38 +8,7 @@ import type {
   PurchaseOrderSupplierRelation,
   PurchaseOrdersQueryParams,
 } from "../types";
-
-function getDateRangeStart(dateRange?: string): string | null {
-  const now = new Date();
-
-  if (!dateRange) return null;
-
-  const dayOffsets: Record<string, number> = {
-    last_24_hours: 1,
-    last_7_days: 7,
-    last_30_days: 30,
-  };
-
-  const dayOffset = dayOffsets[dateRange];
-  if (dayOffset) {
-    const d = new Date(now);
-    d.setDate(now.getDate() - dayOffset);
-    return d.toISOString().slice(0, 10);
-  }
-
-  if (dateRange === "this_month") {
-    const d = new Date(now.getFullYear(), now.getMonth(), 1);
-    return d.toISOString().slice(0, 10);
-  }
-
-  if (dateRange === "this_quarter") {
-    const quarterStartMonth = Math.floor(now.getMonth() / 3) * 3;
-    const d = new Date(now.getFullYear(), quarterStartMonth, 1);
-    return d.toISOString().slice(0, 10);
-  }
-
-  return null;
-}
+import { getFilterDate } from "@/src/lib/date-range-utils";
 
 function mapSupplierName(
   supplierRelation: PurchaseOrderSupplierRelation,
@@ -125,9 +94,9 @@ export async function getPurchaseOrdersAction(
     query = query.eq("status", typedFilters.status);
   }
 
-  const dateStart = getDateRangeStart(typedFilters.dateRange);
-  if (dateStart) {
-    query = query.gte("order_date", dateStart);
+  const dateRange = getFilterDate(typedFilters.dateRange);
+  if (dateRange) {
+    query = query.gte("order_date", dateRange);
   }
 
   const { data, count, error } = await query.range(from, to);

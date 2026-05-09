@@ -14,7 +14,7 @@ export type PurchaseOrdersQueryParams = {
 
 export type PurchaseOrdersFiltersValue = {
   status?: PurchaseOrderStatus;
-  dateRange?: FilterPeriod | string;
+  dateRange?: FilterPeriod;
 };
 
 export type PurchaseOrdersFiltersProps = {

@@ -1,10 +1,10 @@
 import type { DataTableConfig } from "../types";
 
-export function DataTableHeader<T, P = unknown>({
-  config,
-}: {
-  config: DataTableConfig<T, P>;
-}) {
+export function DataTableHeader<
+  T,
+  P = unknown,
+  TFilters extends object = Record<string, never>,
+>({ config }: { config: DataTableConfig<T, P, TFilters> }) {
   return (
     <thead>
       <tr className="bg-slate-50 border-b border-[#d0d7e7]">

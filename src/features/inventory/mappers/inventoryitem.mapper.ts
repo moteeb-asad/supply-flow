@@ -22,6 +22,17 @@ export function mapInventoryItem(row: RawInventoryItemRow): InventoryItem {
     return row.inventory_stock.on_hand_qty;
   };
 
+  // Helper to extract DB stock status (handles both object and array)
+  const getStockStatus = (): InventoryItem["stockStatus"] => {
+    if (!row.inventory_stock) return "good";
+    if (Array.isArray(row.inventory_stock)) {
+      return row.inventory_stock.length > 0
+        ? (row.inventory_stock[0].stock_status ?? "good")
+        : "good";
+    }
+    return row.inventory_stock.stock_status ?? "good";
+  };
+
   // Helper to extract supplier (handles both object and array)
   const getSupplier = (): string => {
     if (!row.sku_suppliers || row.sku_suppliers.length === 0) return "";
@@ -41,6 +52,7 @@ export function mapInventoryItem(row: RawInventoryItemRow): InventoryItem {
     unitPrice: row.standard_unit_price ?? 0,
     category: getCategory(),
     initialStock: getStock(),
+    stockStatus: getStockStatus(),
     primarySupplier: getSupplier(),
   };
 }

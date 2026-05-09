@@ -1,6 +1,11 @@
 "use client";
 
-const STATUS_TABS = [
+import type { PurchaseOrderStatus } from "../../types";
+
+const STATUS_TABS: Array<{
+  key: PurchaseOrderStatus | undefined;
+  label: string;
+}> = [
   { key: undefined, label: "All Orders" },
   { key: "draft", label: "Draft" },
   { key: "pending", label: "Pending" },
@@ -14,8 +19,8 @@ export default function PurchaseOrdersStatusTabs({
   status,
   onStatusChange,
 }: {
-  status?: string;
-  onStatusChange: (status?: string) => void;
+  status?: PurchaseOrderStatus;
+  onStatusChange: (status?: PurchaseOrderStatus) => void;
 }) {
   return (
     <div className="flex border-b border-[#d0d7e7] gap-8">
