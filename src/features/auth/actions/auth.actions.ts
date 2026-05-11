@@ -3,6 +3,7 @@
 import { createClient } from "@/src/db/supabaseClient";
 import { createAdminClient } from "@/src/db/supabaseAdmin";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import {
   loginSchema,
   resetPasswordSchema,
@@ -80,6 +81,10 @@ export async function loginAction(
 export async function logoutAction() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+
+  // Clear the session cache to prevent stale data
+  (await cookies()).delete("cached_user_session");
+
   redirect("/login");
 }
 

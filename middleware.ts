@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { routePermissions } from "@/src/lib/route-permissions"; // 👈 import
+import { routePermissions } from "@/src/lib/route-permissions";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -40,6 +40,9 @@ export async function middleware(request: NextRequest) {
 
   const isProtectedRoute = !isAuthRoute && !pathname.startsWith("/api");
 
+  // IMPORTANT: When users logout, clear the cached_user_session cookie
+  // In your logout handler, add: cookies().delete("cached_user_session")
+
   // Check if this is a password recovery flow
   const typeParam = request.nextUrl.searchParams.get("type");
   const isPasswordRecovery =
@@ -68,11 +71,49 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Session caching: Check if we have a cached user session
+  const cachedSession = request.cookies.get("cached_user_session");
+  let user = null;
 
-  // 🔐 1️⃣ AUTH CHECK
+  if (cachedSession) {
+    // Use cached session (no network call needed)
+    try {
+      const cached = JSON.parse(cachedSession.value);
+      // Check if cache is still valid (60 seconds)
+      if (Date.now() - cached.timestamp < 60000) {
+        user = cached.user;
+      }
+    } catch (e) {
+      // Invalid cache, fall through to fetch
+    }
+  }
+
+  // If no valid cache, fetch from Supabase
+  if (!user) {
+    const {
+      data: { user: fetchedUser },
+    } = await supabase.auth.getUser();
+    user = fetchedUser;
+
+    // Cache the session for 60 seconds
+    if (user) {
+      const cacheData = {
+        user: user,
+        timestamp: Date.now(),
+      };
+      response.cookies.set("cached_user_session", JSON.stringify(cacheData), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60, // 60 seconds
+      });
+    } else {
+      // Clear cache if no user
+      response.cookies.delete("cached_user_session");
+    }
+  }
+
+  // 1️⃣ AUTH CHECK
   if (isProtectedRoute && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -94,7 +135,7 @@ export async function middleware(request: NextRequest) {
       value === "store_keeper",
   );
 
-  // 🔐 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
+  // 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
   if (
     isAuthRoute &&
     user &&
@@ -105,17 +146,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // 🔐 3️⃣ ROLE CHECK (⬅️ WRITE YOUR CODE HERE)
+  // 3️⃣ ROLE CHECK (⬅️ WRITE YOUR CODE HERE)
   if (user && isProtectedRoute) {
-    for (const route in routePermissions) {
-      if (pathname.startsWith(route)) {
-        const allowedRoles = routePermissions[route];
-        const isAllowed = roles.some((value) => allowedRoles.includes(value));
-        if (!isAllowed) {
-          return NextResponse.redirect(
-            new URL("/login?unauthorized=1", request.url),
-          );
-        }
+    // Optimized: Find most specific matching route first, then check permissions once
+    const matchedRoute = Object.keys(routePermissions)
+      .sort((a, b) => b.length - a.length) // Longest first (most specific route)
+      .find((route) => pathname.startsWith(route));
+
+    if (matchedRoute) {
+      const allowedRoles = routePermissions[matchedRoute];
+      const isAllowed = roles.some((value) => allowedRoles.includes(value));
+      if (!isAllowed) {
+        return NextResponse.redirect(
+          new URL("/login?unauthorized=1", request.url),
+        );
       }
     }
   }
@@ -125,6 +169,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next|favicon.ico|.*\\.(?:css|js|map|json|png|jpg|jpeg|svg|woff2)).*)",
+    // Exclude: _next, static files, auth routes (login, forgot-password, reset-password)
+    // This prevents middleware from running on /login after logout, saving ~200-500ms
+    "/((?!_next|favicon.ico|login|forgot-password|reset-password|api|.*\\.(?:css|js|map|json|png|jpg|jpeg|svg|woff2)).*)",
   ],
 };

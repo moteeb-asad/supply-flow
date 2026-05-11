@@ -82,11 +82,6 @@ export default async function getInventoryItemsAction(
 
   const { data, count, error } = await query.range(from, to);
 
-  console.log(
-    "getInventoryItemsAction - query result:",
-    JSON.stringify({ data }, null, 2),
-  );
-
   if (error) {
     console.error("Failed to fetch inventory items:", error);
     return { success: false, data: [], total: 0 };
