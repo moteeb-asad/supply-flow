@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { routePermissions } from "@/src/lib/route-permissions"; // 👈 import
 
 export async function middleware(request: NextRequest) {
+  const startTime = performance.now();
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -68,12 +69,25 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  const getUserStartTime = performance.now();
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const getUserEndTime = performance.now();
+
+  if (process.env.ENABLE_PERF_LOGS === "true") {
+    console.log(
+      `[Middleware] ${pathname} - getUser: ${(getUserEndTime - getUserStartTime).toFixed(2)}ms`,
+    );
+  }
 
   // 🔐 1️⃣ AUTH CHECK
   if (isProtectedRoute && !user) {
+    if (process.env.ENABLE_PERF_LOGS === "true") {
+      console.log(
+        `[Middleware] ${pathname} - Total: ${(performance.now() - startTime).toFixed(2)}ms (redirect to login)`,
+      );
+    }
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -118,6 +132,12 @@ export async function middleware(request: NextRequest) {
         }
       }
     }
+  }
+
+  if (process.env.ENABLE_PERF_LOGS === "true") {
+    console.log(
+      `[Middleware] ${pathname} - Total: ${(performance.now() - startTime).toFixed(2)}ms`,
+    );
   }
 
   return response;
