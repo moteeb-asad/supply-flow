@@ -81,7 +81,7 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  // 🔐 1️⃣ AUTH CHECK
+  // 1️⃣ AUTH CHECK
   if (isProtectedRoute && !user) {
     if (process.env.ENABLE_PERF_LOGS === "true") {
       console.log(
@@ -108,7 +108,7 @@ export async function middleware(request: NextRequest) {
       value === "store_keeper",
   );
 
-  // 🔐 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
+  // 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
   if (
     isAuthRoute &&
     user &&
@@ -119,17 +119,25 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // 🔐 3️⃣ ROLE CHECK (⬅️ WRITE YOUR CODE HERE)
+  // 3️⃣ ROLE CHECK (⬅️ WRITE YOUR CODE HERE)
   if (user && isProtectedRoute) {
-    for (const route in routePermissions) {
-      if (pathname.startsWith(route)) {
-        const allowedRoles = routePermissions[route];
-        const isAllowed = roles.some((value) => allowedRoles.includes(value));
-        if (!isAllowed) {
-          return NextResponse.redirect(
-            new URL("/login?unauthorized=1", request.url),
+    // Optimized: Find most specific matching route first, then check permissions once
+    const matchedRoute = Object.keys(routePermissions)
+      .sort((a, b) => b.length - a.length) // Longest first (most specific route)
+      .find((route) => pathname.startsWith(route));
+
+    if (matchedRoute) {
+      const allowedRoles = routePermissions[matchedRoute];
+      const isAllowed = roles.some((value) => allowedRoles.includes(value));
+      if (!isAllowed) {
+        if (process.env.ENABLE_PERF_LOGS === "true") {
+          console.log(
+            `[Middleware] ${pathname} - Total: ${(performance.now() - startTime).toFixed(2)}ms (unauthorized)`,
           );
         }
+        return NextResponse.redirect(
+          new URL("/login?unauthorized=1", request.url),
+        );
       }
     }
   }
@@ -145,6 +153,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next|favicon.ico|.*\\.(?:css|js|map|json|png|jpg|jpeg|svg|woff2)).*)",
+    // Exclude: _next, static files, auth routes (login, forgot-password, reset-password)
+    // This prevents middleware from running on /login after logout, saving ~200-500ms
+    "/((?!_next|favicon.ico|login|forgot-password|reset-password|api|.*\\.(?:css|js|map|json|png|jpg|jpeg|svg|woff2)).*)",
   ],
 };
