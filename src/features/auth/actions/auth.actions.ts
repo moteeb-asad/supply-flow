@@ -51,7 +51,6 @@ export async function loginAction(
   _prevState: { error?: string } | undefined,
   formData: FormData,
 ): Promise<{ error?: string } | undefined> {
-  const startTime = performance.now();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
@@ -64,23 +63,11 @@ export async function loginAction(
   }
 
   const supabase = await createClient();
-  const authStartTime = performance.now();
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
-
-  const authEndTime = performance.now();
-
-  if (process.env.ENABLE_PERF_LOGS === "true") {
-    console.log(
-      `[Login] Supabase signInWithPassword: ${(authEndTime - authStartTime).toFixed(2)}ms`,
-    );
-    console.log(
-      `[Login] Total action time: ${(authEndTime - startTime).toFixed(2)}ms`,
-    );
-  }
 
   if (error) {
     return {
@@ -92,24 +79,11 @@ export async function loginAction(
 }
 
 export async function logoutAction() {
-  const startTime = performance.now();
   const supabase = await createClient();
-
-  const authStartTime = performance.now();
   await supabase.auth.signOut();
-  const authEndTime = performance.now();
 
   // Clear the session cache to prevent stale data
   (await cookies()).delete("cached_user_session");
-
-  if (process.env.ENABLE_PERF_LOGS === "true") {
-    console.log(
-      `[Logout] Supabase signOut: ${(authEndTime - authStartTime).toFixed(2)}ms`,
-    );
-    console.log(
-      `[Logout] Total action time: ${(authEndTime - startTime).toFixed(2)}ms`,
-    );
-  }
 
   redirect("/login");
 }

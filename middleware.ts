@@ -3,7 +3,6 @@ import { NextResponse, type NextRequest } from "next/server";
 import { routePermissions } from "@/src/lib/route-permissions";
 
 export async function middleware(request: NextRequest) {
-  const startTime = performance.now();
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -83,9 +82,6 @@ export async function middleware(request: NextRequest) {
       // Check if cache is still valid (60 seconds)
       if (Date.now() - cached.timestamp < 60000) {
         user = cached.user;
-        if (process.env.ENABLE_PERF_LOGS === "true") {
-          console.log(`[Middleware] ${pathname} - Using cached session (0ms)`);
-        }
       }
     } catch (e) {
       // Invalid cache, fall through to fetch
@@ -94,12 +90,10 @@ export async function middleware(request: NextRequest) {
 
   // If no valid cache, fetch from Supabase
   if (!user) {
-    const getUserStartTime = performance.now();
     const {
       data: { user: fetchedUser },
     } = await supabase.auth.getUser();
     user = fetchedUser;
-    const getUserEndTime = performance.now();
 
     // Cache the session for 60 seconds
     if (user) {
@@ -117,21 +111,10 @@ export async function middleware(request: NextRequest) {
       // Clear cache if no user
       response.cookies.delete("cached_user_session");
     }
-
-    if (process.env.ENABLE_PERF_LOGS === "true") {
-      console.log(
-        `[Middleware] ${pathname} - getUser: ${(getUserEndTime - getUserStartTime).toFixed(2)}ms (cached for 60s)`,
-      );
-    }
   }
 
   // 1️⃣ AUTH CHECK
   if (isProtectedRoute && !user) {
-    if (process.env.ENABLE_PERF_LOGS === "true") {
-      console.log(
-        `[Middleware] ${pathname} - Total: ${(performance.now() - startTime).toFixed(2)}ms (redirect to login)`,
-      );
-    }
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -174,22 +157,11 @@ export async function middleware(request: NextRequest) {
       const allowedRoles = routePermissions[matchedRoute];
       const isAllowed = roles.some((value) => allowedRoles.includes(value));
       if (!isAllowed) {
-        if (process.env.ENABLE_PERF_LOGS === "true") {
-          console.log(
-            `[Middleware] ${pathname} - Total: ${(performance.now() - startTime).toFixed(2)}ms (unauthorized)`,
-          );
-        }
         return NextResponse.redirect(
           new URL("/login?unauthorized=1", request.url),
         );
       }
     }
-  }
-
-  if (process.env.ENABLE_PERF_LOGS === "true") {
-    console.log(
-      `[Middleware] ${pathname} - Total: ${(performance.now() - startTime).toFixed(2)}ms`,
-    );
   }
 
   return response;
