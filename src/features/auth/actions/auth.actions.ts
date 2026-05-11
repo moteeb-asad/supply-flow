@@ -3,6 +3,7 @@
 import { createClient } from "@/src/db/supabaseClient";
 import { createAdminClient } from "@/src/db/supabaseAdmin";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import {
   loginSchema,
   resetPasswordSchema,
@@ -97,6 +98,9 @@ export async function logoutAction() {
   const authStartTime = performance.now();
   await supabase.auth.signOut();
   const authEndTime = performance.now();
+
+  // Clear the session cache to prevent stale data
+  (await cookies()).delete("cached_user_session");
 
   if (process.env.ENABLE_PERF_LOGS === "true") {
     console.log(
