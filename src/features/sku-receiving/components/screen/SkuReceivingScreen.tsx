@@ -1,6 +1,15 @@
+"use client";
+
+import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
 import SkuReceivingMetrics from "../list/SkuReceivingMetrics";
+import SkuReceivingTable from "../list/SkuReceivingTable";
+import { useState } from "react";
+import { SkuReceivingFiltersValue } from "../../types";
 
 export default function SkuReceivingScreen() {
+  const [filters, setFilters] = useState<SkuReceivingFiltersValue>({});
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+
   return (
     <>
       <div className="px-8 py-6">
@@ -24,7 +33,10 @@ export default function SkuReceivingScreen() {
               </span>
               <span>Bulk Receive Upload</span>
             </button>
-            <button className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer">
+            <button
+              className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer"
+              onClick={() => setIsCreateDrawerOpen(true)}
+            >
               <span className="material-symbols-outlined">barcode_scanner</span>
               <span role="button">Start Receiving</span>
             </button>
@@ -33,6 +45,11 @@ export default function SkuReceivingScreen() {
       </div>
       <div className="px-8 pb-8">
         <SkuReceivingMetrics />
+      </div>
+      <div className="space-y-6">
+        <ErrorBoundary>
+          <SkuReceivingTable filters={filters} onFiltersChange={setFilters} />
+        </ErrorBoundary>
       </div>
     </>
   );

@@ -5,3 +5,9 @@ export type SKUReceivingStatus =
   | "received"
   | "variance_flagged"
   | "overdue";
+
+export type SkuReceivingItem = {
+  id: string;
+  po_number: string;
+  supplier_id: string;
+};

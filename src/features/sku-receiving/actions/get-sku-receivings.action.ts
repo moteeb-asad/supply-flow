@@ -1,10 +1,10 @@
 "use server";
 
 import { createClient } from "@/src/db/supabaseClient";
-import { SKUReceivingQueryParams } from "../types/query.types";
+import { SkuReceivingQueryParams } from "../types/query.types";
 
 export default async function getSkuReceivingsAction(
-  params: SKUReceivingQueryParams,
+  params: SkuReceivingQueryParams,
 ) {
   const supabase = await createClient();
   const { page, pageSize, search, filters } = params;
