@@ -5,6 +5,8 @@ import SkuReceivingMetrics from "../list/SkuReceivingMetrics";
 import SkuReceivingTable from "../list/SkuReceivingTable";
 import { useState } from "react";
 import { SkuReceivingFiltersValue } from "../../types";
+import SkuReceivingCreateDrawer from "../create-receiving/CreateReceivingDrawer";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function SkuReceivingScreen() {
   const [filters, setFilters] = useState<SkuReceivingFiltersValue>({});
@@ -51,6 +53,16 @@ export default function SkuReceivingScreen() {
           <SkuReceivingTable filters={filters} onFiltersChange={setFilters} />
         </ErrorBoundary>
       </div>
+
+      {isCreateDrawerOpen && (
+        <SkuReceivingCreateDrawer
+          open={isCreateDrawerOpen}
+          onClose={() => setIsCreateDrawerOpen(false)}
+          onSuccess={() => {
+            setIsCreateDrawerOpen(false);
+          }}
+        />
+      )}
     </>
   );
 }

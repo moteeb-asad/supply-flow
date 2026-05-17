@@ -1,10 +1,7 @@
 import type {
-  CreatePurchaseOrderStatus,
-  PaymentMethod,
   PurchaseOrder,
   PurchaseOrderDetailLineItem,
   PurchaseOrderLineItemFormValue,
-  ShippingMethod,
 } from "./domain.types";
 
 export type CreatePurchaseOrderDrawerProps = {
