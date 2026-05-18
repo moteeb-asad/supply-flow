@@ -20,6 +20,7 @@ export default function CreateReceivingDrawer({
         submittingLabel="Creating..."
         isSubmitting={isPending}
         formId={CREATE_RECEIVING_FORM_ID}
+        widthClassName="max-w-[680px]"
       >
         <StartReceivingForm
           formId={CREATE_RECEIVING_FORM_ID}

@@ -2,6 +2,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InventoryItemFormValues } from "@/src/features/inventory/types/form.types";
 import { StartReceivingFormProps } from "../../types/form.types";
+import PoLookupSection from "./PoLookupSection";
+import ReceiptHeaderSection from "./ReceiptHeaderSection";
+import { Line } from "react-chartjs-2";
+import LineItemsReceivingSection from "./LineItemsReceivingSection";
+import SummaryFinalNotes from "./SummaryFinalNotes";
 // import {
 //   FormErrorBanner,
 //   getValidationSummaryMessage,
@@ -40,7 +45,14 @@ export default function StartReceivingForm({
         className={`flex-1 min-h-0 space-y-8 transition-opacity ${
           isSubmitting ? "opacity-60" : "opacity-100"
         }`}
-      ></div>
+      >
+        {/* <FormErrorBanner align="center" message={bannerMessage} /> */}
+
+        <PoLookupSection />
+        <ReceiptHeaderSection />
+        <LineItemsReceivingSection />
+        <SummaryFinalNotes />
+      </div>
     </form>
   );
 }

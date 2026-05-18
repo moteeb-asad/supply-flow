@@ -12,3 +12,22 @@ export type SkuReceivingQueryParams = {
   search?: string;
   filters?: SkuReceivingFiltersValue;
 };
+
+export type PurchaseOrderOption = {
+  id: string;
+  po_number: string;
+  supplier_id: string;
+  expected_delivery_date: string | null;
+  status: string;
+};
+
+export type GetPurchaseOrderForReceivingInput = {
+  search?: string;
+  limit?: number;
+  offset?: number;
+};
+
+export type GetPurchaseOrderForReceivingResult = {
+  items: PurchaseOrderOption[];
+  nextOffset: number | null;
+};
