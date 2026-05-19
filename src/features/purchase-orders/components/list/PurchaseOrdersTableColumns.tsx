@@ -2,7 +2,7 @@ import { DataTableColumn } from "@/src/components/data-table/types";
 import { PurchaseOrder, PurchaseOrderStatus } from "../../types";
 import {
   formatAmount,
-  formatDate,
+  formatPurchaseOrderDate,
 } from "@/src/features/purchase-orders/utils/formatters";
 
 const statusStyles: Record<
@@ -78,7 +78,7 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
     key: "order_date",
     header: "Order Date",
     className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
-    cell: (row) => formatDate(row.order_date),
+    cell: (row) => formatPurchaseOrderDate(row.order_date),
   },
   {
     key: "expected_delivery_date",
@@ -88,7 +88,7 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
       const isOverdue = row.status === "overdue";
       return (
         <span className={isOverdue ? "text-red-600 font-medium" : ""}>
-          {formatDate(row.expected_delivery_date)}
+          {formatPurchaseOrderDate(row.expected_delivery_date)}
         </span>
       );
     },

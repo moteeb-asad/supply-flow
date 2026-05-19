@@ -4,8 +4,11 @@ import { createClient } from "@/src/db/supabaseClient";
 import {
   GetPurchaseOrderForReceivingInput,
   GetPurchaseOrderForReceivingResult,
-  PurchaseOrderOption,
 } from "../types";
+import {
+  mapPurchaseOrderRowsToOptions,
+  type PurchaseOrderRow,
+} from "../mappers/purchase-order.mapper";
 
 const DEFAULT_LIMIT = 8;
 const MAX_LIMIT = 20;
@@ -20,7 +23,9 @@ export async function getPurchaseOrderForReceivingAction(
 
   let query = supabase
     .from("purchase_orders")
-    .select("id, po_number, supplier_id, expected_delivery_date, status")
+    .select(
+      "id, po_number, supplier_id, expected_delivery_date, status, suppliers:supplier_id(name)",
+    )
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
     .range(offset, offset + limit - 1);
@@ -39,7 +44,10 @@ export async function getPurchaseOrderForReceivingAction(
     };
   }
 
-  const items = (data ?? []) as PurchaseOrderOption[];
+  const items = mapPurchaseOrderRowsToOptions(
+    (data ?? []) as PurchaseOrderRow[],
+  );
+
   return {
     items,
     nextOffset: items.length === limit ? offset + limit : null,

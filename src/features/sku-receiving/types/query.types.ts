@@ -17,6 +17,7 @@ export type PurchaseOrderOption = {
   id: string;
   po_number: string;
   supplier_id: string;
+  supplier_name: string | null;
   expected_delivery_date: string | null;
   status: string;
 };
