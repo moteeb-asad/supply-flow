@@ -1,39 +1,89 @@
+"use client";
+
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { InventoryItemFormValues } from "@/src/features/inventory/types/form.types";
-import { StartReceivingFormProps } from "../../types/form.types";
+import {
+  StartReceivingFormProps,
+  StartReceivingFormValues,
+} from "../../types/form.types";
 import PoLookupSection from "./PoLookupSection";
 import ReceiptHeaderSection from "./ReceiptHeaderSection";
-import { Line } from "react-chartjs-2";
 import LineItemsReceivingSection from "./LineItemsReceivingSection";
 import SummaryFinalNotes from "./SummaryFinalNotes";
-// import {
-//   FormErrorBanner,
-//   getValidationSummaryMessage,
-// } from "@/src/components/ui/FormErrorBanner";
+import FormErrorBanner, {
+  getValidationSummaryMessage,
+} from "@/src/components/ui/FormErrorBanner";
+import { useUser } from "@/src/providers/UserProvider";
+
+const getCurrentDateTimeLocalValue = () => {
+  const now = new Date();
+  const tzOffsetMs = now.getTimezoneOffset() * 60_000;
+  const local = new Date(now.getTime() - tzOffsetMs);
+  return local.toISOString().slice(0, 16);
+};
 
 export default function StartReceivingForm({
   formId,
   serverError,
   isSubmitting,
 }: StartReceivingFormProps) {
-  //   const {
-  //     register,
-  //     handleSubmit,
-  //     clearErrors,
-  //     setValue,
-  //     control,
-  //     formState: { errors },
-  //   } = useForm<InventoryItemFormValues>({
-  //     resolver: zodResolver(StartReceivingSchema),
-  //     defaultValues: getInventoryItemDefaultValues(initialValues),
-  //   });
-  //   const fieldErrorCount = Object.values(errors).reduce(
-  //     (count, error) => count + (error?.message ? 1 : 0),
-  //     0,
-  //   );
-  //   const bannerMessage =
-  //     serverError || getValidationSummaryMessage(fieldErrorCount);
+  const { user } = useUser();
+
+  const {
+    register,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm<StartReceivingFormValues>({
+    defaultValues: {
+      receipt_datetime: getCurrentDateTimeLocalValue(),
+      delivery_note_number: "",
+      received_by_name: "",
+      received_by_role: "",
+      receiving_location: "dock_door_04",
+      vehicle_ref: "",
+      notes: "",
+      line_items: [
+        {
+          sku_code: "SKU-9921-WH",
+          item_name: "Wireless Keyboard (Nordic)",
+          ordered_qty: 100,
+          remaining_qty: 40,
+          qty_received: 40,
+          qty_rejected: 0,
+          variance_reason: "N/A",
+        },
+        {
+          sku_code: "SKU-1044-BLK",
+          item_name: "Ergonomic Office Chair",
+          ordered_qty: 12,
+          remaining_qty: 12,
+          qty_received: 10,
+          qty_rejected: 2,
+          variance_reason: "Damaged",
+        },
+      ],
+    },
+  });
+
+  useEffect(() => {
+    const role = user?.primaryRole
+      ? user.primaryRole
+          .split("_")
+          .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+          .join(" ")
+      : "";
+
+    setValue("received_by_name", user?.fullName ?? user?.email ?? "");
+    setValue("received_by_role", role);
+  }, [setValue, user?.email, user?.fullName, user?.primaryRole]);
+
+  const fieldErrorCount = Object.values(errors).reduce(
+    (count, error) => count + (error?.message ? 1 : 0),
+    0,
+  );
+  const bannerMessage =
+    serverError || getValidationSummaryMessage(fieldErrorCount);
 
   return (
     <form
@@ -46,12 +96,16 @@ export default function StartReceivingForm({
           isSubmitting ? "opacity-60" : "opacity-100"
         }`}
       >
-        {/* <FormErrorBanner align="center" message={bannerMessage} /> */}
+        <FormErrorBanner align="center" message={bannerMessage} />
 
         <PoLookupSection />
-        <ReceiptHeaderSection />
-        <LineItemsReceivingSection />
-        <SummaryFinalNotes />
+        <ReceiptHeaderSection
+          control={control}
+          errors={errors}
+          register={register}
+        />
+        <LineItemsReceivingSection control={control} register={register} />
+        <SummaryFinalNotes control={control} register={register} />
       </div>
     </form>
   );

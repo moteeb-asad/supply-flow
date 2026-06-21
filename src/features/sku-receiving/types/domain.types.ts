@@ -10,4 +10,5 @@ export type SkuReceivingItem = {
   id: string;
   po_number: string;
   supplier_id: string;
+  status: SKUReceivingStatus;
 };

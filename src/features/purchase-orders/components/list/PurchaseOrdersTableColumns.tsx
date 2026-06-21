@@ -96,13 +96,13 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "total_amount",
     header: "Total Amount",
-    className: "px-6 py-4 text-sm font-semibold whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
     cell: (row) => formatAmount(row.total_amount),
   },
   {
     key: "payment_method",
     header: "Payment",
-    className: "px-6 py-4 whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
     cell: (row) => {
       const payment = paymentMethodStyles[row.payment_method];
       return (
@@ -120,7 +120,7 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "status",
     header: "Status",
-    className: "px-6 py-4",
+    className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
     cell: (row) => {
       const style = statusStyles[row.status] ?? statusStyles.draft;
       return (
@@ -136,7 +136,7 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "actions",
     header: "Actions",
-    className: "px-6 py-4 text-right",
+    className: "px-6 py-4 text-sm text-[#4e6797] text-right",
     cell: (row) => (
       <div className="flex justify-end gap-2">
         <button

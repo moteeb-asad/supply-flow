@@ -1,4 +1,14 @@
-export default function LineItemsReceivingSection() {
+import { useWatch } from "react-hook-form";
+import type { LineItemsReceivingSectionProps } from "../../types/form.types";
+
+const VARIANCE_REASONS = ["N/A", "Damaged", "Incorrect Item", "Shortage"];
+
+export default function LineItemsReceivingSection({
+  register,
+  control,
+}: LineItemsReceivingSectionProps) {
+  const lineItems = useWatch({ control, name: "line_items" }) ?? [];
+
   return (
     <>
       <section className="space-y-5 border-t border-slate-200 pt-2">
@@ -12,7 +22,7 @@ export default function LineItemsReceivingSection() {
             </h3>
           </div>
           <span className="text-[10px] font-medium italic text-[#4e6797]">
-            Showing 2 active lines
+            Showing {lineItems.length} active lines
           </span>
         </div>
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50/50">
@@ -30,85 +40,88 @@ export default function LineItemsReceivingSection() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              <tr className="transition-colors hover:bg-gray-50">
-                <td className="px-3 py-3">
-                  <p className="font-bold text-[#0e121b]">SKU-9921-WH</p>
-                  <p className="text-[10px] text-[#4e6797]">
-                    Wireless Keyboard (Nordic)
-                  </p>
-                </td>
-                <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
-                  100
-                </td>
-                <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
-                  40
-                </td>
-                <td className="px-2 py-3">
-                  <input
-                    className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-                    type="number"
-                    value="40"
-                    readOnly
-                  />
-                </td>
-                <td className="px-2 py-3">
-                  <input
-                    className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-                    type="number"
-                    value="0"
-                    readOnly
-                  />
-                </td>
-                <td className="px-3 py-3">
-                  <select className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary">
-                    <option>N/A</option>
-                    <option>Damaged</option>
-                    <option>Incorrect Item</option>
-                    <option>Shortage</option>
-                  </select>
-                </td>
-              </tr>
-
-              <tr className="transition-colors hover:bg-gray-50">
-                <td className="px-3 py-3">
-                  <p className="font-bold text-[#0e121b]">SKU-1044-BLK</p>
-                  <p className="text-[10px] text-[#4e6797]">
-                    Ergonomic Office Chair
-                  </p>
-                </td>
-                <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
-                  12
-                </td>
-                <td className="px-3 py-3 text-center font-medium text-red-600">
-                  12
-                </td>
-                <td className="px-2 py-3">
-                  <input
-                    className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-                    type="number"
-                    value="10"
-                    readOnly
-                  />
-                </td>
-                <td className="px-2 py-3">
-                  <input
-                    className="w-full rounded-lg border border-red-600 bg-red-50 px-3 py-2 text-center text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-red-500"
-                    type="number"
-                    value="2"
-                    readOnly
-                  />
-                </td>
-                <td className="px-3 py-3">
-                  <select
-                    className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-                    defaultValue="Damaged"
-                  >
-                    <option value="Damaged">Damaged</option>
-                    <option value="Incorrect Item">Incorrect Item</option>
-                    <option value="Shortage">Shortage</option>
-                  </select>
-                </td>
-              </tr>
+              {lineItems.map((item, index) => (
+                <tr
+                  className="transition-colors hover:bg-gray-50"
+                  key={item.sku_code}
+                >
+                  <td className="px-3 py-3">
+                    <p className="font-bold text-[#0e121b]">{item.sku_code}</p>
+                    <p className="text-[10px] text-[#4e6797]">
+                      {item.item_name}
+                    </p>
+                    <input
+                      type="hidden"
+                      {...register(`line_items.${index}.sku_code` as const)}
+                    />
+                    <input
+                      type="hidden"
+                      {...register(`line_items.${index}.item_name` as const)}
+                    />
+                  </td>
+                  <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
+                    {item.ordered_qty}
+                    <input
+                      type="hidden"
+                      {...register(`line_items.${index}.ordered_qty` as const, {
+                        valueAsNumber: true,
+                      })}
+                    />
+                  </td>
+                  <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
+                    {item.remaining_qty}
+                    <input
+                      type="hidden"
+                      {...register(
+                        `line_items.${index}.remaining_qty` as const,
+                        {
+                          valueAsNumber: true,
+                        },
+                      )}
+                    />
+                  </td>
+                  <td className="px-2 py-3">
+                    <input
+                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+                      type="number"
+                      min={0}
+                      {...register(
+                        `line_items.${index}.qty_received` as const,
+                        {
+                          valueAsNumber: true,
+                        },
+                      )}
+                    />
+                  </td>
+                  <td className="px-2 py-3">
+                    <input
+                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+                      type="number"
+                      min={0}
+                      {...register(
+                        `line_items.${index}.qty_rejected` as const,
+                        {
+                          valueAsNumber: true,
+                        },
+                      )}
+                    />
+                  </td>
+                  <td className="px-3 py-3">
+                    <select
+                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+                      {...register(
+                        `line_items.${index}.variance_reason` as const,
+                      )}
+                    >
+                      {VARIANCE_REASONS.map((reason) => (
+                        <option key={reason} value={reason}>
+                          {reason}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
