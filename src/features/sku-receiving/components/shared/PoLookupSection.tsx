@@ -3,12 +3,19 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getPurchaseOrderForReceivingAction } from "@/src/features/sku-receiving/actions/getPurchaseOrderForReceivingAction";
 import type { PurchaseOrderOption } from "@/src/features/sku-receiving/types";
 import { formatDate } from "@/src/lib/utils";
+import type { StartReceivingLoadedPoPayload } from "../../types/form.types";
+import { getPurchaseOrderWithItemsForReceivingAction } from "../../actions/getPurchaseOrderWithItemsForReceivingAction";
 const PAGE_SIZE = 5;
 
-export default function PoLookupSection() {
+type PoLookupSectionProps = {
+  onPoLoaded: (payload: StartReceivingLoadedPoPayload) => void;
+};
+
+export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [selectedPO, setSelectedPO] = useState<PurchaseOrderOption | null>(
     null,
   );
@@ -40,10 +47,22 @@ export default function PoLookupSection() {
     [data],
   );
 
+  const clearLoadedPo = () => {
+    onPoLoaded({
+      purchase_order_id: "",
+      po_number: "",
+      supplier_name: null,
+      expected_delivery_date: null,
+      status: "",
+      line_items: [],
+    });
+  };
+
   const handleClearSelection = () => {
     setSelectedPO(null);
     setLoadedPO(null);
     setQuery("");
+    clearLoadedPo();
     setOpen(false);
   };
 
@@ -69,9 +88,59 @@ export default function PoLookupSection() {
     handleSelectPO(purchaseOrder);
   };
 
-  const handleSearchButtonClick = () => {
+  const handleSearchButtonClick = async () => {
     if (!selectedPO) return;
     setLoadedPO(selectedPO);
+    setIsLoadingDetails(true);
+
+    const data = await getPurchaseOrderWithItemsForReceivingAction(
+      selectedPO.id,
+    );
+    if (data) {
+      const supplierRecord = Array.isArray(data.suppliers)
+        ? (data.suppliers[0] ?? null)
+        : data.suppliers;
+
+      const lineItems = (data.purchase_order_items ?? []).map((item) => {
+        const skuRecord = Array.isArray(item.skus)
+          ? (item.skus[0] ?? null)
+          : item.skus;
+        const orderedQty = Number(item.ordered_qty ?? 0);
+        const receivedQty = Number(item.received_qty ?? 0);
+        const remainingQty = Math.max(orderedQty - receivedQty, 0);
+
+        return {
+          purchase_order_item_id: item.id,
+          sku_id: item.sku_id,
+          sku_code: skuRecord?.sku_code ?? "",
+          item_name: skuRecord?.name ?? "Unknown Item",
+          ordered_qty: orderedQty,
+          received_qty_so_far: receivedQty,
+          remaining_qty: remainingQty,
+          qty_received: 0,
+          qty_rejected: 0,
+          variance_reason: "N/A",
+        };
+      });
+
+      setLoadedPO({
+        ...selectedPO,
+        supplier_name: supplierRecord?.name ?? "Unknown Supplier",
+        expected_delivery_date: data.expected_delivery_date,
+        status: data.status,
+      });
+
+      onPoLoaded({
+        purchase_order_id: data.id,
+        po_number: data.po_number,
+        supplier_name: supplierRecord?.name ?? null,
+        expected_delivery_date: data.expected_delivery_date,
+        status: data.status,
+        line_items: lineItems,
+      });
+    }
+
+    setIsLoadingDetails(false);
     setOpen(false);
   };
 
@@ -103,6 +172,7 @@ export default function PoLookupSection() {
                   setQuery(event.target.value);
                   setSelectedPO(null);
                   setLoadedPO(null);
+                  clearLoadedPo();
                   setOpen(true);
                 }}
                 onBlur={() => {
@@ -180,7 +250,7 @@ export default function PoLookupSection() {
               className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-bold flex items-center justify-center gap-2 text-white shadow-md transition-colors hover:bg-blue-700 active:scale-[0.98] cursor-pointer disabled:bg-gray-500 disabled:opacity-50 disabled:text-gray-100 disabled:cursor-not-allowed"
               onClick={handleSearchButtonClick}
               type="button"
-              disabled={!selectedPO || isLoading}
+              disabled={!selectedPO || isLoading || isLoadingDetails}
             >
               <span className="material-symbols-outlined text-sm">sync</span>
               Search/Load

@@ -52,6 +52,16 @@ export default function LineItemsReceivingSection({
                     </p>
                     <input
                       type="hidden"
+                      {...register(
+                        `line_items.${index}.purchase_order_item_id` as const,
+                      )}
+                    />
+                    <input
+                      type="hidden"
+                      {...register(`line_items.${index}.sku_id` as const)}
+                    />
+                    <input
+                      type="hidden"
                       {...register(`line_items.${index}.sku_code` as const)}
                     />
                     <input
@@ -74,6 +84,15 @@ export default function LineItemsReceivingSection({
                       type="hidden"
                       {...register(
                         `line_items.${index}.remaining_qty` as const,
+                        {
+                          valueAsNumber: true,
+                        },
+                      )}
+                    />
+                    <input
+                      type="hidden"
+                      {...register(
+                        `line_items.${index}.received_qty_so_far` as const,
                         {
                           valueAsNumber: true,
                         },

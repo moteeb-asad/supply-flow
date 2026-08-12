@@ -70,13 +70,13 @@ export const skuReceivingTableColumns: DataTableColumn<SkuReceivingItem>[] = [
   {
     key: "qty_ordered",
     header: "Quantity Ordered",
-    className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (row) => "850",
   },
   {
     key: "qty_received",
     header: "Quantity Received",
-    className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (row) => "810",
   },
   {

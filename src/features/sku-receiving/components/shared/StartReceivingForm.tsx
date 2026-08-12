@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
+  StartReceivingLoadedPoPayload,
   StartReceivingFormProps,
   StartReceivingFormValues,
 } from "../../types/form.types";
@@ -36,6 +37,7 @@ export default function StartReceivingForm({
     formState: { errors },
   } = useForm<StartReceivingFormValues>({
     defaultValues: {
+      purchase_order_id: "",
       receipt_datetime: getCurrentDateTimeLocalValue(),
       delivery_note_number: "",
       received_by_name: "",
@@ -43,26 +45,7 @@ export default function StartReceivingForm({
       receiving_location: "dock_door_04",
       vehicle_ref: "",
       notes: "",
-      line_items: [
-        {
-          sku_code: "SKU-9921-WH",
-          item_name: "Wireless Keyboard (Nordic)",
-          ordered_qty: 100,
-          remaining_qty: 40,
-          qty_received: 40,
-          qty_rejected: 0,
-          variance_reason: "N/A",
-        },
-        {
-          sku_code: "SKU-1044-BLK",
-          item_name: "Ergonomic Office Chair",
-          ordered_qty: 12,
-          remaining_qty: 12,
-          qty_received: 10,
-          qty_rejected: 2,
-          variance_reason: "Damaged",
-        },
-      ],
+      line_items: [],
     },
   });
 
@@ -85,12 +68,21 @@ export default function StartReceivingForm({
   const bannerMessage =
     serverError || getValidationSummaryMessage(fieldErrorCount);
 
+  const handlePoLoaded = (payload: StartReceivingLoadedPoPayload) => {
+    setValue("purchase_order_id", payload.purchase_order_id);
+    setValue("line_items", payload.line_items, {
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
   return (
     <form
       className="flex-1 overflow-y-auto p-6 space-y-8"
       id={formId}
       noValidate
     >
+      <input type="hidden" {...register("purchase_order_id")} />
       <div
         className={`flex-1 min-h-0 space-y-8 transition-opacity ${
           isSubmitting ? "opacity-60" : "opacity-100"
@@ -98,7 +90,7 @@ export default function StartReceivingForm({
       >
         <FormErrorBanner align="center" message={bannerMessage} />
 
-        <PoLookupSection />
+        <PoLookupSection onPoLoaded={handlePoLoaded} />
         <ReceiptHeaderSection
           control={control}
           errors={errors}

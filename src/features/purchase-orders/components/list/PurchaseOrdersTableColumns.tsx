@@ -77,13 +77,13 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "order_date",
     header: "Order Date",
-    className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (row) => formatPurchaseOrderDate(row.order_date),
   },
   {
     key: "expected_delivery_date",
     header: "Expected Delivery",
-    className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (row) => {
       const isOverdue = row.status === "overdue";
       return (
@@ -96,13 +96,13 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "total_amount",
     header: "Total Amount",
-    className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (row) => formatAmount(row.total_amount),
   },
   {
     key: "payment_method",
     header: "Payment",
-    className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (row) => {
       const payment = paymentMethodStyles[row.payment_method];
       return (
@@ -120,7 +120,7 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "status",
     header: "Status",
-    className: "px-6 py-4 text-sm text-[#4e6797] whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (row) => {
       const style = statusStyles[row.status] ?? statusStyles.draft;
       return (
