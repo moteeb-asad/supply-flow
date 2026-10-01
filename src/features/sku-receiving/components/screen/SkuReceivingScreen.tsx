@@ -6,7 +6,6 @@ import SkuReceivingTable from "../list/SkuReceivingTable";
 import { useState } from "react";
 import { SkuReceivingFiltersValue } from "../../types";
 import SkuReceivingCreateDrawer from "../create-receiving/CreateReceivingDrawer";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function SkuReceivingScreen() {
   const [filters, setFilters] = useState<SkuReceivingFiltersValue>({});

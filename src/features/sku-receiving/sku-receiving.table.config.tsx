@@ -1,12 +1,23 @@
+import type { DataTableConfig } from "@/src/components/data-table/types";
+import { isFilterPeriod } from "@/src/lib/date-range-utils";
+import { setOrDeleteParam } from "@/src/lib/url-filter-utils";
 import { skuReceivingFetcher } from "./fetchers/sku-receiving.fetcher";
-import { skuReceivingTableColumns } from "@/src/features/sku-receiving/components/list/SkuReceivingColumns";
-import { SkuReceivingItem } from "./types/domain.types";
-import { DataTableConfig } from "@/src/components/data-table/types";
-import SkuReceivingFilters from "@/src/features/sku-receiving/components/list/SkuReceivingFilters";
+import { skuReceivingTableColumns } from "./components/list/SkuReceivingColumns";
+import SkuReceivingFilters from "./components/list/SkuReceivingFilters";
 import {
-  SkuReceivingQueryParams,
+  SKU_RECEIVING_STATUSES,
+  type SKUReceivingStatus,
+  type SkuReceivingItem,
+} from "./types/domain.types";
+import type {
   SkuReceivingFiltersValue,
-} from "@/src/features/sku-receiving/types/query.types";
+  SkuReceivingQueryParams,
+} from "./types/query.types";
+
+const isSkuReceivingStatus = (
+  value: string | null,
+): value is SKUReceivingStatus =>
+  SKU_RECEIVING_STATUSES.includes(value as SKUReceivingStatus);
 
 export const skuReceivingTableConfig: DataTableConfig<
   SkuReceivingItem,
@@ -17,5 +28,18 @@ export const skuReceivingTableConfig: DataTableConfig<
   queryKey: (params) => ["sku-receiving-table", params],
   filters: SkuReceivingFilters,
   columns: skuReceivingTableColumns,
-  searchPlaceholder: "Search by SKU or item name...",
+  searchPlaceholder: "Search by PO# or supplier name...",
+
+  parseFiltersFromUrl: (searchParams) => {
+    const status = searchParams.get("status");
+    const dateRange = searchParams.get("dateRange");
+    return {
+      status: isSkuReceivingStatus(status) ? status : undefined,
+      dateRange: isFilterPeriod(dateRange) ? dateRange : undefined,
+    };
+  },
+  writeFiltersToUrl: (filters, params) => {
+    setOrDeleteParam(params, "status", filters.status);
+    setOrDeleteParam(params, "dateRange", filters.dateRange);
+  },
 };

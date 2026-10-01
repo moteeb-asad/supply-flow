@@ -9,6 +9,7 @@ import {
   mapPurchaseOrderRowsToOptions,
   type PurchaseOrderRow,
 } from "../mappers/purchase-order.mapper";
+import { RECEIVABLE_PO_STATUSES } from "../types/domain.types";
 
 const DEFAULT_LIMIT = 8;
 const MAX_LIMIT = 20;
@@ -26,6 +27,7 @@ export async function getPurchaseOrderForReceivingAction(
     .select(
       "id, po_number, supplier_id, expected_delivery_date, status, suppliers:supplier_id(name)",
     )
+    .in("status", RECEIVABLE_PO_STATUSES)
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
     .range(offset, offset + limit - 1);

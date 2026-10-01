@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/src/db/supabaseClient";
+import { RECEIVABLE_PO_STATUSES } from "../types/domain.types";
 
 export async function getPurchaseOrderWithItemsForReceivingAction(
   purchaseOrderId: string,
@@ -13,6 +14,7 @@ export async function getPurchaseOrderWithItemsForReceivingAction(
       "id, po_number, supplier_id, expected_delivery_date, status, suppliers:supplier_id(name), purchase_order_items(id,purchase_order_id,sku_id,ordered_qty,received_qty,unit_price,line_total,skus:sku_id(sku_code,name))",
     )
     .eq("id", purchaseOrderId)
+    .in("status", RECEIVABLE_PO_STATUSES)
     .single();
 
   if (error) {

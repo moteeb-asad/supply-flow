@@ -1,13 +1,28 @@
 import { useWatch } from "react-hook-form";
 import type { LineItemsReceivingSectionProps } from "../../types/form.types";
+import { NO_VARIANCE_REASON } from "../../validators/sku-receiving.schema";
 
-const VARIANCE_REASONS = ["N/A", "Damaged", "Incorrect Item", "Shortage"];
+const VARIANCE_REASONS = [
+  NO_VARIANCE_REASON,
+  "Damaged",
+  "Incorrect Item",
+  "Shortage",
+];
+
+const inputClassName =
+  "w-full rounded-lg border bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary";
+
+const borderClass = (hasError: boolean) =>
+  hasError ? "border-red-500" : "border-gray-200";
 
 export default function LineItemsReceivingSection({
   register,
+  errors,
   control,
 }: LineItemsReceivingSectionProps) {
   const lineItems = useWatch({ control, name: "line_items" }) ?? [];
+  const lineErrors = errors.line_items;
+  const listError = lineErrors?.message ?? lineErrors?.root?.message;
 
   return (
     <>
@@ -25,6 +40,9 @@ export default function LineItemsReceivingSection({
             Showing {lineItems.length} active lines
           </span>
         </div>
+        {listError ? (
+          <p className="text-xs text-red-600">{listError}</p>
+        ) : null}
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50/50">
           <table className="w-full border-collapse text-left text-sm">
             <thead>
@@ -40,107 +58,81 @@ export default function LineItemsReceivingSection({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {lineItems.map((item, index) => (
-                <tr
-                  className="transition-colors hover:bg-gray-50"
-                  key={item.sku_code}
-                >
-                  <td className="px-3 py-3">
-                    <p className="font-bold text-[#0e121b]">{item.sku_code}</p>
-                    <p className="text-[10px] text-[#4e6797]">
-                      {item.item_name}
-                    </p>
-                    <input
-                      type="hidden"
-                      {...register(
-                        `line_items.${index}.purchase_order_item_id` as const,
-                      )}
-                    />
-                    <input
-                      type="hidden"
-                      {...register(`line_items.${index}.sku_id` as const)}
-                    />
-                    <input
-                      type="hidden"
-                      {...register(`line_items.${index}.sku_code` as const)}
-                    />
-                    <input
-                      type="hidden"
-                      {...register(`line_items.${index}.item_name` as const)}
-                    />
-                  </td>
-                  <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
-                    {item.ordered_qty}
-                    <input
-                      type="hidden"
-                      {...register(`line_items.${index}.ordered_qty` as const, {
-                        valueAsNumber: true,
-                      })}
-                    />
-                  </td>
-                  <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
-                    {item.remaining_qty}
-                    <input
-                      type="hidden"
-                      {...register(
-                        `line_items.${index}.remaining_qty` as const,
-                        {
+              {lineItems.map((item, index) => {
+                const itemErrors = lineErrors?.[index];
+
+                return (
+                  <tr
+                    className="transition-colors hover:bg-gray-50"
+                    key={item.purchase_order_item_id}
+                  >
+                    <td className="px-3 py-3">
+                      <p className="font-bold text-[#0e121b]">
+                        {item.sku_code}
+                      </p>
+                      <p className="text-[10px] text-[#4e6797]">
+                        {item.item_name}
+                      </p>
+                    </td>
+                    <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
+                      {item.ordered_qty}
+                    </td>
+                    <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
+                      {item.remaining_qty}
+                    </td>
+                    <td className="px-2 py-3 align-top">
+                      <input
+                        className={`${inputClassName} text-center ${borderClass(!!itemErrors?.qty_received)}`}
+                        type="number"
+                        min={0}
+                        aria-invalid={!!itemErrors?.qty_received}
+                        {...register(`line_items.${index}.qty_received`, {
                           valueAsNumber: true,
-                        },
-                      )}
-                    />
-                    <input
-                      type="hidden"
-                      {...register(
-                        `line_items.${index}.received_qty_so_far` as const,
-                        {
+                        })}
+                      />
+                      {itemErrors?.qty_received ? (
+                        <p className="mt-1 text-[10px] text-red-600">
+                          {itemErrors.qty_received.message}
+                        </p>
+                      ) : null}
+                    </td>
+                    <td className="px-2 py-3 align-top">
+                      <input
+                        className={`${inputClassName} text-center ${borderClass(!!itemErrors?.qty_rejected)}`}
+                        type="number"
+                        min={0}
+                        aria-invalid={!!itemErrors?.qty_rejected}
+                        {...register(`line_items.${index}.qty_rejected`, {
                           valueAsNumber: true,
-                        },
-                      )}
-                    />
-                  </td>
-                  <td className="px-2 py-3">
-                    <input
-                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-                      type="number"
-                      min={0}
-                      {...register(
-                        `line_items.${index}.qty_received` as const,
-                        {
-                          valueAsNumber: true,
-                        },
-                      )}
-                    />
-                  </td>
-                  <td className="px-2 py-3">
-                    <input
-                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-                      type="number"
-                      min={0}
-                      {...register(
-                        `line_items.${index}.qty_rejected` as const,
-                        {
-                          valueAsNumber: true,
-                        },
-                      )}
-                    />
-                  </td>
-                  <td className="px-3 py-3">
-                    <select
-                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-                      {...register(
-                        `line_items.${index}.variance_reason` as const,
-                      )}
-                    >
-                      {VARIANCE_REASONS.map((reason) => (
-                        <option key={reason} value={reason}>
-                          {reason}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-              ))}
+                        })}
+                      />
+                      {itemErrors?.qty_rejected ? (
+                        <p className="mt-1 text-[10px] text-red-600">
+                          {itemErrors.qty_rejected.message}
+                        </p>
+                      ) : null}
+                    </td>
+                    <td className="px-3 py-3 align-top">
+                      <select
+                        className={`${inputClassName} ${borderClass(!!itemErrors?.variance_reason)}`}
+                        aria-invalid={!!itemErrors?.variance_reason}
+                        {...register(`line_items.${index}.variance_reason`)}
+                      >
+                        {VARIANCE_REASONS.map((reason) => (
+                          <option key={reason} value={reason}>
+                            {reason}
+                          </option>
+                        ))}
+                      </select>
+                      {itemErrors?.variance_reason ? (
+                        <p className="mt-1 text-[10px] text-red-600">
+                          {itemErrors.variance_reason.message}
+                        </p>
+                      ) : null}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

@@ -1,23 +1,21 @@
 import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
+import type {
+  StartReceivingFormOutput,
+  StartReceivingFormValues,
+  StartReceivingLineItemValue,
+} from "../validators/sku-receiving.schema";
+
+export type {
+  StartReceivingFormOutput,
+  StartReceivingFormValues,
+  StartReceivingLineItemValue,
+};
 
 export type StartReceivingFormProps = {
   formId?: string;
-  onCancel?: () => void;
+  onSubmit?: (values: StartReceivingFormOutput) => void;
   isSubmitting?: boolean;
   serverError?: string;
-};
-
-export type StartReceivingLineItemValue = {
-  purchase_order_item_id: string;
-  sku_id: string;
-  sku_code: string;
-  item_name: string;
-  ordered_qty: number;
-  received_qty_so_far: number;
-  remaining_qty: number;
-  qty_received: number;
-  qty_rejected: number;
-  variance_reason: string;
 };
 
 export type StartReceivingLoadedPoPayload = {
@@ -29,18 +27,6 @@ export type StartReceivingLoadedPoPayload = {
   line_items: StartReceivingLineItemValue[];
 };
 
-export type StartReceivingFormValues = {
-  purchase_order_id: string;
-  receipt_datetime: string;
-  delivery_note_number: string;
-  received_by_name: string;
-  received_by_role: string;
-  receiving_location: string;
-  vehicle_ref: string;
-  notes: string;
-  line_items: StartReceivingLineItemValue[];
-};
-
 export type ReceiptHeaderSectionProps = {
   register: UseFormRegister<StartReceivingFormValues>;
   errors: FieldErrors<StartReceivingFormValues>;
@@ -49,6 +35,7 @@ export type ReceiptHeaderSectionProps = {
 
 export type LineItemsReceivingSectionProps = {
   register: UseFormRegister<StartReceivingFormValues>;
+  errors: FieldErrors<StartReceivingFormValues>;
   control: Control<StartReceivingFormValues>;
 };
 

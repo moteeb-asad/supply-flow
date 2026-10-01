@@ -1,37 +1,37 @@
-import { useMemo } from "react";
 import { useWatch } from "react-hook-form";
-import type { SummaryFinalNotesProps } from "../../types/form.types";
+import type {
+  StartReceivingLineItemValue,
+  SummaryFinalNotesProps,
+} from "../../types/form.types";
+
+// Single pass; useWatch already re-renders only when line_items change.
+function summarize(lineItems: StartReceivingLineItemValue[]) {
+  const summary = {
+    totalLines: lineItems.length,
+    totalQtyReceiving: 0,
+    totalRejected: 0,
+    varianceCount: 0,
+  };
+
+  for (const item of lineItems) {
+    const received = Number(item.qty_received) || 0;
+    const rejected = Number(item.qty_rejected) || 0;
+    summary.totalQtyReceiving += received;
+    summary.totalRejected += rejected;
+    if (rejected > 0 || received < item.remaining_qty) {
+      summary.varianceCount += 1;
+    }
+  }
+
+  return summary;
+}
 
 export default function SummaryFinalNotes({
   register,
   control,
 }: SummaryFinalNotesProps) {
-  const lineItems = useWatch({ control, name: "line_items" }) ?? [];
-
-  const summary = useMemo(() => {
-    const totalLines = lineItems.length;
-    const totalQtyReceiving = lineItems.reduce(
-      (sum, item) => sum + (Number(item.qty_received) || 0),
-      0,
-    );
-    const totalRejected = lineItems.reduce(
-      (sum, item) => sum + (Number(item.qty_rejected) || 0),
-      0,
-    );
-    const varianceCount = lineItems.reduce((count, item) => {
-      const ordered = Number(item.ordered_qty) || 0;
-      const received = Number(item.qty_received) || 0;
-      const rejected = Number(item.qty_rejected) || 0;
-      return ordered === received + rejected ? count : count + 1;
-    }, 0);
-
-    return {
-      totalLines,
-      totalQtyReceiving,
-      totalRejected,
-      varianceCount,
-    };
-  }, [lineItems]);
+  const lineItems = useWatch({ control, name: "line_items" });
+  const summary = summarize(lineItems ?? []);
 
   return (
     <>

@@ -40,9 +40,7 @@ export default function ReceiptHeaderSection({
               className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
               defaultValue=""
               type="datetime-local"
-              {...register("receipt_datetime", {
-                required: "Receipt date and time is required",
-              })}
+              {...register("receipt_datetime")}
             />
             {errors.receipt_datetime && (
               <p className="text-xs text-red-600">
@@ -96,9 +94,7 @@ export default function ReceiptHeaderSection({
             <select
               className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
               defaultValue="dock_door_04"
-              {...register("receiving_location", {
-                required: "Receiving location is required",
-              })}
+              {...register("receiving_location")}
             >
               {RECEIVING_GATES.map((gate) => (
                 <option key={gate.value} value={gate.value}>

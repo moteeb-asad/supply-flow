@@ -1,34 +1,54 @@
 "use server";
 
 import { createClient } from "@/src/db/supabaseClient";
-import { SkuReceivingQueryParams } from "../types/query.types";
+import { getFilterDate } from "@/src/lib/date-range-utils";
+import type { SkuReceivingItem } from "../types/domain.types";
+import type { SkuReceivingQueryParams } from "../types/query.types";
+
+const LIST_COLUMNS =
+  "id, purchase_order_id, po_number, supplier_id, supplier_name, receipt_datetime, receiving_location, status, sku_count, qty_ordered, qty_received, qty_rejected";
 
 export default async function getSkuReceivingsAction(
   params: SkuReceivingQueryParams,
 ) {
   const supabase = await createClient();
   const { page, pageSize, search, filters } = params;
-  const searchTerm = search?.trim();
+  // Characters that would break PostgREST's or() filter syntax.
+  const searchTerm = search?.trim().replace(/[,()]/g, "");
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  // Apply search filter if search term is provided
-  // if (searchTerm) {
-  //   query = query.or(
-  //     `name.ilike.%${searchTerm}%,sku_code.ilike.%${searchTerm}%`,
-  //   );
-  // }
+  let query = supabase
+    .from("sku_receivings_list")
+    .select(LIST_COLUMNS, { count: "exact" })
+    .order("receipt_datetime", { ascending: false })
+    .order("id", { ascending: false });
 
-  // const { data, count, error } = await query.range(from, to);
+  if (searchTerm) {
+    query = query.or(
+      `po_number.ilike.%${searchTerm}%,supplier_name.ilike.%${searchTerm}%`,
+    );
+  }
 
-  // if (error) {
-  //   console.error("Failed to fetch inventory items:", error);
-  //   return { success: false, data: [], total: 0 };
-  // }
+  if (filters?.status) {
+    query = query.eq("status", filters.status);
+  }
+
+  const since = getFilterDate(filters?.dateRange);
+  if (since) {
+    query = query.gte("receipt_datetime", since);
+  }
+
+  const { data, count, error } = await query.range(from, to);
+
+  if (error) {
+    console.error("Failed to fetch SKU receivings:", error);
+    return { success: false, data: [], total: 0 };
+  }
 
   return {
     success: true,
-    data: [],
-    total: 0,
+    data: (data ?? []) as SkuReceivingItem[],
+    total: count ?? 0,
   };
 }

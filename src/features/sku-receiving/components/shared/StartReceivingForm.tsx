@@ -2,11 +2,14 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import {
+import { zodResolver } from "@hookform/resolvers/zod";
+import type {
   StartReceivingLoadedPoPayload,
+  StartReceivingFormOutput,
   StartReceivingFormProps,
   StartReceivingFormValues,
 } from "../../types/form.types";
+import { startReceivingSchema } from "../../validators/sku-receiving.schema";
 import PoLookupSection from "./PoLookupSection";
 import ReceiptHeaderSection from "./ReceiptHeaderSection";
 import LineItemsReceivingSection from "./LineItemsReceivingSection";
@@ -25,6 +28,7 @@ const getCurrentDateTimeLocalValue = () => {
 
 export default function StartReceivingForm({
   formId,
+  onSubmit,
   serverError,
   isSubmitting,
 }: StartReceivingFormProps) {
@@ -32,10 +36,13 @@ export default function StartReceivingForm({
 
   const {
     register,
+    handleSubmit,
     setValue,
+    trigger,
     control,
-    formState: { errors },
-  } = useForm<StartReceivingFormValues>({
+    formState: { errors, isSubmitted },
+  } = useForm<StartReceivingFormValues, unknown, StartReceivingFormOutput>({
+    resolver: zodResolver(startReceivingSchema),
     defaultValues: {
       purchase_order_id: "",
       receipt_datetime: getCurrentDateTimeLocalValue(),
@@ -61,12 +68,12 @@ export default function StartReceivingForm({
     setValue("received_by_role", role);
   }, [setValue, user?.email, user?.fullName, user?.primaryRole]);
 
-  const fieldErrorCount = Object.values(errors).reduce(
-    (count, error) => count + (error?.message ? 1 : 0),
-    0,
-  );
+  // Count each top-level field once, including nested line_items errors.
+  const fieldErrorCount = Object.keys(errors).length;
   const bannerMessage =
-    serverError || getValidationSummaryMessage(fieldErrorCount);
+    serverError ||
+    errors.purchase_order_id?.message ||
+    getValidationSummaryMessage(fieldErrorCount);
 
   const handlePoLoaded = (payload: StartReceivingLoadedPoPayload) => {
     setValue("purchase_order_id", payload.purchase_order_id);
@@ -74,6 +81,9 @@ export default function StartReceivingForm({
       shouldDirty: true,
       shouldTouch: true,
     });
+    // One schema run after the first submit so stale errors clear on PO change.
+    // (setValue's shouldValidate skips empty arrays and runs per nested field.)
+    if (isSubmitted) void trigger(["purchase_order_id", "line_items"]);
   };
 
   return (
@@ -81,6 +91,7 @@ export default function StartReceivingForm({
       className="flex-1 overflow-y-auto p-6 space-y-8"
       id={formId}
       noValidate
+      onSubmit={handleSubmit((values) => onSubmit?.(values))}
     >
       <input type="hidden" {...register("purchase_order_id")} />
       <div
@@ -96,7 +107,11 @@ export default function StartReceivingForm({
           errors={errors}
           register={register}
         />
-        <LineItemsReceivingSection control={control} register={register} />
+        <LineItemsReceivingSection
+          control={control}
+          errors={errors}
+          register={register}
+        />
         <SummaryFinalNotes control={control} register={register} />
       </div>
     </form>
