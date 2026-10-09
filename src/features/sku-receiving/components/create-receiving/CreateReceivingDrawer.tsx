@@ -13,6 +13,7 @@ const CREATE_RECEIVING_FORM_ID = "create-receiving-form";
 // Everything a confirmed receipt changes: receipts, PO lookup/status, stock.
 const AFFECTED_QUERY_KEYS = [
   ["sku-receiving-table"],
+  ["sku-receiving-metrics"],
   ["po-lookup-suggestions"],
   ["purchase-orders-table"],
   ["purchase-orders-metrics"],

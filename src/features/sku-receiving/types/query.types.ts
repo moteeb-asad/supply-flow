@@ -32,3 +32,17 @@ export type GetPurchaseOrderForReceivingResult = {
   items: PurchaseOrderOption[];
   nextOffset: number | null;
 };
+
+// ISO timestamps for the start of the user's local day and month.
+export type SkuReceivingMetricsInput = {
+  dayStart: string;
+  monthStart: string;
+};
+
+// Row returned by public.get_sku_receiving_metrics().
+export type SkuReceivingMetrics = {
+  awaiting_receipt_count: number;
+  received_today_qty: number;
+  variance_cases_mtd: number;
+  received_value_mtd: number;
+};
