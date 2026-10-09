@@ -5,16 +5,16 @@ import type {
 } from "./domain.types";
 import { FilterPeriod } from "@/src/lib/date-range-utils";
 
+export type PurchaseOrdersFiltersValue = {
+  status?: PurchaseOrderStatus;
+  dateRange?: FilterPeriod;
+};
+
 export type PurchaseOrdersQueryParams = {
   page: number;
   pageSize: number;
   search?: string;
   filters?: PurchaseOrdersFiltersValue;
-};
-
-export type PurchaseOrdersFiltersValue = {
-  status?: PurchaseOrderStatus;
-  dateRange?: FilterPeriod;
 };
 
 export type PurchaseOrdersFiltersProps = {

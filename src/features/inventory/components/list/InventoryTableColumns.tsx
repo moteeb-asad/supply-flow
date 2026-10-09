@@ -34,7 +34,7 @@ export const inventoryTableColumns: DataTableColumn<InventoryItem>[] = [
   {
     key: "item_name",
     header: "Item Name",
-    className: "px-6 py-4 text-sm font-medium",
+    className: "px-6 py-4 text-sm ",
     cell: (row) => row.itemName,
   },
   {
@@ -52,7 +52,7 @@ export const inventoryTableColumns: DataTableColumn<InventoryItem>[] = [
   {
     key: "stock_level",
     header: "Stock Level",
-    className: "px-6 py-4",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (row) => {
       const stock = typeof row.initialStock === "number" ? row.initialStock : 0;
       const status: StockStatus = row.stockStatus;
@@ -79,19 +79,19 @@ export const inventoryTableColumns: DataTableColumn<InventoryItem>[] = [
   {
     key: "unit_price",
     header: "Unit Price",
-    className: "px-6 py-4 text-sm font-semibold whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (row) => `$${row.unitPrice}`,
   },
   {
     key: "total_value",
     header: "Total Value",
-    className: "px-6 py-4 text-sm font-semibold whitespace-nowrap",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (row) => `$${(row.unitPrice * row.initialStock).toFixed(2)}`,
   },
   {
     key: "actions",
     header: "Actions",
-    className: "px-6 py-4",
+    className: "px-6 py-4 text-sm text-[#4e6797]",
     cell: (_row) => (
       <div className="flex justify-end gap-2">
         <button
