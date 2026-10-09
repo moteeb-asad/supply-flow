@@ -43,9 +43,10 @@ export const skuReceivingStyles: Record<
 
 const formatQty = (value: number) => Number(value).toLocaleString();
 
-// Accepted qty against what the receipt's PO lines ordered; negative = short.
+// Accepted qty against what was still outstanding when this delivery arrived;
+// negative = short or rejected.
 const getVariance = (row: SkuReceivingItem) =>
-  Number(row.qty_received) - Number(row.qty_ordered);
+  Number(row.qty_received) - Number(row.qty_expected);
 
 export const skuReceivingTableColumns: DataTableColumn<SkuReceivingItem>[] = [
   {
@@ -77,10 +78,10 @@ export const skuReceivingTableColumns: DataTableColumn<SkuReceivingItem>[] = [
     cell: (row) => row.sku_count,
   },
   {
-    key: "qty_ordered",
-    header: "Quantity Ordered",
+    key: "qty_expected",
+    header: "Quantity Expected",
     className: "px-6 py-4 text-sm text-[#4e6797]",
-    cell: (row) => formatQty(row.qty_ordered),
+    cell: (row) => formatQty(row.qty_expected),
   },
   {
     key: "qty_received",

@@ -25,6 +25,7 @@ export type SkuReceivingItem = {
   qty_ordered: number;
   qty_received: number;
   qty_rejected: number;
+  qty_expected: number;
 };
 
 // Only POs in these states can have goods received against them.

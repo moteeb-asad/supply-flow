@@ -6,7 +6,7 @@ import type { SkuReceivingItem } from "../types/domain.types";
 import type { SkuReceivingQueryParams } from "../types/query.types";
 
 const LIST_COLUMNS =
-  "id, purchase_order_id, po_number, supplier_id, supplier_name, receipt_datetime, receiving_location, status, sku_count, qty_ordered, qty_received, qty_rejected";
+  "id, purchase_order_id, po_number, supplier_id, supplier_name, receipt_datetime, receiving_location, status, sku_count, qty_ordered, qty_received, qty_rejected, qty_expected";
 
 export default async function getSkuReceivingsAction(
   params: SkuReceivingQueryParams,
