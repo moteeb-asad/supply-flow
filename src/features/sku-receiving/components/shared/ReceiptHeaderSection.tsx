@@ -1,17 +1,11 @@
 "use client";
 
-import type { ReceiptHeaderSectionProps } from "../../types/form.types";
 import { useWatch } from "react-hook-form";
-
-const RECEIVING_GATES = [
-  { value: "dock_door_01", label: "Dock Door 01" },
-  { value: "dock_door_02", label: "Dock Door 02" },
-  { value: "dock_door_03", label: "Dock Door 03" },
-  { value: "dock_door_04", label: "Dock Door 04" },
-  { value: "dock_door_05", label: "Dock Door 05" },
-  { value: "main_entrance", label: "Main Entrance" },
-  { value: "back_gate", label: "Back Gate" },
-];
+import {
+  DEFAULT_RECEIVING_GATE,
+  RECEIVING_GATES,
+} from "../../constants/form-options";
+import type { ReceiptHeaderSectionProps } from "../../types";
 
 export default function ReceiptHeaderSection({
   control,
@@ -93,7 +87,7 @@ export default function ReceiptHeaderSection({
             </label>
             <select
               className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-              defaultValue="dock_door_04"
+              defaultValue={DEFAULT_RECEIVING_GATE}
               {...register("receiving_location")}
             >
               {RECEIVING_GATES.map((gate) => (

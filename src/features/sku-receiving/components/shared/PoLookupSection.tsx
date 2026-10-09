@@ -1,15 +1,12 @@
 import { useState, useMemo, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getPurchaseOrderForReceivingAction } from "@/src/features/sku-receiving/actions/getPurchaseOrderForReceivingAction";
-import type { PurchaseOrderOption } from "@/src/features/sku-receiving/types";
+import { getReceivablePurchaseOrdersAction } from "../../actions/get-receivable-purchase-orders.action";
+import { getPurchaseOrderWithItemsAction } from "../../actions/get-purchase-order-with-items.action";
+import { mapPurchaseOrderToLoadedPayload } from "../../mappers/purchase-order.mapper";
 import { formatDate } from "@/src/lib/utils";
-import type { StartReceivingLoadedPoPayload } from "../../types/form.types";
-import { getPurchaseOrderWithItemsForReceivingAction } from "../../actions/getPurchaseOrderWithItemsForReceivingAction";
-const PAGE_SIZE = 5;
+import type { PoLookupSectionProps, PurchaseOrderOption } from "../../types";
 
-type PoLookupSectionProps = {
-  onPoLoaded: (payload: StartReceivingLoadedPoPayload) => void;
-};
+const PAGE_SIZE = 5;
 
 export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
   const [query, setQuery] = useState("");
@@ -33,7 +30,7 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
       queryKey: ["po-lookup-suggestions", debouncedQuery],
       initialPageParam: 0,
       queryFn: ({ pageParam }) =>
-        getPurchaseOrderForReceivingAction({
+        getReceivablePurchaseOrdersAction({
           search: debouncedQuery,
           limit: PAGE_SIZE,
           offset: pageParam,
@@ -46,6 +43,15 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
     () => data?.pages.flatMap((page) => page.items) ?? [],
     [data],
   );
+
+  // Load the next page of POs when the dropdown is scrolled near its bottom.
+  const handleDropdownScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
+    const isNearBottom = scrollTop + clientHeight >= scrollHeight - 24;
+    if (isNearBottom && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  };
 
   const clearLoadedPo = () => {
     onPoLoaded({
@@ -93,51 +99,18 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
     setLoadedPO(selectedPO);
     setIsLoadingDetails(true);
 
-    const data = await getPurchaseOrderWithItemsForReceivingAction(
-      selectedPO.id,
-    );
+    const data = await getPurchaseOrderWithItemsAction(selectedPO.id);
     if (data) {
-      const supplierRecord = Array.isArray(data.suppliers)
-        ? (data.suppliers[0] ?? null)
-        : data.suppliers;
-
-      const lineItems = (data.purchase_order_items ?? []).map((item) => {
-        const skuRecord = Array.isArray(item.skus)
-          ? (item.skus[0] ?? null)
-          : item.skus;
-        const orderedQty = Number(item.ordered_qty ?? 0);
-        const receivedQty = Number(item.received_qty ?? 0);
-        const remainingQty = Math.max(orderedQty - receivedQty, 0);
-
-        return {
-          purchase_order_item_id: item.id,
-          sku_id: item.sku_id,
-          sku_code: skuRecord?.sku_code ?? "",
-          item_name: skuRecord?.name ?? "Unknown Item",
-          ordered_qty: orderedQty,
-          received_qty_so_far: receivedQty,
-          remaining_qty: remainingQty,
-          qty_received: 0,
-          qty_rejected: 0,
-          variance_reason: "N/A",
-        };
-      });
+      const payload = mapPurchaseOrderToLoadedPayload(data);
 
       setLoadedPO({
         ...selectedPO,
-        supplier_name: supplierRecord?.name ?? "Unknown Supplier",
-        expected_delivery_date: data.expected_delivery_date,
-        status: data.status,
+        supplier_name: payload.supplier_name ?? "Unknown Supplier",
+        expected_delivery_date: payload.expected_delivery_date,
+        status: payload.status,
       });
 
-      onPoLoaded({
-        purchase_order_id: data.id,
-        po_number: data.po_number,
-        supplier_name: supplierRecord?.name ?? null,
-        expected_delivery_date: data.expected_delivery_date,
-        status: data.status,
-        line_items: lineItems,
-      });
+      onPoLoaded(payload);
     }
 
     setIsLoadingDetails(false);
@@ -182,7 +155,7 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
               />
               {canClear ? (
                 <button
-                  aria-label="Clear selected category"
+                  aria-label="Clear PO selection"
                   className="absolute inset-y-0 right-3 flex items-center text-[#4e6797] transition-colors hover:text-[#0e121b] cursor-pointer"
                   onClick={handleClearSelection}
                   type="button"
@@ -193,7 +166,10 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
                 </button>
               ) : null}
               {open ? (
-                <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+                <div
+                  className="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg"
+                  onScroll={handleDropdownScroll}
+                >
                   {isLoading ? (
                     <p className="px-4 py-3 text-sm text-[#4e6797]">
                       Loading purchase orders...

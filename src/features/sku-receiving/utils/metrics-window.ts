@@ -1,4 +1,4 @@
-import type { SkuReceivingMetricsInput } from "../types/query.types";
+import type { SkuReceivingMetricsInput } from "../types";
 
 // Start of the user's local day and month as UTC ISO strings, so "today" and
 // "MTD" follow the user's clock rather than the database's UTC day.

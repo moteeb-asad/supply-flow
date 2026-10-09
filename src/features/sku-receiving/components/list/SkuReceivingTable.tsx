@@ -3,16 +3,14 @@ import type {
   SkuReceivingItem,
   SkuReceivingQueryParams,
   SkuReceivingFiltersValue,
+  SkuReceivingTableProps,
 } from "../../types";
 import { skuReceivingTableConfig } from "../../sku-receiving.table.config";
 
 export default function SkuReceivingTable({
   filters,
   onFiltersChange,
-}: {
-  filters: SkuReceivingFiltersValue;
-  onFiltersChange: (filters: SkuReceivingFiltersValue) => void;
-}) {
+}: SkuReceivingTableProps) {
   return (
     <DataTable<
       SkuReceivingItem,

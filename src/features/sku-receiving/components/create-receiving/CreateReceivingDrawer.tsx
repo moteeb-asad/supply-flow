@@ -3,9 +3,11 @@
 import { FormDrawer } from "@/src/components/ui/FormDrawer";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, useTransition } from "react";
-import { confirmSkuReceivingAction } from "../../actions/confirmSkuReceivingAction";
-import { CreateReceivingDrawerProps } from "../../types/component-props.types";
-import type { StartReceivingFormOutput } from "../../types/form.types";
+import { confirmSkuReceivingAction } from "../../actions/confirm-sku-receiving.action";
+import type {
+  CreateReceivingDrawerProps,
+  StartReceivingFormOutput,
+} from "../../types";
 import StartReceivingForm from "../shared/StartReceivingForm";
 
 const CREATE_RECEIVING_FORM_ID = "create-receiving-form";

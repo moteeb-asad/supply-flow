@@ -4,7 +4,7 @@ import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
 import SkuReceivingMetrics from "../list/SkuReceivingMetrics";
 import SkuReceivingTable from "../list/SkuReceivingTable";
 import { useState } from "react";
-import { SkuReceivingFiltersValue } from "../../types";
+import type { SkuReceivingFiltersValue } from "../../types";
 import SkuReceivingCreateDrawer from "../create-receiving/CreateReceivingDrawer";
 
 export default function SkuReceivingScreen() {
@@ -55,7 +55,6 @@ export default function SkuReceivingScreen() {
 
       {isCreateDrawerOpen && (
         <SkuReceivingCreateDrawer
-          open={isCreateDrawerOpen}
           onClose={() => setIsCreateDrawerOpen(false)}
           onSuccess={() => {
             setIsCreateDrawerOpen(false);

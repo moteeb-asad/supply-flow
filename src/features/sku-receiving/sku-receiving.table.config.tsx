@@ -4,15 +4,13 @@ import { setOrDeleteParam } from "@/src/lib/url-filter-utils";
 import { skuReceivingFetcher } from "./fetchers/sku-receiving.fetcher";
 import { skuReceivingTableColumns } from "./components/list/SkuReceivingColumns";
 import SkuReceivingFilters from "./components/list/SkuReceivingFilters";
-import {
-  SKU_RECEIVING_STATUSES,
-  type SKUReceivingStatus,
-  type SkuReceivingItem,
-} from "./types/domain.types";
+import { SKU_RECEIVING_STATUSES } from "./constants/statuses";
 import type {
+  SKUReceivingStatus,
   SkuReceivingFiltersValue,
+  SkuReceivingItem,
   SkuReceivingQueryParams,
-} from "./types/query.types";
+} from "./types";
 
 const isSkuReceivingStatus = (
   value: string | null,

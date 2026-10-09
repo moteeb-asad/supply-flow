@@ -4,10 +4,9 @@ import { DATE_RANGE_OPTIONS } from "@/src/constants/dateRangeOptions";
 import type { FilterPeriod } from "@/src/lib/date-range-utils";
 import {
   SKU_RECEIVING_STATUSES,
-  type SKUReceivingStatus,
-} from "../../types/domain.types";
-import type { SkuReceivingFiltersValue } from "../../types/query.types";
-import { skuReceivingStyles } from "./SkuReceivingColumns";
+  SKU_RECEIVING_STATUS_STYLES,
+} from "../../constants/statuses";
+import type { SKUReceivingStatus, SkuReceivingFiltersProps } from "../../types";
 
 const selectClassName =
   "w-full bg-white border border-[#d0d7e7] rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none";
@@ -15,10 +14,7 @@ const selectClassName =
 export default function SkuReceivingFilters({
   onChange,
   values,
-}: {
-  onChange: (filters: SkuReceivingFiltersValue) => void;
-  values?: SkuReceivingFiltersValue;
-}) {
+}: SkuReceivingFiltersProps) {
   return (
     <>
       <div>
@@ -38,7 +34,7 @@ export default function SkuReceivingFilters({
           <option value="">All statuses</option>
           {SKU_RECEIVING_STATUSES.map((status) => (
             <option key={status} value={status}>
-              {skuReceivingStyles[status].label}
+              {SKU_RECEIVING_STATUS_STYLES[status].label}
             </option>
           ))}
         </select>

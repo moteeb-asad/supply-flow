@@ -2,7 +2,7 @@ import { useWatch } from "react-hook-form";
 import type {
   StartReceivingLineItemValue,
   SummaryFinalNotesProps,
-} from "../../types/form.types";
+} from "../../types";
 
 // Single pass; useWatch already re-renders only when line_items change.
 function summarize(lineItems: StartReceivingLineItemValue[]) {

@@ -8,7 +8,8 @@ import type {
   StartReceivingFormOutput,
   StartReceivingFormProps,
   StartReceivingFormValues,
-} from "../../types/form.types";
+} from "../../types";
+import { DEFAULT_RECEIVING_GATE } from "../../constants/form-options";
 import { startReceivingSchema } from "../../validators/sku-receiving.schema";
 import PoLookupSection from "./PoLookupSection";
 import ReceiptHeaderSection from "./ReceiptHeaderSection";
@@ -49,7 +50,7 @@ export default function StartReceivingForm({
       delivery_note_number: "",
       received_by_name: "",
       received_by_role: "",
-      receiving_location: "dock_door_04",
+      receiving_location: DEFAULT_RECEIVING_GATE,
       vehicle_ref: "",
       notes: "",
       line_items: [],

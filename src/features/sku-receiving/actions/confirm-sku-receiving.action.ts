@@ -1,15 +1,12 @@
 "use server";
 
 import { createClient } from "@/src/db/supabaseClient";
-import {
-  NO_VARIANCE_REASON,
-  startReceivingSchema,
-} from "../validators/sku-receiving.schema";
-import type { StartReceivingFormValues } from "../types/form.types";
-
-export type ConfirmSkuReceivingResult =
-  | { success: true; receivingId: string }
-  | { success: false; error: string };
+import { NO_VARIANCE_REASON } from "../constants/form-options";
+import { startReceivingSchema } from "../validators/sku-receiving.schema";
+import type {
+  ConfirmSkuReceivingResult,
+  StartReceivingFormValues,
+} from "../types";
 
 // Raised by confirm_sku_receiving() with a user-facing message.
 const RAISE_EXCEPTION_CODE = "P0001";

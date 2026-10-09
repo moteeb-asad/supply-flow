@@ -1,7 +1,7 @@
 "use client";
 
-import getSkuReceivingsAction from "../actions/get-sku-receivings.action";
-import type { SkuReceivingQueryParams } from "../types/query.types";
+import { getSkuReceivingsAction } from "../actions/get-sku-receivings.action";
+import type { SkuReceivingQueryParams } from "../types";
 
 export async function skuReceivingFetcher(params: SkuReceivingQueryParams) {
   const result = await getSkuReceivingsAction(params);

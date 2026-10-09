@@ -1,22 +1,20 @@
 "use server";
 
 import { createClient } from "@/src/db/supabaseClient";
-import {
-  GetPurchaseOrderForReceivingInput,
-  GetPurchaseOrderForReceivingResult,
+import { RECEIVABLE_PO_STATUSES } from "../constants/statuses";
+import { mapPurchaseOrderRowsToOptions } from "../mappers/purchase-order.mapper";
+import type {
+  GetReceivablePurchaseOrdersInput,
+  GetReceivablePurchaseOrdersResult,
+  PurchaseOrderRow,
 } from "../types";
-import {
-  mapPurchaseOrderRowsToOptions,
-  type PurchaseOrderRow,
-} from "../mappers/purchase-order.mapper";
-import { RECEIVABLE_PO_STATUSES } from "../types/domain.types";
 
 const DEFAULT_LIMIT = 8;
 const MAX_LIMIT = 20;
 
-export async function getPurchaseOrderForReceivingAction(
-  input: GetPurchaseOrderForReceivingInput = {},
-): Promise<GetPurchaseOrderForReceivingResult> {
+export async function getReceivablePurchaseOrdersAction(
+  input: GetReceivablePurchaseOrdersInput = {},
+): Promise<GetReceivablePurchaseOrdersResult> {
   const supabase = await createClient();
   const search = input.search?.trim();
   const limit = Math.min(Math.max(input.limit ?? DEFAULT_LIMIT, 1), MAX_LIMIT);
@@ -39,7 +37,7 @@ export async function getPurchaseOrderForReceivingAction(
   const { data, error } = await query;
 
   if (error) {
-    console.error("getPurchaseOrderForReceivingAction error:", error.message);
+    console.error("getReceivablePurchaseOrdersAction error:", error.message);
     return {
       items: [],
       nextOffset: null,

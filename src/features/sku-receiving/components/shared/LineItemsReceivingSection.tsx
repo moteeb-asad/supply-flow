@@ -1,13 +1,6 @@
 import { useWatch } from "react-hook-form";
-import type { LineItemsReceivingSectionProps } from "../../types/form.types";
-import { NO_VARIANCE_REASON } from "../../validators/sku-receiving.schema";
-
-const VARIANCE_REASONS = [
-  NO_VARIANCE_REASON,
-  "Damaged",
-  "Incorrect Item",
-  "Shortage",
-];
+import { VARIANCE_REASONS } from "../../constants/form-options";
+import type { LineItemsReceivingSectionProps } from "../../types";
 
 const inputClassName =
   "w-full rounded-lg border bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary";

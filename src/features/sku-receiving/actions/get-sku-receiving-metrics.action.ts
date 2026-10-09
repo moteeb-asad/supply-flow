@@ -1,10 +1,7 @@
 "use server";
 
 import { createClient } from "@/src/db/supabaseClient";
-import type {
-  SkuReceivingMetrics,
-  SkuReceivingMetricsInput,
-} from "../types/query.types";
+import type { SkuReceivingMetrics, SkuReceivingMetricsInput } from "../types";
 
 export async function getSkuReceivingMetricsAction({
   dayStart,

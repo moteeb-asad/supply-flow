@@ -1,6 +1,5 @@
 import { z } from "zod";
-
-export const NO_VARIANCE_REASON = "N/A";
+import { NO_VARIANCE_REASON } from "../constants/form-options";
 
 const quantitySchema = z
   .number({ message: "Enter a quantity" })
