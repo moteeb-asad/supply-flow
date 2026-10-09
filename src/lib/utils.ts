@@ -12,8 +12,12 @@ export function formatRole(role: string | UserRole | undefined | null): string {
   return ROLE_LABELS[role as UserRole] || role;
 }
 
-export function formatDate(dateString: string): string {
+export function formatDate(dateString: string | null): string {
+  if (!dateString) return "-";
+
   const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "-";
+
   return date.toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",

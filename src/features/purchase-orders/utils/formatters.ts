@@ -30,15 +30,6 @@ export const formatQuantity = (value: number) => {
   }).format(value);
 };
 
-export const formatDate = (date: string | null) => {
-  if (!date) return "---";
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-};
-
 export function formatDateTime(value: string | null): string {
   if (!value) return "Not available";
 
