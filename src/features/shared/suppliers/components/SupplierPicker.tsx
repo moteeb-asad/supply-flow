@@ -114,15 +114,15 @@ export default function SupplierPicker({
 
   return (
     <div className="space-y-1.5">
-      <label className="text-sm font-semibold text-[#0e121b]">{label}</label>
+      <label className="text-sm font-semibold text-ink">{label}</label>
       <div className="relative">
-        <span className="pointer-events-none absolute inset-y-0 left-3 z-10 flex items-center text-[#4e6797]">
+        <span className="pointer-events-none absolute inset-y-0 left-3 z-10 flex items-center text-muted">
           <span className="material-symbols-outlined text-[18px] leading-none">
             search
           </span>
         </span>
         <input
-          className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-10 pr-10 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+          className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-10 pr-10 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
           onChange={(event) => {
             setQuery(event.target.value);
             setSelectedSupplier(null);
@@ -141,7 +141,7 @@ export default function SupplierPicker({
         {canClear ? (
           <button
             aria-label="Clear selected supplier"
-            className="absolute inset-y-0 right-3 flex items-center text-[#4e6797] transition-colors hover:text-[#0e121b] cursor-pointer"
+            className="absolute inset-y-0 right-3 flex items-center text-muted transition-colors hover:text-ink cursor-pointer"
             onClick={handleClearSelection}
             type="button"
           >
@@ -168,11 +168,11 @@ export default function SupplierPicker({
             onScroll={handleDropdownScroll}
           >
             {isLoading ? (
-              <p className="px-4 py-3 text-sm text-[#4e6797]">
+              <p className="px-4 py-3 text-sm text-muted">
                 Loading suppliers...
               </p>
             ) : options.length === 0 ? (
-              <p className="px-4 py-3 text-sm text-[#4e6797]">
+              <p className="px-4 py-3 text-sm text-muted">
                 No active suppliers found.
               </p>
             ) : (
@@ -188,10 +188,10 @@ export default function SupplierPicker({
                   }
                   type="button"
                 >
-                  <p className="text-sm font-semibold text-[#0e121b]">
+                  <p className="text-sm font-semibold text-ink">
                     {supplier.name}
                   </p>
-                  <p className="text-xs text-[#4e6797]">
+                  <p className="text-xs text-muted">
                     {(supplier.category ?? "uncategorized").toUpperCase()} •{" "}
                     {supplier.status ?? "unknown"}
                   </p>
@@ -200,13 +200,13 @@ export default function SupplierPicker({
             )}
 
             {isFetchingNextPage ? (
-              <p className="px-4 py-3 text-sm text-[#4e6797]">
+              <p className="px-4 py-3 text-sm text-muted">
                 Loading more suppliers...
               </p>
             ) : null}
 
             {!hasNextPage && options.length > 0 ? (
-              <p className="px-4 py-2 text-center text-xs text-[#4e6797]">
+              <p className="px-4 py-2 text-center text-xs text-muted">
                 End of supplier list
               </p>
             ) : null}
@@ -217,11 +217,11 @@ export default function SupplierPicker({
       {error ? (
         <p className="text-xs text-red-600">{error}</p>
       ) : selectedSupplier ? (
-        <p className="text-xs text-[#4e6797]">
+        <p className="text-xs text-muted">
           Selected: {selectedSupplier.name} ({supplierStatusLabel})
         </p>
       ) : (
-        <p className="text-xs text-[#4e6797]">
+        <p className="text-xs text-muted">
           Select one active supplier from results.
         </p>
       )}

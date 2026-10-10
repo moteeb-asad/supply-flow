@@ -23,11 +23,11 @@ export default function DataTableSearch({
 
   return (
     <div className="relative w-full max-w-md">
-      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#4e6797] text-lg">
+      <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-muted !text-[18px]">
         search
       </span>
       <input
-        className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#d0d7e7] rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all "
+        className="h-9 w-full pl-9 pr-3 bg-white border border-line rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all "
         placeholder={placeholder || "Search..."}
         type="text"
         value={inputValue}

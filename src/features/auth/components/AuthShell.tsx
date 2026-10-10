@@ -6,7 +6,7 @@ type AuthShellProps = {
 
 export default function AuthShell({ children }: AuthShellProps) {
   return (
-    <div className="w-full lg:w-1/2 flex flex-col justify-between p-8 lg:p-16 bg-white">
+    <div className="flex w-full flex-col justify-between bg-white p-6 sm:p-8 lg:w-1/2 lg:p-12">
       {children}
     </div>
   );

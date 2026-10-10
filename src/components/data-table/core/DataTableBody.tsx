@@ -16,12 +16,12 @@ export function DataTableBody<
   onRowClick?: (row: T, event: React.MouseEvent) => void;
 }) {
   return (
-    <tbody className="divide-y divide-[#d0d7e7]">
+    <tbody className="divide-y divide-line">
       {data.length === 0 ? (
         <tr>
           <td
             colSpan={config.columns.length}
-            className="text-center py-10 text-sm font-medium text-[#4e6797]"
+            className="text-center py-10 text-sm font-medium text-muted"
           >
             No results found
           </td>
@@ -34,7 +34,7 @@ export function DataTableBody<
             onClick={onRowClick ? (event) => onRowClick(row, event) : undefined}
           >
             {config.columns.map((col) => (
-              <td key={col.key} className={col.className ?? "px-6 py-4"}>
+              <td key={col.key} className={`px-4 py-2.5 ${col.className ?? ""}`}>
                 {col.cell(row)}
               </td>
             ))}

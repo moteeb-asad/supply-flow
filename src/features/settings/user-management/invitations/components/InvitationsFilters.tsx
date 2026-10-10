@@ -18,7 +18,7 @@ export function InvitationsFilters({
 
   return (
     <div>
-      <h3 className="text-xs font-bold text-[#4e6797] uppercase tracking-wider mb-3">
+      <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
         Role Assigned
       </h3>
       <div className="space-y-2">

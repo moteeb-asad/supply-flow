@@ -1,71 +1,58 @@
+import { StatCard } from "@/src/components/ui/StatCard";
+
+const hintClassName =
+  "inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs font-bold";
+
 export default function InventoryMetrics() {
   return (
-    <>
-      <div className="px-8 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-xl border border-slate-200  flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                Total Inventory Value
+    <div className="px-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <StatCard
+          label="Total Inventory Value"
+          icon="account_balance_wallet"
+          className="border-slate-200"
+          iconClassName="bg-blue-50 text-blue-600"
+          labelClassName="text-slate-500"
+          valueClassName="text-slate-900"
+          value="$1,248,500.00"
+          hint={
+            <span className={`${hintClassName} bg-emerald-50 text-emerald-700`}>
+              <span className="material-symbols-outlined !text-xs">
+                trending_up
               </span>
-              <div className="p-2 bg-blue-50 rounded-lg">
-                <span className="material-symbols-outlined text-blue-600">
-                  account_balance_wallet
-                </span>
-              </div>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-2xl font-black text-slate-900">
-                $1,248,500.00
-              </h3>
-              <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 text-xs font-bold">
-                <span className="material-symbols-outlined text-xs">
-                  trending_up
-                </span>{" "}
-                +2.4% vs last month
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl border border-slate-200  flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                Low Stock Alerts
-              </span>
-              <div className="p-2 bg-red-50 rounded-lg">
-                <span className="material-symbols-outlined text-red-600">
-                  warning
-                </span>
-              </div>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-2xl font-black text-slate-900">14 Items</h3>
-              <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-red-50 text-red-700 text-xs font-bold">
-                Action required immediately
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl border border-slate-200  flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                Items Out of Stock
-              </span>
-              <div className="p-2 bg-amber-50 rounded-lg">
-                <span className="material-symbols-outlined text-amber-600">
-                  inventory
-                </span>
-              </div>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-2xl font-black text-slate-900">3 SKUs</h3>
-              <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-50 text-amber-700 text-xs font-bold">
-                2 since yesterday
-              </div>
-            </div>
-          </div>
-        </div>
+              +2.4% vs last month
+            </span>
+          }
+        />
+        <StatCard
+          label="Low Stock Alerts"
+          icon="warning"
+          className="border-slate-200"
+          iconClassName="bg-red-50 text-red-600"
+          labelClassName="text-slate-500"
+          valueClassName="text-slate-900"
+          value="14 Items"
+          hint={
+            <span className={`${hintClassName} bg-red-50 text-red-700`}>
+              Action required
+            </span>
+          }
+        />
+        <StatCard
+          label="Items Out of Stock"
+          icon="inventory"
+          className="border-slate-200"
+          iconClassName="bg-amber-50 text-amber-600"
+          labelClassName="text-slate-500"
+          valueClassName="text-slate-900"
+          value="3 SKUs"
+          hint={
+            <span className={`${hintClassName} bg-amber-50 text-amber-700`}>
+              2 since yesterday
+            </span>
+          }
+        />
       </div>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { StatCard } from "@/src/components/ui/StatCard";
 import { purchaseOrdersFetcher } from "@/src/features/purchase-orders/fetchers/purchaseorders.fetcher";
 import type { PurchaseOrder } from "@/src/features/purchase-orders/types";
 
@@ -26,48 +27,38 @@ export default function PurchaseOrdersMetrics() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-center gap-4">
-        <div className="p-3 bg-blue-100 rounded-lg text-blue-700">
-          <span className="material-symbols-outlined">payments</span>
-        </div>
-        <div>
-          <p className="text-xs text-blue-700 font-bold uppercase">
-            Open Commitment
-          </p>
-          <p className="text-xl font-black text-blue-900">
-            {isPending
-              ? "..."
-              : `$${openCommitment.toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
-          </p>
-        </div>
-      </div>
-      <div className="bg-red-50 p-4 rounded-xl border border-red-100 flex items-center gap-4">
-        <div className="p-3 bg-red-100 rounded-lg text-red-700">
-          <span className="material-symbols-outlined">running_with_errors</span>
-        </div>
-        <div>
-          <p className="text-xs text-red-700 font-bold uppercase">
-            Overdue Orders
-          </p>
-          <p className="text-xl font-black text-red-900">
-            {isPending ? "..." : `${overdueCount} Orders`}
-          </p>
-        </div>
-      </div>
-      <div className="bg-green-50 p-4 rounded-xl border border-green-100 flex items-center gap-4">
-        <div className="p-3 bg-green-100 rounded-lg text-green-700">
-          <span className="material-symbols-outlined">task_alt</span>
-        </div>
-        <div>
-          <p className="text-xs text-green-700 font-bold uppercase">
-            Completed (MTD)
-          </p>
-          <p className="text-xl font-black text-green-900">
-            {isPending ? "..." : `${completedCount} Orders`}
-          </p>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <StatCard
+        label="Open Commitment"
+        icon="payments"
+        className="border-blue-100 bg-blue-50"
+        iconClassName="bg-blue-100 text-blue-700"
+        labelClassName="text-blue-700"
+        valueClassName="text-blue-900"
+        value={
+          isPending
+            ? "..."
+            : `$${openCommitment.toLocaleString("en-US", { minimumFractionDigits: 2 })}`
+        }
+      />
+      <StatCard
+        label="Overdue Orders"
+        icon="running_with_errors"
+        className="border-red-100 bg-red-50"
+        iconClassName="bg-red-100 text-red-700"
+        labelClassName="text-red-700"
+        valueClassName="text-red-900"
+        value={isPending ? "..." : `${overdueCount} Orders`}
+      />
+      <StatCard
+        label="Completed (MTD)"
+        icon="task_alt"
+        className="border-green-100 bg-green-50"
+        iconClassName="bg-green-100 text-green-700"
+        labelClassName="text-green-700"
+        valueClassName="text-green-900"
+        value={isPending ? "..." : `${completedCount} Orders`}
+      />
     </div>
   );
 }

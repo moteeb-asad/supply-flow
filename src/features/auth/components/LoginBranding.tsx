@@ -1,6 +1,6 @@
 export default function LoginBranding() {
   return (
-    <div className="hidden lg:flex w-1/2 bg-background-dark relative overflow-hidden flex-col justify-center items-center p-16">
+    <div className="hidden lg:flex w-1/2 bg-background-dark relative overflow-hidden flex-col justify-center items-center p-12">
       {/* Background Effects */}
       <div className="absolute inset-0 watermark-pattern opacity-40" />
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
@@ -12,8 +12,8 @@ export default function LoginBranding() {
       {/* Content */}
       <div className="relative z-10 text-center max-w-lg">
         {/* Logo */}
-        <div className="inline-flex items-center justify-center bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 mb-8">
-          <div className="bg-white size-16 rounded-2xl flex items-center justify-center text-primary shadow-2xl">
+        <div className="mb-6 inline-flex items-center justify-center rounded-3xl border border-white/20 bg-white/10 p-4 backdrop-blur-md">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-white text-primary shadow-2xl">
             <span
               className="material-symbols-outlined text-4xl"
               style={{ fontVariationSettings: '"FILL" 1' }}
@@ -24,13 +24,13 @@ export default function LoginBranding() {
         </div>
 
         {/* Title */}
-        <h2 className="text-4xl font-bold text-white mb-4 tracking-tight">
+        <h2 className="mb-3 text-3xl font-bold tracking-tight text-white">
           SupplyFlow
         </h2>
-        <div className="h-1 w-12 bg-primary mx-auto mb-8 rounded-full" />
+        <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-primary" />
 
         {/* Description */}
-        <p className="text-gray-400 text-lg mb-12 font-medium leading-relaxed">
+        <p className="mb-8 text-base font-medium leading-relaxed text-gray-400">
           Integrated supply chain and warehouse management system for
           streamlined internal operations.
         </p>
@@ -63,7 +63,7 @@ export default function LoginBranding() {
       </div>
 
       {/* Bottom Badge */}
-      <div className="absolute bottom-12 flex items-center gap-2 text-white/40 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+      <div className="absolute bottom-8 flex items-center gap-2 text-white/40 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
         <span className="material-symbols-outlined text-sm">
           shield_with_heart
         </span>

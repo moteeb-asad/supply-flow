@@ -1,10 +1,16 @@
 import SidebarNav from "./SidebarNav";
+import SidebarNavLink from "./SidebarNavLink";
 import { sidebarMenu } from "./menu.config";
-import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
+import {
+  getCurrentUser,
+  logoutAction,
+} from "@/src/features/auth/actions/auth.actions";
 import { getMenuByRole } from "@/src/lib/navigation";
 import { formatRole } from "@/src/lib/utils";
 import type { UserRole } from "@/src/types/layout";
-import SettingsLink from "./SettingsLink";
+
+const sidebarIconButtonClassName =
+  "relative flex size-8 cursor-pointer items-center justify-center rounded-md text-muted transition-colors hover:bg-gray-100";
 
 export default async function Sidebar() {
   const user = await getCurrentUser();
@@ -22,34 +28,57 @@ export default async function Sidebar() {
   // Get first letter of name for avatar
   const initial = userName.charAt(0).toUpperCase();
   return (
-    <aside className="w-64 flex flex-col border-r border-[#e7ebf3] bg-white min-h-screen shrink-0">
-      <div className="p-6">
-        <div className="flex items-center gap-3">
-          <div className="bg-primary size-10 rounded-lg flex items-center justify-center text-white">
-            <span className="material-symbols-outlined">inventory_2</span>
-          </div>
-          <div className="flex flex-col">
-            <h1 className="text-base font-bold leading-none">SupplyFlow</h1>
-            <p className="text-[#4e6797] text-xs font-normal">
-              Warehouse Admin
-            </p>
-          </div>
+    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-line-soft bg-white">
+      <div className="flex h-14 items-center gap-2.5 px-4">
+        <div className="flex size-8 items-center justify-center rounded-md bg-primary text-white">
+          <span className="material-symbols-outlined !text-[20px]">
+            inventory_2
+          </span>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-sm font-bold leading-none">SupplyFlow</h1>
+          <p className="text-xs leading-none text-muted">Warehouse Admin</p>
         </div>
       </div>
       <SidebarNav items={filteredMenuItems} />
-      <div className="p-4 border-t border-[#e7ebf3]">
-        <SettingsLink />
-        <div className="mt-4 flex items-center gap-3 px-3">
-          <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <span className="text-sm font-bold text-primary">{initial}</span>
+      <div className="space-y-1 border-t border-line-soft p-3">
+        <SidebarNavLink href="/settings" icon="settings" label="Settings" />
+        <div className="flex items-center gap-2.5 py-1.5 pl-2.5">
+          <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
+            <span className="text-xs font-bold text-primary">{initial}</span>
           </div>
-          <div className="flex flex-col justify-space-between">
-            <p className="text-sm font-medium leading-none truncate max-w-32">
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <p className="truncate text-sm font-medium leading-none">
               {userName}
             </p>
-            <p className="text-xs text-[#4e6797] truncate max-w-32">
+            <p className="truncate text-xs leading-none text-muted">
               {formatRole(user?.user_metadata.primary_role)}
             </p>
+          </div>
+          <div className="flex shrink-0 items-center">
+            <button
+              aria-label="Notifications"
+              className={sidebarIconButtonClassName}
+              title="Notifications"
+              type="button"
+            >
+              <span className="material-symbols-outlined !text-[20px]">
+                notifications
+              </span>
+              <span className="absolute right-1.5 top-1.5 size-2 rounded-full border-2 border-white bg-danger" />
+            </button>
+            <form action={logoutAction}>
+              <button
+                aria-label="Log out"
+                className={sidebarIconButtonClassName}
+                title="Log out"
+                type="submit"
+              >
+                <span className="material-symbols-outlined !text-[20px]">
+                  logout
+                </span>
+              </button>
+            </form>
           </div>
         </div>
       </div>
