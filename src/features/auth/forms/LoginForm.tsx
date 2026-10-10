@@ -28,11 +28,11 @@ export default function LoginForm() {
 
   return (
     <AuthShell>
-      <div className="flex items-center gap-3 lg:hidden mb-12">
-        <div className="bg-primary size-10 rounded-lg flex items-center justify-center text-white">
+      <div className="mb-8 flex items-center gap-2.5 lg:hidden">
+        <div className="flex size-9 items-center justify-center rounded-lg bg-primary text-white">
           <span className="material-symbols-outlined">inventory_2</span>
         </div>
-        <h1 className="text-xl font-bold tracking-tight text-ink">
+        <h1 className="text-lg font-bold tracking-tight text-ink">
           SupplyFlow
         </h1>
       </div>
@@ -44,8 +44,8 @@ export default function LoginForm() {
         />
 
         {(state?.error || errors.email || errors.password) && (
-          <div className="mb-6 p-4 bg-danger/10 border border-danger/20 rounded-xl flex gap-3 items-start">
-            <span className="material-symbols-outlined text-danger text-xl">
+          <div className="mb-4 flex items-start gap-2.5 rounded-lg border border-danger/20 bg-danger/10 p-3">
+            <span className="material-symbols-outlined !text-[20px] text-danger">
               error
             </span>
             <div className="text-sm text-danger font-medium">
@@ -57,7 +57,7 @@ export default function LoginForm() {
         )}
 
         <form
-          className="space-y-6"
+          className="space-y-4"
           noValidate
           onSubmit={handleSubmit((data) => {
             const formData = new FormData();
@@ -71,18 +71,18 @@ export default function LoginForm() {
         >
           <div>
             <label
-              className="block text-sm font-semibold text-gray-700 mb-2"
+              className="mb-1.5 block text-sm font-semibold text-gray-700"
               htmlFor="email"
             >
               Email Address
             </label>
             <div className="relative">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 !text-[18px]">
                 mail
               </span>
               <Input
                 autoComplete="email"
-                className="pl-10 pr-4 text-sm"
+                className="rounded-lg py-2.5 pl-9 pr-3 text-sm"
                 id="email"
                 placeholder="name@company.com"
                 type="email"
@@ -92,7 +92,7 @@ export default function LoginForm() {
           </div>
 
           <div>
-            <div className="flex justify-between items-center mb-2">
+            <div className="mb-1.5 flex items-center justify-between">
               <label
                 className="block text-sm font-semibold text-gray-700"
                 htmlFor="password"
@@ -107,12 +107,12 @@ export default function LoginForm() {
               </a>
             </div>
             <div className="relative">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 !text-[18px]">
                 lock
               </span>
               <Input
                 autoComplete="current-password"
-                className="pl-10 pr-4 text-sm"
+                className="rounded-lg py-2.5 pl-9 pr-3 text-sm"
                 id="password"
                 placeholder="••••••••"
                 type="password"
@@ -127,7 +127,7 @@ export default function LoginForm() {
             loadingText="Signing in..."
             loading={isPending}
             icon={
-              <span className="material-symbols-outlined text-xl">login</span>
+              <span className="material-symbols-outlined !text-[18px]">login</span>
             }
           />
         </form>
