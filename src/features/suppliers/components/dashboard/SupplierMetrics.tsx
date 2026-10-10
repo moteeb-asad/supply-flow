@@ -1,56 +1,34 @@
+import { StatCard } from "@/src/components/ui/StatCard";
+
 export default function SupplierMetrics() {
   return (
-    <>
-      <div className="px-8 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-6 border border-line ">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-50 rounded-lg text-primary">
-                <span className="material-symbols-outlined">group</span>
-              </div>
-              <div>
-                <p className="text-muted text-xs font-bold uppercase tracking-wider">
-                  Total Active Suppliers
-                </p>
-                <p className="text-ink text-3xl font-black mt-1">42</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl p-6 border border-line ">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-green-50 rounded-lg text-green-600">
-                <span className="material-symbols-outlined">star</span>
-              </div>
-              <div>
-                <p className="text-muted text-xs font-bold uppercase tracking-wider">
-                  Avg. Performance Score
-                </p>
-                <div className="flex items-baseline gap-2">
-                  <p className="text-ink text-3xl font-black mt-1">88%</p>
-                  <span className="text-green-500 text-xs font-bold">
-                    +2.4%
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl p-6 border border-line ">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-purple-50 rounded-lg text-purple-600">
-                <span className="material-symbols-outlined">payments</span>
-              </div>
-              <div>
-                <p className="text-muted text-xs font-bold uppercase tracking-wider">
-                  Total Spend (YTD)
-                </p>
-                <p className="text-ink text-3xl font-black mt-1">
-                  $1.24M
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="px-6 pb-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <StatCard
+          label="Total Active Suppliers"
+          icon="group"
+          className="border-line"
+          iconClassName="bg-blue-50 text-primary"
+          value="42"
+        />
+        <StatCard
+          label="Avg. Performance Score"
+          icon="star"
+          className="border-line"
+          iconClassName="bg-green-50 text-green-600"
+          value="88%"
+          hint={
+            <span className="text-xs font-bold text-green-500">+2.4%</span>
+          }
+        />
+        <StatCard
+          label="Total Spend (YTD)"
+          icon="payments"
+          className="border-line"
+          iconClassName="bg-purple-50 text-purple-600"
+          value="$1.24M"
+        />
       </div>
-    </>
+    </div>
   );
 }

@@ -13,7 +13,7 @@ export default function SkuReceivingScreen() {
 
   return (
     <>
-      <div className="px-8 py-6">
+      <div className="px-6 py-6">
         <div className="flex flex-wrap justify-between items-center gap-4">
           <div className="flex flex-col gap-1">
             <h2 className="text-ink text-3xl font-black leading-tight tracking-tight">
@@ -44,7 +44,7 @@ export default function SkuReceivingScreen() {
           </div>
         </div>
       </div>
-      <div className="px-8 pb-8">
+      <div className="px-6">
         <SkuReceivingMetrics />
       </div>
       <div className="space-y-6">

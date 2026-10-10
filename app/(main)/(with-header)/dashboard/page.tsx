@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
+import { StatCard } from "@/src/components/ui/StatCard";
 import SupplierPerformanceChart from "@/src/features/dashboard/components/SupplierPerformanceChart";
 
 export default async function DashboardPage() {
@@ -8,7 +9,7 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto p-8 space-y-8">
+      <div className="flex-1 overflow-y-auto space-y-6 p-6">
         <div>
           <h3 className="text-2xl font-bold text-ink">
             Welcome back, {displayName}
@@ -17,77 +18,54 @@ export default async function DashboardPage() {
             Here&apos;s what&apos;s happening in your warehouse today.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white p-5 rounded-xl border border-line-soft">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-muted">
-                Open Purchase Orders
-              </span>
-              <span className="material-symbols-outlined text-primary">
-                description
-              </span>
-            </div>
-            <div className="flex items-end justify-between">
-              <h3 className="text-2xl font-bold">24</h3>
-              <span className="text-muted text-xs font-medium">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            label="Open Purchase Orders"
+            icon="description"
+            value="24"
+            hint={
+              <span className="text-xs font-medium text-muted">
                 8 pending approval
               </span>
-            </div>
-          </div>
-          <div className="bg-primary text-white p-5 rounded-xl shadow-lg shadow-primary/20 relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-8xl">
-                local_shipping
-              </span>
-            </div>
-            <div className="flex items-center justify-between mb-2 relative z-10">
-              <span className="text-sm font-medium text-white/80">
-                Pending Deliveries
-              </span>
-              <span className="material-symbols-outlined">schedule</span>
-            </div>
-            <div className="flex items-end justify-between relative z-10">
-              <h3 className="text-3xl font-black">12</h3>
-              <span className="text-white text-xs font-bold px-2 py-0.5 bg-white/20 rounded">
+            }
+          />
+          <StatCard
+            label="Pending Deliveries"
+            icon="schedule"
+            className="border-transparent bg-primary shadow-lg shadow-primary/20"
+            iconClassName="bg-white/20 text-white"
+            labelClassName="text-white/80"
+            valueClassName="text-white"
+            value="12"
+            hint={
+              <span className="rounded bg-white/20 px-1.5 py-0.5 text-xs font-bold text-white">
                 4 Urgent
               </span>
-            </div>
-          </div>
-          <div className="bg-white p-5 rounded-xl border border-line-soft">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-muted">
-                Low Stock Alerts
-              </span>
-              <div className="flex gap-1">
-                <span className="size-2 rounded-full bg-danger animate-pulse"></span>
-                <span className="size-2 rounded-full bg-warning"></span>
-              </div>
-            </div>
-            <div className="flex items-end justify-between">
-              <h3 className="text-2xl font-bold text-danger">15</h3>
-              <span className="text-danger text-xs font-bold flex items-center gap-1">
+            }
+          />
+          <StatCard
+            label="Low Stock Alerts"
+            icon="warning"
+            iconClassName="bg-danger/10 text-danger"
+            valueClassName="text-danger"
+            value="15"
+            hint={
+              <span className="text-xs font-bold text-danger">
                 Critical Level
               </span>
-            </div>
-          </div>
-          <div className="bg-white p-5 rounded-xl border border-line-soft">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-muted">
-                Total Monthly Spend
-              </span>
-              <span className="material-symbols-outlined text-success">
-                payments
-              </span>
-            </div>
-            <div className="flex items-end justify-between">
-              <h3 className="text-2xl font-bold">$142.5k</h3>
-              <span className="text-success text-xs font-medium flex items-center">
-                +4.2%
-              </span>
-            </div>
-          </div>
+            }
+          />
+          <StatCard
+            label="Total Monthly Spend"
+            icon="payments"
+            iconClassName="bg-success/10 text-success"
+            value="$142.5k"
+            hint={
+              <span className="text-xs font-medium text-success">+4.2%</span>
+            }
+          />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div className="bg-white rounded-xl border border-line-soft overflow-hidden">
             <div className="p-6 border-b border-line-soft flex justify-between items-center">
               <h4 className="font-bold">Recent Receiving Activity</h4>

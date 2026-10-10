@@ -15,7 +15,7 @@ export default function InventoryManagementScreen() {
 
   return (
     <>
-      <div className="px-8 py-6">
+      <div className="px-6 py-6">
         <div className="flex flex-wrap justify-between items-center gap-4">
           <div className="flex flex-col gap-1">
             <h2 className="text-ink text-3xl font-black leading-tight tracking-tight">
