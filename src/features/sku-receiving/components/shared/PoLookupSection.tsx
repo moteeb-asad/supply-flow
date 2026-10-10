@@ -121,7 +121,7 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
 
   return (
     <>
-      <section className="space-y-5">
+      <section className="space-y-4">
         <div className="mb-1 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-lg">
             search
@@ -130,14 +130,14 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
             PO LOOKUP
           </h3>
         </div>
-        <div className="grid grid-cols-12 gap-3 items-end">
-          <div className="col-span-8 space-y-1.5">
+        <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-12">
+          <div className="space-y-1.5 sm:col-span-8">
             <label className="text-sm font-semibold text-ink">
               PO Number <span className="text-red-600">*</span>
             </label>
             <div className="relative">
               <input
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary uppercase placeholder:capitalize"
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary uppercase placeholder:capitalize"
                 placeholder="Enter PO reference..."
                 type="text"
                 value={query}
@@ -221,9 +221,9 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
               ) : null}
             </div>
           </div>
-          <div className="col-span-4">
+          <div className="sm:col-span-4">
             <button
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-bold flex items-center justify-center gap-2 text-white shadow-md transition-colors hover:bg-blue-700 active:scale-[0.98] cursor-pointer disabled:bg-gray-500 disabled:opacity-50 disabled:text-gray-100 disabled:cursor-not-allowed"
+              className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-bold flex items-center justify-center gap-2 text-white shadow-md transition-colors hover:bg-blue-700 active:scale-[0.98] cursor-pointer disabled:bg-gray-500 disabled:opacity-50 disabled:text-gray-100 disabled:cursor-not-allowed"
               onClick={handleSearchButtonClick}
               type="button"
               disabled={!selectedPO || isLoading || isLoadingDetails}
@@ -234,7 +234,7 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
           </div>
         </div>
         {loadedPO ? (
-          <div className="grid grid-cols-3 gap-4 rounded-lg border border-gray-200 bg-slate-50 p-4">
+          <div className="grid grid-cols-1 gap-3 rounded-lg sm:grid-cols-3 border border-gray-200 bg-slate-50 p-4">
             <div>
               <p className="mb-1 text-[10px] font-bold uppercase text-muted">
                 Supplier

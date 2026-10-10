@@ -19,7 +19,7 @@ export default function LineItemsReceivingSection({
 
   return (
     <>
-      <section className="space-y-5 border-t border-slate-200 pt-2">
+      <section className="space-y-4 border-t border-slate-200 pt-2">
         <div className="flex items-center justify-between">
           <div className="mb-1 flex items-center gap-2">
             <span className="material-symbols-outlined text-primary text-lg">
@@ -36,8 +36,8 @@ export default function LineItemsReceivingSection({
         {listError ? (
           <p className="text-xs text-red-600">{listError}</p>
         ) : null}
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50/50">
-          <table className="w-full border-collapse text-left text-sm">
+        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-gray-50/50">
+          <table className="w-full min-w-[560px] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-100 font-medium text-muted">
                 <th className="w-1/4 px-3 py-2 font-semibold">SKU / Item</th>

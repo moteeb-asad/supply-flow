@@ -38,7 +38,7 @@ export default function LineItemsSection({
   };
 
   return (
-    <section className="space-y-5">
+    <section className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="mb-1 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-lg">
@@ -58,8 +58,8 @@ export default function LineItemsSection({
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50/50">
-        <table className="w-full text-left text-sm border-collapse">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 bg-gray-50/50">
+        <table className="w-full min-w-[560px] text-left text-sm border-collapse">
           <thead>
             <tr className="bg-gray-100 text-muted font-medium">
               <th className="px-4 py-3 font-semibold">SKU / Item Name</th>

@@ -9,7 +9,7 @@ export default function SupplierAssignmentSection({
   clearErrors,
 }: SupplierAssignmentSectionProps) {
   return (
-    <section className="space-y-5">
+    <section className="space-y-4">
       <div className="mb-1 flex items-center gap-2">
         <span className="material-symbols-outlined text-primary text-lg">
           store

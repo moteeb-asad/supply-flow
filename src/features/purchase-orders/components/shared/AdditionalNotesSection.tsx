@@ -5,7 +5,7 @@ export default function AdditionalNotesSection({
   errors,
 }: AdditionalNotesSectionProps) {
   return (
-    <section className="space-y-5">
+    <section className="space-y-4">
       <div className="mb-1 flex items-center gap-2">
         <span className="material-symbols-outlined text-primary text-lg">
           sticky_note_2
@@ -15,7 +15,7 @@ export default function AdditionalNotesSection({
         </h3>
       </div>
       <textarea
-        className="min-h-[96px] w-full resize-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+        className="min-h-[96px] w-full resize-none rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
         // defaultValue={notes ?? ""}
         {...register("notes")}
         name="notes"

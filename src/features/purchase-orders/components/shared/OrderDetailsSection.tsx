@@ -16,7 +16,7 @@ export default function OrderDetailsSection({
   };
 
   return (
-    <section className="space-y-5">
+    <section className="space-y-4">
       <div className="mb-1 flex items-center gap-2">
         <span className="material-symbols-outlined text-primary text-lg">
           calendar_today
@@ -26,13 +26,13 @@ export default function OrderDetailsSection({
         </h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-ink">
             Order Date
           </label>
           <input
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
             {...register("orderDate")}
             name="orderDate"
             type="date"
@@ -46,7 +46,7 @@ export default function OrderDetailsSection({
             Expected Delivery
           </label>
           <input
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
             {...register("expectedDeliveryDate")}
             name="expectedDeliveryDate"
             type="date"
@@ -59,13 +59,13 @@ export default function OrderDetailsSection({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <label className="text-sm font-semibold text-ink">
             Shipping Method
           </label>
           <select
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-ink outline-none transition-all focus:ring-2 focus:ring-primary"
+            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:ring-2 focus:ring-primary"
             {...register("shippingMethod")}
             name="shippingMethod"
           >
@@ -85,7 +85,7 @@ export default function OrderDetailsSection({
             Payment Method
           </label>
           <select
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-ink outline-none transition-all focus:ring-2 focus:ring-primary"
+            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:ring-2 focus:ring-primary"
             {...register("paymentMethod")}
             name="paymentMethod"
             onChange={handlePaymentMethodChange}
@@ -104,7 +104,7 @@ export default function OrderDetailsSection({
       <div className="space-y-1.5">
         <label className="text-sm font-semibold text-ink">Status</label>
         <select
-          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-ink outline-none transition-all focus:ring-2 focus:ring-primary"
+          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:ring-2 focus:ring-primary"
           {...register("status")}
           name="status"
         >
