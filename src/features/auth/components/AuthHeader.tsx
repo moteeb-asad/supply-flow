@@ -5,9 +5,9 @@ type AuthHeaderProps = {
 
 export default function AuthHeader({ title, subtitle }: AuthHeaderProps) {
   return (
-    <div className="mb-10">
-      <h2 className="text-3xl font-bold text-gray-900 mb-2">{title}</h2>
-      <p className="text-gray-500 font-medium">{subtitle}</p>
+    <div className="mb-6">
+      <h2 className="mb-1 text-2xl font-bold text-gray-900">{title}</h2>
+      <p className="text-sm font-medium text-gray-500">{subtitle}</p>
     </div>
   );
 }

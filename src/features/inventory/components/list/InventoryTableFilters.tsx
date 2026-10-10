@@ -52,7 +52,7 @@ export default function InventoryTableFilters({
     <>
       {/* Categories  */}
       <div>
-        <h3 className="text-xs font-bold text-[#4e6797] uppercase tracking-wider mb-3">
+        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
           Category
         </h3>
         <CategoryPicker
@@ -64,7 +64,7 @@ export default function InventoryTableFilters({
       </div>
       {/* Unit Price Range  */}
       <div>
-        <h3 className="text-xs font-bold text-[#4e6797] uppercase tracking-wider mb-3">
+        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
           Unit Price Range
         </h3>
         <div className="flex items-center gap-3">
@@ -73,7 +73,7 @@ export default function InventoryTableFilters({
               $
             </span>
             <input
-              className="w-full bg-surface-variant border-[#d0d7e7] rounded-lg py-2 pl-6 pr-2 text-sm focus:ring-2 focus:ring-primary/20"
+              className="w-full bg-surface-variant border-line rounded-lg py-2 pl-6 pr-2 text-sm focus:ring-2 focus:ring-primary/20"
               placeholder="Min"
               type="number"
               value={values?.unitPriceMin ?? ""}
@@ -88,7 +88,7 @@ export default function InventoryTableFilters({
               $
             </span>
             <input
-              className="w-full bg-surface-variant border-[#d0d7e7] rounded-lg py-2 pl-6 pr-2 text-sm focus:ring-2 focus:ring-primary/20"
+              className="w-full bg-surface-variant border-line rounded-lg py-2 pl-6 pr-2 text-sm focus:ring-2 focus:ring-primary/20"
               placeholder="Max"
               type="number"
               value={values?.unitPriceMax ?? ""}
@@ -101,11 +101,11 @@ export default function InventoryTableFilters({
       </div>
       {/* Stock Status  */}
       <div>
-        <h3 className="text-xs font-bold text-[#4e6797] uppercase tracking-wider mb-3">
+        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
           Stock Status
         </h3>
         <select
-          className="w-full bg-white border border-[#d0d7e7] rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+          className="w-full bg-white border border-line rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
           value={values?.stockStatus || ""}
           onChange={handleStockStatusChange}
         >

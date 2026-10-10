@@ -1,5 +1,4 @@
 import Header from "@/src/components/layout/header/Header";
-import ProgressBarClient from "@/src/components/ui/ProgressBarClient";
 
 export default function WithHeaderLayout({
   children,
@@ -7,12 +6,9 @@ export default function WithHeaderLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <div className="relative flex-1 flex flex-col">
-        <ProgressBarClient />
-        <Header />
-        <main className="flex-1 bg-gray-50">{children}</main>
-      </div>
-    </>
+    <div className="relative flex flex-1 flex-col">
+      <Header />
+      <main className="flex-1 bg-gray-50">{children}</main>
+    </div>
   );
 }

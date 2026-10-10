@@ -19,11 +19,11 @@ export default function PurchaseOrdersFilters({
   return (
     <>
       <div>
-        <h3 className="text-xs font-bold text-[#4e6797] uppercase tracking-wider mb-3">
+        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
           Date Range
         </h3>
         <select
-          className="w-full bg-white border border-[#d0d7e7] rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+          className="w-full bg-white border border-line rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
           value={values?.dateRange || ""}
           onChange={handleDateRangeChange}
         >

@@ -11,9 +11,9 @@ export default function LineItemsTable({ lineItems }: LineItemsTableProps) {
   const subtotal = lineItems.reduce((sum, item) => sum + item.line_total, 0);
 
   return (
-    <div className="space-y-4 lg:col-span-2">
+    <div className="min-w-0 space-y-3 xl:col-span-2">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-bold">Line Items ({lineItems.length})</h3>
+        <h3 className="text-base font-bold">Line Items ({lineItems.length})</h3>
         {underReceivedCount > 0 ? (
           <div className="flex items-center gap-2 rounded-lg border border-rose-100 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-600">
             <span className="material-symbols-outlined text-sm">warning</span>
@@ -23,23 +23,23 @@ export default function LineItemsTable({ lineItems }: LineItemsTableProps) {
         ) : null}
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full border-collapse text-left">
+      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+        <table className="w-full min-w-[520px] border-collapse text-left">
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50">
-              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-500">
                 SKU / Item
               </th>
-              <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-2.5 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
                 Qty Ord.
               </th>
-              <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-2.5 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
                 Qty Rec.
               </th>
-              <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-2.5 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
                 Unit Price
               </th>
-              <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-2.5 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
                 Line Total
               </th>
             </tr>
@@ -49,7 +49,7 @@ export default function LineItemsTable({ lineItems }: LineItemsTableProps) {
             {lineItems.length === 0 ? (
               <tr>
                 <td
-                  className="px-6 py-8 text-center text-sm text-slate-500"
+                  className="px-4 py-6 text-center text-sm text-slate-500"
                   colSpan={5}
                 >
                   No line items found for this purchase order.
@@ -67,7 +67,7 @@ export default function LineItemsTable({ lineItems }: LineItemsTableProps) {
                     }
                     key={item.id}
                   >
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2.5">
                       <p className="text-sm font-bold text-slate-900">
                         {item.sku_code}
                       </p>
@@ -75,10 +75,10 @@ export default function LineItemsTable({ lineItems }: LineItemsTableProps) {
                         {item.sku_name}
                       </p>
                     </td>
-                    <td className="px-6 py-4 text-right text-sm font-medium text-slate-900">
+                    <td className="px-4 py-2.5 text-right text-sm font-medium text-slate-900">
                       {formatQuantity(item.ordered_qty)}
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-4 py-2.5 text-right">
                       {isUnderReceived ? (
                         <div className="flex flex-col items-end">
                           <span className="text-sm font-bold text-rose-600">
@@ -94,10 +94,10 @@ export default function LineItemsTable({ lineItems }: LineItemsTableProps) {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right text-sm font-medium text-slate-900">
+                    <td className="px-4 py-2.5 text-right text-sm font-medium text-slate-900">
                       {formatAmount(item.unit_price)}
                     </td>
-                    <td className="px-6 py-4 text-right text-sm font-bold text-slate-900">
+                    <td className="px-4 py-2.5 text-right text-sm font-bold text-slate-900">
                       {formatAmount(item.line_total)}
                     </td>
                   </tr>
@@ -109,12 +109,12 @@ export default function LineItemsTable({ lineItems }: LineItemsTableProps) {
           <tfoot className="bg-slate-50">
             <tr>
               <td
-                className="px-6 py-4 text-right text-sm font-bold text-slate-900"
+                className="px-4 py-2.5 text-right text-sm font-bold text-slate-900"
                 colSpan={4}
               >
                 Order Subtotal
               </td>
-              <td className="px-6 py-4 text-right text-sm font-black text-primary">
+              <td className="px-4 py-2.5 text-right text-sm font-black text-primary">
                 {formatAmount(subtotal)}
               </td>
             </tr>
