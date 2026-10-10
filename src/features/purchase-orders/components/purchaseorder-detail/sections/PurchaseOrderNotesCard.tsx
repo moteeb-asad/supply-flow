@@ -8,8 +8,8 @@ export default function PurchaseOrderNotesCard({
   const hasNotes = Boolean(notes && notes.trim().length > 0);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h3 className="mb-4 text-base font-bold">Internal Notes</h3>
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <h3 className="mb-3 text-sm font-bold">Internal Notes</h3>
       {hasNotes ? (
         <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">
           {notes}
