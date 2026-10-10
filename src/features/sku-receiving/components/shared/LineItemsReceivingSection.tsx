@@ -37,7 +37,7 @@ export default function LineItemsReceivingSection({
           <p className="text-xs text-red-600">{listError}</p>
         ) : null}
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-gray-50/50">
-          <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+          <table className="w-full min-w-[440px] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-100 font-medium text-muted">
                 <th className="w-1/4 px-3 py-2 font-semibold">SKU / Item</th>

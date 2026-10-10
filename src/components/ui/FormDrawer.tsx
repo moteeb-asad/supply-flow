@@ -14,7 +14,6 @@ type FormDrawerProps = {
   isSubmitting?: boolean;
   cancelLabel?: string;
   showFooter?: boolean;
-  widthClassName?: string;
 };
 
 export function FormDrawer({
@@ -29,7 +28,6 @@ export function FormDrawer({
   isSubmitting = false,
   cancelLabel = "Cancel",
   showFooter = true,
-  widthClassName = "max-w-lg",
 }: FormDrawerProps) {
   if (!open) {
     return null;
@@ -47,7 +45,7 @@ export function FormDrawer({
       aria-modal="true"
     >
       <aside
-        className={`w-full ${widthClassName} flex h-full flex-col bg-white shadow-2xl transition-transform duration-300`}
+        className="flex h-full w-full max-w-lg flex-col bg-white shadow-2xl transition-transform duration-300"
       >
         <header className="z-10 flex items-center justify-between gap-3 border-b border-line-soft bg-white px-5 py-4">
           <div className="min-w-0">
