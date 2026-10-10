@@ -5,7 +5,9 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { getPageTitle } from "@/src/lib/page-titles";
 import DynamicHeader from "./DynamicHeader";
-import { Button } from "../../ui/Button";
+
+const iconButtonClassName =
+  "relative flex size-9 cursor-pointer items-center justify-center rounded-md text-muted transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50";
 
 export default function Header() {
   const pathname = usePathname();
@@ -13,37 +15,40 @@ export default function Header() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   return (
-    <>
-      <header className="h-16 flex items-center justify-between px-8 border-b border-line-soft bg-white shrink-0">
-        <div className="flex items-center gap-6">
-          <h2 className="text-xl font-bold tracking-tight">{pageTitle}</h2>
-        </div>
+    <header className="flex h-14 shrink-0 items-center justify-between border-b border-line-soft bg-white px-6">
+      <h2 className="text-lg font-semibold tracking-tight">{pageTitle}</h2>
 
-        <div className="flex items-center gap-3">
-          {/* Dynamic header content (search, action buttons) per route */}
-          <DynamicHeader />
+      <div className="flex items-center gap-2">
+        {/* Dynamic header content (search, action buttons) per route */}
+        <DynamicHeader />
 
-          <button className="p-2 text-muted hover:bg-gray-100 rounded-lg relative">
-            <span className="material-symbols-outlined">notifications</span>
-            <span className="absolute top-2 right-2 w-2 h-2 bg-danger rounded-full border-2 border-white" />
-          </button>
+        <button
+          className={iconButtonClassName}
+          title="Notifications"
+          type="button"
+        >
+          <span className="material-symbols-outlined !text-[20px]">
+            notifications
+          </span>
+          <span className="absolute right-2 top-2 size-2 rounded-full border-2 border-white bg-danger" />
+        </button>
 
-          <Button
-            onClick={async () => {
-              setIsLoggingOut(true);
-              await logoutAction();
-              setIsLoggingOut(false);
-            }}
-            disabled={isLoggingOut}
-            title="Logout"
-            variant="icon"
-            shadow="none"
-            className="p-2 text-muted hover:bg-gray-100 rounded-lg disabled:opacity-50 inline-block cursor-pointer w-auto"
-          >
-            <span className="material-symbols-outlined">logout</span>
-          </Button>
-        </div>
-      </header>
-    </>
+        <button
+          className={iconButtonClassName}
+          disabled={isLoggingOut}
+          onClick={async () => {
+            setIsLoggingOut(true);
+            await logoutAction();
+            setIsLoggingOut(false);
+          }}
+          title="Logout"
+          type="button"
+        >
+          <span className="material-symbols-outlined !text-[20px]">
+            logout
+          </span>
+        </button>
+      </div>
+    </header>
   );
 }
