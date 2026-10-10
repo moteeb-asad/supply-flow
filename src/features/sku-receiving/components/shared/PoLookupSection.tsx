@@ -126,18 +126,18 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
           <span className="material-symbols-outlined text-primary text-lg">
             search
           </span>
-          <h3 className="text-xs font-bold uppercase tracking-widest text-[#4e6797]">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
             PO LOOKUP
           </h3>
         </div>
         <div className="grid grid-cols-12 gap-3 items-end">
           <div className="col-span-8 space-y-1.5">
-            <label className="text-sm font-semibold text-[#0e121b]">
+            <label className="text-sm font-semibold text-ink">
               PO Number <span className="text-red-600">*</span>
             </label>
             <div className="relative">
               <input
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary uppercase placeholder:capitalize"
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary uppercase placeholder:capitalize"
                 placeholder="Enter PO reference..."
                 type="text"
                 value={query}
@@ -156,7 +156,7 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
               {canClear ? (
                 <button
                   aria-label="Clear PO selection"
-                  className="absolute inset-y-0 right-3 flex items-center text-[#4e6797] transition-colors hover:text-[#0e121b] cursor-pointer"
+                  className="absolute inset-y-0 right-3 flex items-center text-muted transition-colors hover:text-ink cursor-pointer"
                   onClick={handleClearSelection}
                   type="button"
                 >
@@ -171,11 +171,11 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
                   onScroll={handleDropdownScroll}
                 >
                   {isLoading ? (
-                    <p className="px-4 py-3 text-sm text-[#4e6797]">
+                    <p className="px-4 py-3 text-sm text-muted">
                       Loading purchase orders...
                     </p>
                   ) : options.length === 0 ? (
-                    <p className="px-4 py-3 text-sm text-[#4e6797]">
+                    <p className="px-4 py-3 text-sm text-muted">
                       No purchase orders found.
                     </p>
                   ) : (
@@ -191,15 +191,15 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
                           handleOptionPointerDown(event, purchaseOrder)
                         }
                       >
-                        <p className="text-sm font-semibold text-[#0e121b]">
+                        <p className="text-sm font-semibold text-ink">
                           {purchaseOrder.po_number}
                         </p>
                         {purchaseOrder.status ? (
                           <div className="flex justify-between items-center">
-                            <p className="text-xs text-[#4e6797]">
+                            <p className="text-xs text-muted">
                               {purchaseOrder.expected_delivery_date}
                             </p>
-                            <p className="text-xs text-[#4e6797] capitalize">
+                            <p className="text-xs text-muted capitalize">
                               {purchaseOrder.status}
                             </p>
                           </div>
@@ -208,12 +208,12 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
                     ))
                   )}
                   {isFetchingNextPage ? (
-                    <p className="px-4 py-3 text-sm text-[#4e6797]">
+                    <p className="px-4 py-3 text-sm text-muted">
                       Loading more purchase orders...
                     </p>
                   ) : null}
                   {!hasNextPage && options.length > 0 ? (
-                    <p className="px-4 py-2 text-center text-xs text-[#4e6797]">
+                    <p className="px-4 py-2 text-center text-xs text-muted">
                       End of purchase order list
                     </p>
                   ) : null}
@@ -236,23 +236,23 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
         {loadedPO ? (
           <div className="grid grid-cols-3 gap-4 rounded-lg border border-gray-200 bg-slate-50 p-4">
             <div>
-              <p className="mb-1 text-[10px] font-bold uppercase text-[#4e6797]">
+              <p className="mb-1 text-[10px] font-bold uppercase text-muted">
                 Supplier
               </p>
-              <p className="text-sm font-semibold text-[#0e121b]">
+              <p className="text-sm font-semibold text-ink">
                 {loadedPO.supplier_name ?? "Unknown Supplier"}
               </p>
             </div>
             <div>
-              <p className="mb-1 text-[10px] font-bold uppercase text-[#4e6797]">
+              <p className="mb-1 text-[10px] font-bold uppercase text-muted">
                 Exp. Delivery
               </p>
-              <p className="text-sm font-semibold text-[#0e121b]">
+              <p className="text-sm font-semibold text-ink">
                 {formatDate(loadedPO.expected_delivery_date)}
               </p>
             </div>
             <div>
-              <p className="mb-1 text-[10px] font-bold uppercase text-[#4e6797]">
+              <p className="mb-1 text-[10px] font-bold uppercase text-muted">
                 PO Status
               </p>
               <span className="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700 capitalize">

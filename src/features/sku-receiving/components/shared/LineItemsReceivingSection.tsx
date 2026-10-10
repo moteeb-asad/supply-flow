@@ -3,7 +3,7 @@ import { VARIANCE_REASONS } from "../../constants/form-options";
 import type { LineItemsReceivingSectionProps } from "../../types";
 
 const inputClassName =
-  "w-full rounded-lg border bg-white px-3 py-2 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary";
+  "w-full rounded-lg border bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary";
 
 const borderClass = (hasError: boolean) =>
   hasError ? "border-red-500" : "border-gray-200";
@@ -25,11 +25,11 @@ export default function LineItemsReceivingSection({
             <span className="material-symbols-outlined text-primary text-lg">
               list_alt
             </span>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-[#4e6797]">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
               LINE ITEMS RECEIVING GRID
             </h3>
           </div>
-          <span className="text-[10px] font-medium italic text-[#4e6797]">
+          <span className="text-[10px] font-medium italic text-muted">
             Showing {lineItems.length} active lines
           </span>
         </div>
@@ -39,7 +39,7 @@ export default function LineItemsReceivingSection({
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50/50">
           <table className="w-full border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-100 font-medium text-[#4e6797]">
+              <tr className="border-b border-gray-200 bg-gray-100 font-medium text-muted">
                 <th className="w-1/4 px-3 py-2 font-semibold">SKU / Item</th>
                 <th className="px-3 py-2 text-center font-semibold">Ordered</th>
                 <th className="px-3 py-2 text-center font-semibold">
@@ -60,17 +60,17 @@ export default function LineItemsReceivingSection({
                     key={item.purchase_order_item_id}
                   >
                     <td className="px-3 py-3">
-                      <p className="font-bold text-[#0e121b]">
+                      <p className="font-bold text-ink">
                         {item.sku_code}
                       </p>
-                      <p className="text-[10px] text-[#4e6797]">
+                      <p className="text-[10px] text-muted">
                         {item.item_name}
                       </p>
                     </td>
-                    <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
+                    <td className="px-3 py-3 text-center font-medium text-ink">
                       {item.ordered_qty}
                     </td>
-                    <td className="px-3 py-3 text-center font-medium text-[#0e121b]">
+                    <td className="px-3 py-3 text-center font-medium text-ink">
                       {item.remaining_qty}
                     </td>
                     <td className="px-2 py-3 align-top">

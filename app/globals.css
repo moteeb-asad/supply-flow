@@ -20,6 +20,15 @@
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
 
+  /* Text: text-ink (headings, strong), text-muted (secondary), text-subtle */
+  --color-ink: #0e121b;
+  --color-muted: #4e6797;
+  --color-subtle: #94a3b8;
+
+  /* Borders and dividers: border-line (default), border-line-soft (dividers) */
+  --color-line: #d0d7e7;
+  --color-line-soft: #e7ebf3;
+
   --spacing: 0.25rem;
 
   --font-sans: var(--font-inter);

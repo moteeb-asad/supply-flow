@@ -11,7 +11,7 @@ export function SupplierIdentitySection({
         <span className="material-symbols-outlined text-primary text-lg">
           business
         </span>
-        <h4 className="text-xs font-bold text-[#4e6797] uppercase tracking-widest">
+        <h4 className="text-xs font-bold text-muted uppercase tracking-widest">
           Supplier Identity
         </h4>
       </div>
@@ -54,7 +54,7 @@ export function SupplierIdentitySection({
                 {...register("category")}
               />
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-lg text-[#4e6797] group-has-[:checked]:text-primary transition-colors">
+                <span className="material-symbols-outlined text-lg text-muted group-has-[:checked]:text-primary transition-colors">
                   inventory
                 </span>
                 <span className="text-xs font-bold group-has-[:checked]:text-primary">
@@ -70,7 +70,7 @@ export function SupplierIdentitySection({
                 {...register("category")}
               />
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-lg text-[#4e6797] group-has-[:checked]:text-primary transition-colors">
+                <span className="material-symbols-outlined text-lg text-muted group-has-[:checked]:text-primary transition-colors">
                   water_drop
                 </span>
                 <span className="text-xs font-bold group-has-[:checked]:text-primary">
@@ -86,7 +86,7 @@ export function SupplierIdentitySection({
                 {...register("category")}
               />
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-lg text-[#4e6797] group-has-[:checked]:text-primary transition-colors">
+                <span className="material-symbols-outlined text-lg text-muted group-has-[:checked]:text-primary transition-colors">
                   layers
                 </span>
                 <span className="text-xs font-bold group-has-[:checked]:text-primary">

@@ -101,7 +101,7 @@ export default function ChangePasswordModal({
           )}
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#4e6797]">
+            <label className="text-xs font-bold uppercase tracking-wider text-muted">
               Current Password
             </label>
             <Input
@@ -118,7 +118,7 @@ export default function ChangePasswordModal({
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#4e6797]">
+            <label className="text-xs font-bold uppercase tracking-wider text-muted">
               New Password
             </label>
             <Input
@@ -135,7 +135,7 @@ export default function ChangePasswordModal({
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#4e6797]">
+            <label className="text-xs font-bold uppercase tracking-wider text-muted">
               Confirm New Password
             </label>
             <Input

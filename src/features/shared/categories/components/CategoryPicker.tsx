@@ -84,15 +84,15 @@ export default function CategoryPicker({
 
   return (
     <div className="space-y-1.5">
-      <label className="text-sm font-semibold text-[#0e121b]">{label}</label>
+      <label className="text-sm font-semibold text-ink">{label}</label>
       <div className="relative">
-        <span className="pointer-events-none absolute inset-y-0 left-3 z-10 flex items-center text-[#4e6797]">
+        <span className="pointer-events-none absolute inset-y-0 left-3 z-10 flex items-center text-muted">
           <span className="material-symbols-outlined text-[18px] leading-none">
             search
           </span>
         </span>
         <input
-          className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-10 pr-10 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+          className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-10 pr-10 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
           onChange={(event) => {
             setQuery(event.target.value);
             setSelectedCategory(null);
@@ -110,7 +110,7 @@ export default function CategoryPicker({
         {canClear ? (
           <button
             aria-label="Clear selected category"
-            className="absolute inset-y-0 right-3 flex items-center text-[#4e6797] transition-colors hover:text-[#0e121b] cursor-pointer"
+            className="absolute inset-y-0 right-3 flex items-center text-muted transition-colors hover:text-ink cursor-pointer"
             onClick={handleClearSelection}
             type="button"
           >
@@ -135,11 +135,11 @@ export default function CategoryPicker({
             onScroll={handleDropdownScroll}
           >
             {isLoading ? (
-              <p className="px-4 py-3 text-sm text-[#4e6797]">
+              <p className="px-4 py-3 text-sm text-muted">
                 Loading categories...
               </p>
             ) : options.length === 0 ? (
-              <p className="px-4 py-3 text-sm text-[#4e6797]">
+              <p className="px-4 py-3 text-sm text-muted">
                 No categories found.
               </p>
             ) : (
@@ -155,11 +155,11 @@ export default function CategoryPicker({
                   }
                   type="button"
                 >
-                  <p className="text-sm font-semibold text-[#0e121b]">
+                  <p className="text-sm font-semibold text-ink">
                     {category.name}
                   </p>
                   {category.description ? (
-                    <p className="text-xs text-[#4e6797]">
+                    <p className="text-xs text-muted">
                       {category.description}
                     </p>
                   ) : null}
@@ -167,12 +167,12 @@ export default function CategoryPicker({
               ))
             )}
             {isFetchingNextPage ? (
-              <p className="px-4 py-3 text-sm text-[#4e6797]">
+              <p className="px-4 py-3 text-sm text-muted">
                 Loading more categories...
               </p>
             ) : null}
             {!hasNextPage && options.length > 0 ? (
-              <p className="px-4 py-2 text-center text-xs text-[#4e6797]">
+              <p className="px-4 py-2 text-center text-xs text-muted">
                 End of category list
               </p>
             ) : null}
@@ -182,11 +182,11 @@ export default function CategoryPicker({
       {error ? (
         <p className="text-xs text-red-600">{error}</p>
       ) : selectedCategory ? (
-        <p className="text-xs text-[#4e6797]">
+        <p className="text-xs text-muted">
           Selected: {selectedCategory.name}
         </p>
       ) : (
-        <p className="text-xs text-[#4e6797]">
+        <p className="text-xs text-muted">
           Select a category from results.
         </p>
       )}

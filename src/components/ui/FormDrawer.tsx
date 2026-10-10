@@ -49,15 +49,15 @@ export function FormDrawer({
       <aside
         className={`w-full ${widthClassName} flex h-full flex-col bg-white shadow-2xl transition-transform duration-300`}
       >
-        <header className="z-10 flex items-center justify-between border-b border-[#e7ebf3] bg-white p-6">
+        <header className="z-10 flex items-center justify-between border-b border-line-soft bg-white p-6">
           <div>
-            <h3 className="text-xl font-bold text-[#0e121b]">{title}</h3>
+            <h3 className="text-xl font-bold text-ink">{title}</h3>
             {description ? (
-              <p className="mt-1 text-sm text-[#4e6797]">{description}</p>
+              <p className="mt-1 text-sm text-muted">{description}</p>
             ) : null}
           </div>
           <button
-            className="cursor-pointer rounded-lg p-2 text-[#4e6797] transition-colors hover:bg-gray-100"
+            className="cursor-pointer rounded-lg p-2 text-muted transition-colors hover:bg-gray-100"
             onClick={onClose}
             aria-label="Close"
             type="button"
@@ -69,9 +69,9 @@ export function FormDrawer({
         {children}
 
         {showFooter ? (
-          <footer className="flex items-center justify-between gap-4 border-t border-[#e7ebf3] bg-white p-6">
+          <footer className="flex items-center justify-between gap-4 border-t border-line-soft bg-white p-6">
             <Button
-              className="w-auto rounded-lg bg-transparent px-6 py-2.5 text-sm font-bold text-[#4e6797] shadow-none transition-colors hover:bg-gray-50"
+              className="w-auto rounded-lg bg-transparent px-6 py-2.5 text-sm font-bold text-muted shadow-none transition-colors hover:bg-gray-50"
               onClick={onClose}
               type="button"
             >

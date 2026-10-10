@@ -77,10 +77,10 @@ export default function SkuReceivingMetrics() {
             <span className="material-symbols-outlined">{card.icon}</span>
           </div>
           <div>
-            <p className="text-[#4e6797] text-xs font-bold uppercase tracking-wider">
+            <p className="text-muted text-xs font-bold uppercase tracking-wider">
               {card.label}
             </p>
-            <p className="text-2xl font-black text-[#0e121b]">{card.value}</p>
+            <p className="text-2xl font-black text-ink">{card.value}</p>
           </div>
         </div>
       ))}

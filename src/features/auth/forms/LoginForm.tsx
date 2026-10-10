@@ -32,7 +32,7 @@ export default function LoginForm() {
         <div className="bg-primary size-10 rounded-lg flex items-center justify-center text-white">
           <span className="material-symbols-outlined">inventory_2</span>
         </div>
-        <h1 className="text-xl font-bold tracking-tight text-[#0e121b]">
+        <h1 className="text-xl font-bold tracking-tight text-ink">
           SupplyFlow
         </h1>
       </div>

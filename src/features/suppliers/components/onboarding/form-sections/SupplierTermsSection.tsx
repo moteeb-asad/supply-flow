@@ -11,14 +11,14 @@ export function SupplierTermsSection({
         <span className="material-symbols-outlined text-primary text-lg">
           handshake
         </span>
-        <h4 className="text-xs font-bold text-[#4e6797] uppercase tracking-widest">
+        <h4 className="text-xs font-bold text-muted uppercase tracking-widest">
           Initial Negotiated Terms
         </h4>
       </div>
       <div className="bg-gray-50 p-5 rounded-xl border border-gray-200 space-y-6">
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-[#4e6797]">
+            <label className="text-xs font-bold text-muted">
               Payment Terms
             </label>
             <select
@@ -38,7 +38,7 @@ export function SupplierTermsSection({
             )}
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-[#4e6797]">
+            <label className="text-xs font-bold text-muted">
               Min. Order Qty (Units)
             </label>
             <input
@@ -55,7 +55,7 @@ export function SupplierTermsSection({
         </div>
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <label className="text-xs font-bold text-[#4e6797]">
+            <label className="text-xs font-bold text-muted">
               Standard Lead Time
             </label>
             <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-[10px] font-bold">
@@ -75,7 +75,7 @@ export function SupplierTermsSection({
                 {errors.leadTimeDays.message}
               </p>
             )}
-            <div className="flex justify-between mt-2 text-[10px] text-[#4e6797] font-medium">
+            <div className="flex justify-between mt-2 text-[10px] text-muted font-medium">
               <span className="flex flex-col items-center">
                 1<span>Day</span>
               </span>
@@ -90,7 +90,7 @@ export function SupplierTermsSection({
         </div>
       </div>
       <div className="space-y-2">
-        <label className="text-xs font-bold text-[#4e6797]">Notes</label>
+        <label className="text-xs font-bold text-muted">Notes</label>
         <textarea
           className="w-full min-h-[96px] bg-white border border-gray-200 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-2 focus:ring-primary resize-none"
           placeholder="Add any supplier notes or internal context"

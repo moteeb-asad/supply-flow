@@ -7,12 +7,12 @@ export function DataTableHeader<
 >({ config }: { config: DataTableConfig<T, P, TFilters> }) {
   return (
     <thead>
-      <tr className="bg-slate-50 border-b border-[#d0d7e7]">
+      <tr className="bg-slate-50 border-b border-line">
         {config.columns.map((col) => (
           <th
             key={col.key}
             className={
-              `px-6 py-4 text-xs font-bold text-[#4e6797] uppercase tracking-wider ` +
+              `px-6 py-4 text-xs font-bold text-muted uppercase tracking-wider ` +
               (col.className ?? "") +
               (col.header === "Actions" ? " text-right" : "")
             }

@@ -10,12 +10,12 @@ export default function AdditionalNotesSection({
         <span className="material-symbols-outlined text-primary text-lg">
           sticky_note_2
         </span>
-        <h3 className="text-xs font-bold uppercase tracking-widest text-[#4e6797]">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
           Additional Notes
         </h3>
       </div>
       <textarea
-        className="min-h-[96px] w-full resize-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#0e121b] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+        className="min-h-[96px] w-full resize-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
         // defaultValue={notes ?? ""}
         {...register("notes")}
         name="notes"

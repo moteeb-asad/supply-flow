@@ -11,7 +11,7 @@ export function SupplierContactSection({
         <span className="material-symbols-outlined text-primary text-lg">
           person_pin
         </span>
-        <h4 className="text-xs font-bold text-[#4e6797] uppercase tracking-widest">
+        <h4 className="text-xs font-bold text-muted uppercase tracking-widest">
           Primary Contact Details
         </h4>
       </div>

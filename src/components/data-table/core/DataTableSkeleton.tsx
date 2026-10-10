@@ -6,16 +6,16 @@ export default function DataTableSkeleton({
   return (
     <>
       <div className="absolute inset-x-0 top-[140px] z-10 flex flex-col items-center justify-center pointer-events-none">
-        <div className="bg-white px-6 py-4 rounded-xl shadow-xl border border-[#e7ebf3] flex items-center gap-3">
+        <div className="bg-white px-6 py-4 rounded-xl shadow-xl border border-line-soft flex items-center gap-3">
           <div className="w-5 h-5 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-          <span className="text-sm font-semibold text-[#0e121b]">
+          <span className="text-sm font-semibold text-ink">
             {type === "search" ? "Searching..." : "Loading..."}
           </span>
         </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
-          <tbody className="divide-y divide-[#e7ebf3] opacity-40">
+          <tbody className="divide-y divide-line-soft opacity-40">
             {[...Array(3)].map((_, i) => (
               <tr key={i}>
                 <td className="px-6 py-4">

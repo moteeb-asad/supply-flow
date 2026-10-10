@@ -40,19 +40,19 @@ export const inventoryTableColumns: DataTableColumn<InventoryItem>[] = [
   {
     key: "category",
     header: "Category",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (row) => row.category,
   },
   {
     key: "supplier",
     header: "Supplier",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (row) => row.primarySupplier,
   },
   {
     key: "stock_level",
     header: "Stock Level",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (row) => {
       const stock = typeof row.initialStock === "number" ? row.initialStock : 0;
       const status: StockStatus = row.stockStatus;
@@ -79,19 +79,19 @@ export const inventoryTableColumns: DataTableColumn<InventoryItem>[] = [
   {
     key: "unit_price",
     header: "Unit Price",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (row) => `$${row.unitPrice}`,
   },
   {
     key: "total_value",
     header: "Total Value",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (row) => `$${(row.unitPrice * row.initialStock).toFixed(2)}`,
   },
   {
     key: "actions",
     header: "Actions",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (_row) => (
       <div className="flex justify-end gap-2">
         <button

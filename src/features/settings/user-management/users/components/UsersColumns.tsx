@@ -20,7 +20,7 @@ export const usersColumns: DataTableColumn<User>[] = [
             {getInitials(user?.full_name)}
           </div>
         )}
-        <span className="text-sm font-semibold text-[#0e121b]">
+        <span className="text-sm font-semibold text-ink">
           {user?.full_name}
         </span>
       </div>
@@ -30,7 +30,7 @@ export const usersColumns: DataTableColumn<User>[] = [
     key: "email",
     header: "Email",
     cell: (user) => (
-      <span className="text-sm text-[#4e6797]">{user.email}</span>
+      <span className="text-sm text-muted">{user.email}</span>
     ),
   },
   {
@@ -43,7 +43,7 @@ export const usersColumns: DataTableColumn<User>[] = [
             ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase text-nowrap"
             : formatRole(user.primary_role_label) === "Operations Manager"
               ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-600 uppercase text-nowrap"
-              : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-[#4e6797] uppercase text-nowrap"
+              : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-muted uppercase text-nowrap"
         }
       >
         {formatRole(user.primary_role_label)}
@@ -54,7 +54,7 @@ export const usersColumns: DataTableColumn<User>[] = [
     key: "last_login",
     header: "Last Login",
     cell: (user) => (
-      <span className="text-sm text-[#4e6797]">
+      <span className="text-sm text-muted">
         {formatLastLogin(user.last_login_at)}
       </span>
     ),
@@ -65,7 +65,7 @@ export const usersColumns: DataTableColumn<User>[] = [
     cell: (user) => (
       <div className="flex justify-end gap-2">
         <button
-          className="p-1.5 hover:bg-gray-100 rounded-lg text-[#4e6797] hover:text-primary transition-colors"
+          className="p-1.5 hover:bg-gray-100 rounded-lg text-muted hover:text-primary transition-colors"
           title="Edit Role"
         >
           <span className="material-symbols-outlined text-xl">
@@ -73,7 +73,7 @@ export const usersColumns: DataTableColumn<User>[] = [
           </span>
         </button>
         <button
-          className="p-1.5 hover:bg-red-50 rounded-lg text-[#4e6797] hover:text-danger transition-colors"
+          className="p-1.5 hover:bg-red-50 rounded-lg text-muted hover:text-danger transition-colors"
           title="Disable User"
         >
           <span className="material-symbols-outlined text-xl">block</span>

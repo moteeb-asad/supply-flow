@@ -77,13 +77,13 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "order_date",
     header: "Order Date",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (row) => formatPurchaseOrderDate(row.order_date),
   },
   {
     key: "expected_delivery_date",
     header: "Expected Delivery",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (row) => {
       const isOverdue = row.status === "overdue";
       return (
@@ -96,13 +96,13 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "total_amount",
     header: "Total Amount",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (row) => formatAmount(row.total_amount),
   },
   {
     key: "payment_method",
     header: "Payment",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (row) => {
       const payment = paymentMethodStyles[row.payment_method];
       return (
@@ -120,7 +120,7 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "status",
     header: "Status",
-    className: "px-6 py-4 text-sm text-[#4e6797]",
+    className: "px-6 py-4 text-sm text-muted",
     cell: (row) => {
       const style = statusStyles[row.status] ?? statusStyles.draft;
       return (
@@ -136,12 +136,12 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "actions",
     header: "Actions",
-    className: "px-6 py-4 text-sm text-[#4e6797] text-right",
+    className: "px-6 py-4 text-sm text-muted text-right",
     cell: (row) => (
       <div className="flex justify-end gap-2">
         <button
           disabled
-          className="p-1.5 text-[#4e6797] cursor-not-allowed opacity-50 rounded transition-all"
+          className="p-1.5 text-muted cursor-not-allowed opacity-50 rounded transition-all"
           title="View PDF"
           type="button"
         >
@@ -151,7 +151,7 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
         </button>
         <button
           disabled
-          className="p-1.5 text-[#4e6797] cursor-not-allowed opacity-50 rounded transition-all"
+          className="p-1.5 text-muted cursor-not-allowed opacity-50 rounded transition-all"
           title="Track Delivery"
           type="button"
         >

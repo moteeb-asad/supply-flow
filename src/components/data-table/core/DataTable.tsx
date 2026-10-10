@@ -186,7 +186,7 @@ export default function DataTable<
           <div className="relative">
             <button
               className={`px-4 py-2.5 border rounded-lg text-sm font-bold flex items-center gap-2 transition-colors cursor-pointer
-                bg-white border-[#d0d7e7] text-[#4e6797] hover:bg-slate-50
+                bg-white border-line text-muted hover:bg-slate-50
               `}
               onClick={() => setFiltersOpen((prev) => !prev)}
               type="button"
@@ -217,7 +217,7 @@ export default function DataTable<
 
       {/* Table */}
 
-      <div className="bg-white rounded-xl border border-[#d0d7e7] overflow-hidden">
+      <div className="bg-white rounded-xl border border-line overflow-hidden">
         {loading && search ? (
           <DataTableSkeleton type="search" />
         ) : loading ? (

@@ -14,7 +14,7 @@ export default function SupplierAssignmentSection({
         <span className="material-symbols-outlined text-primary text-lg">
           store
         </span>
-        <h3 className="text-xs font-bold uppercase tracking-widest text-[#4e6797]">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
           Supplier Assignment
         </h3>
       </div>
