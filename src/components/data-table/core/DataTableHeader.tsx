@@ -11,11 +11,9 @@ export function DataTableHeader<
         {config.columns.map((col) => (
           <th
             key={col.key}
-            className={
-              `px-6 py-4 text-xs font-bold text-muted uppercase tracking-wider ` +
-              (col.className ?? "") +
-              (col.header === "Actions" ? " text-right" : "")
-            }
+            className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-muted ${
+              col.headerClassName ?? ""
+            }${col.header === "Actions" ? " text-right" : ""}`}
           >
             {col.header}
           </th>

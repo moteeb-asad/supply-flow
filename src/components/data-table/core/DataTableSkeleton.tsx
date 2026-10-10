@@ -18,25 +18,25 @@ export default function DataTableSkeleton({
           <tbody className="divide-y divide-line-soft opacity-40">
             {[...Array(3)].map((_, i) => (
               <tr key={i}>
-                <td className="px-6 py-4">
+                <td className="px-4 py-2.5">
                   <div className="flex items-center gap-3">
                     <div className="size-9 rounded-full bg-gray-200 animate-pulse"></div>
                     <div className="h-4 w-32 skeleton-bar"></div>
                   </div>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-4 py-2.5">
                   <div className="h-4 w-48 skeleton-bar"></div>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-4 py-2.5">
                   <div className="h-6 w-16 rounded-full skeleton-bar"></div>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-4 py-2.5">
                   <div className="h-4 w-12 skeleton-bar"></div>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-4 py-2.5">
                   <div className="h-4 w-20 skeleton-bar"></div>
                 </td>
-                <td className="px-6 py-4"></td>
+                <td className="px-4 py-2.5"></td>
               </tr>
             ))}
           </tbody>

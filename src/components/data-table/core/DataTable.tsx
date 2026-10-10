@@ -172,7 +172,7 @@ export default function DataTable<
   /** ---------------- RENDER ---------------- */
 
   return (
-    <div className="p-8 space-y-6 relative">
+    <div className="relative space-y-4 p-6">
       {/* Search + Filters */}
 
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -185,13 +185,11 @@ export default function DataTable<
         {config.filters && (
           <div className="relative">
             <button
-              className={`px-4 py-2.5 border rounded-lg text-sm font-bold flex items-center gap-2 transition-colors cursor-pointer
-                bg-white border-line text-muted hover:bg-slate-50
-              `}
+              className="flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-line bg-white px-3 text-sm font-bold text-muted transition-colors hover:bg-slate-50"
               onClick={() => setFiltersOpen((prev) => !prev)}
               type="button"
             >
-              <span className="material-symbols-outlined text-lg">
+              <span className="material-symbols-outlined !text-[18px]">
                 filter_alt
               </span>
               <span>Advanced Filters</span>

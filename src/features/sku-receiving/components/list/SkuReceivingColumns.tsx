@@ -14,13 +14,13 @@ export const skuReceivingTableColumns: DataTableColumn<SkuReceivingItem>[] = [
   {
     key: "po_number",
     header: "PO Number",
-    className: "px-6 py-4 text-sm font-bold text-primary whitespace-wrap",
+    className: "text-sm font-bold text-primary whitespace-wrap",
     cell: (row) => `#${row.po_number}`,
   },
   {
     key: "supplier",
     header: "Supplier",
-    className: "px-6 py-4 text-sm text-muted whitespace-nowrap",
+    className: "text-sm text-muted whitespace-nowrap",
     cell: (row) => (
       <span className="text-sm font-medium">
         {row.supplier_name ?? "Unknown Supplier"}
@@ -30,31 +30,31 @@ export const skuReceivingTableColumns: DataTableColumn<SkuReceivingItem>[] = [
   {
     key: "receipt_datetime",
     header: "Received On",
-    className: "px-6 py-4 text-sm text-muted whitespace-nowrap",
+    className: "text-sm text-muted whitespace-nowrap",
     cell: (row) => formatDate(row.receipt_datetime),
   },
   {
     key: "sku_count",
     header: "SKU Count",
-    className: "px-6 py-4 text-sm text-muted whitespace-nowrap",
+    className: "text-sm text-muted whitespace-nowrap",
     cell: (row) => row.sku_count,
   },
   {
     key: "qty_expected",
     header: "Quantity Expected",
-    className: "px-6 py-4 text-sm text-muted",
+    className: "text-sm text-muted",
     cell: (row) => formatQty(row.qty_expected),
   },
   {
     key: "qty_received",
     header: "Quantity Received",
-    className: "px-6 py-4 text-sm text-muted",
+    className: "text-sm text-muted",
     cell: (row) => formatQty(row.qty_received),
   },
   {
     key: "variance",
     header: "Variance",
-    className: "px-6 py-4 text-sm text-muted whitespace-nowrap",
+    className: "text-sm text-muted whitespace-nowrap",
     cell: (row) => {
       const variance = getVariance(row);
       if (variance === 0) {
@@ -73,7 +73,7 @@ export const skuReceivingTableColumns: DataTableColumn<SkuReceivingItem>[] = [
   {
     key: "status",
     header: "Status",
-    className: "px-6 py-4 text-sm text-muted whitespace-nowrap",
+    className: "text-sm text-muted whitespace-nowrap",
     cell: (row) => {
       const style =
         SKU_RECEIVING_STATUS_STYLES[row.status] ??
