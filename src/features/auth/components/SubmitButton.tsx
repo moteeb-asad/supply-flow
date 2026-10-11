@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/src/components/ui/Button";
+import { cn } from "@/src/lib/utils";
 import { useFormStatus } from "react-dom";
 import { SubmitButtonProps } from "../types";
 
@@ -20,7 +21,7 @@ export default function SubmitButton({
       type="submit"
       text={isLoading ? loadingText : text}
       icon={icon}
-      className={className}
+      className={cn("py-2.5 text-sm", className)}
     />
   );
 }

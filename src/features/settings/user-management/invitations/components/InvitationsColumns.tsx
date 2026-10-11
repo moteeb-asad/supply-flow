@@ -7,7 +7,7 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
     key: "email",
     header: "Email",
     cell: (invite) => (
-      <span className="text-sm font-medium text-[#0e121b]">{invite.email}</span>
+      <span className="text-sm font-medium text-ink">{invite.email}</span>
     ),
   },
   {
@@ -20,7 +20,7 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
             ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase text-nowrap"
             : formatRole(invite.role?.name) === "Operations Manager"
               ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-600 uppercase text-nowrap"
-              : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-[#4e6797] uppercase text-nowrap"
+              : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-muted uppercase text-nowrap"
         }
       >
         {formatRole(invite.role?.name) ?? "—"}
@@ -32,7 +32,7 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
     header: "Invited By",
     cell: (invite) => (
       <div className="flex items-center gap-2">
-        <span className="text-sm text-[#4e6797]">
+        <span className="text-sm text-muted">
           {invite.inviter_profile?.full_name ?? "—"}
         </span>
       </div>
@@ -42,7 +42,7 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
     key: "sent_at",
     header: "Sent Date",
     cell: (invite) => (
-      <span className="text-sm text-[#4e6797]">
+      <span className="text-sm text-muted">
         {invite.sent_at ? formatDate(invite.sent_at) : "-"}
       </span>
     ),
@@ -55,7 +55,7 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
         className={
           invite.status === "Expired"
             ? "text-sm text-danger font-medium"
-            : "text-sm text-[#4e6797]"
+            : "text-sm text-muted"
         }
       >
         {invite.expires_at ? formatDate(invite.expires_at) : "-"}
@@ -93,7 +93,7 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
           Resend
         </button>
         <button
-          className="p-1.5 hover:bg-red-50 rounded-lg text-[#4e6797] hover:text-danger transition-colors"
+          className="p-1.5 hover:bg-red-50 rounded-lg text-muted hover:text-danger transition-colors"
           title="Revoke Invitation"
         >
           <span className="material-symbols-outlined text-xl">cancel</span>

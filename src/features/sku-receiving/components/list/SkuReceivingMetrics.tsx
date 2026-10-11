@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { StatCard } from "@/src/components/ui/StatCard";
 import { getSkuReceivingMetricsAction } from "../../actions/get-sku-receiving-metrics.action";
 import { getMetricsWindow } from "../../utils/metrics-window";
 
@@ -67,22 +68,7 @@ export default function SkuReceivingMetrics() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map((card) => (
-        <div
-          key={card.label}
-          className="bg-white p-5 rounded-xl border border-slate-200 flex items-center gap-4"
-        >
-          <div
-            className={`w-12 h-12 rounded-lg flex items-center justify-center ${card.iconClassName}`}
-          >
-            <span className="material-symbols-outlined">{card.icon}</span>
-          </div>
-          <div>
-            <p className="text-[#4e6797] text-xs font-bold uppercase tracking-wider">
-              {card.label}
-            </p>
-            <p className="text-2xl font-black text-[#0e121b]">{card.value}</p>
-          </div>
-        </div>
+        <StatCard key={card.label} {...card} />
       ))}
     </div>
   );

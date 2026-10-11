@@ -15,10 +15,10 @@ export default function CategoryFilter({
   return (
     <>
       <div className="flex items-center gap-2">
-        <span className="text-sm font-bold text-[#4e6797] mr-2">
+        <span className="text-sm font-bold text-muted mr-2">
           Filter by Category:
         </span>
-        <div className="flex bg-white border border-[#d0d7e7] p-1 rounded-lg">
+        <div className="flex bg-white border border-line p-1 rounded-lg">
           {categories.map((category) => (
             <button
               key={category.value}
@@ -26,7 +26,7 @@ export default function CategoryFilter({
                 ${
                   category.value === value
                     ? "px-4 py-1.5 text-xs font-bold rounded-md bg-primary text-white"
-                    : "px-4 py-1.5 text-xs font-bold rounded-md text-[#4e6797] hover:bg-slate-100"
+                    : "px-4 py-1.5 text-xs font-bold rounded-md text-muted hover:bg-slate-100"
                 } cursor-pointer`}
               onClick={() => onChange(category.value)}
               type="button"

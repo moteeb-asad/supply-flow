@@ -14,7 +14,6 @@ type FormDrawerProps = {
   isSubmitting?: boolean;
   cancelLabel?: string;
   showFooter?: boolean;
-  widthClassName?: string;
 };
 
 export function FormDrawer({
@@ -29,7 +28,6 @@ export function FormDrawer({
   isSubmitting = false,
   cancelLabel = "Cancel",
   showFooter = true,
-  widthClassName = "max-w-lg",
 }: FormDrawerProps) {
   if (!open) {
     return null;
@@ -47,31 +45,33 @@ export function FormDrawer({
       aria-modal="true"
     >
       <aside
-        className={`w-full ${widthClassName} flex h-full flex-col bg-white shadow-2xl transition-transform duration-300`}
+        className="flex h-full w-full max-w-lg flex-col bg-white shadow-2xl transition-transform duration-300"
       >
-        <header className="z-10 flex items-center justify-between border-b border-[#e7ebf3] bg-white p-6">
-          <div>
-            <h3 className="text-xl font-bold text-[#0e121b]">{title}</h3>
+        <header className="z-10 flex items-center justify-between gap-3 border-b border-line-soft bg-white px-5 py-4">
+          <div className="min-w-0">
+            <h3 className="truncate text-lg font-bold text-ink">{title}</h3>
             {description ? (
-              <p className="mt-1 text-sm text-[#4e6797]">{description}</p>
+              <p className="truncate text-sm text-muted">{description}</p>
             ) : null}
           </div>
           <button
-            className="cursor-pointer rounded-lg p-2 text-[#4e6797] transition-colors hover:bg-gray-100"
+            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted transition-colors hover:bg-gray-100"
             onClick={onClose}
             aria-label="Close"
             type="button"
           >
-            <span className="material-symbols-outlined">close</span>
+            <span className="material-symbols-outlined !text-[20px]">
+              close
+            </span>
           </button>
         </header>
 
         {children}
 
         {showFooter ? (
-          <footer className="flex items-center justify-between gap-4 border-t border-[#e7ebf3] bg-white p-6">
+          <footer className="flex items-center justify-between gap-3 border-t border-line-soft bg-white px-5 py-3">
             <Button
-              className="w-auto rounded-lg bg-transparent px-6 py-2.5 text-sm font-bold text-[#4e6797] shadow-none transition-colors hover:bg-gray-50"
+              className="w-auto rounded-lg bg-transparent px-4 py-2 text-sm font-bold text-muted shadow-none transition-colors hover:bg-gray-50"
               onClick={onClose}
               type="button"
             >
@@ -80,7 +80,7 @@ export function FormDrawer({
 
             {submitLabel ? (
               <Button
-                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary/90"
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white shadow-md shadow-primary/25 transition-all hover:bg-primary/90"
                 form={formId}
                 type="submit"
                 disabled={isSubmitting}
@@ -93,7 +93,7 @@ export function FormDrawer({
                 ) : (
                   <>
                     <span>{submitLabel}</span>
-                    <span className="material-symbols-outlined text-lg">
+                    <span className="material-symbols-outlined !text-[18px]">
                       arrow_forward
                     </span>
                   </>

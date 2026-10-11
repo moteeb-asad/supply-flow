@@ -109,12 +109,12 @@ export default function InviteUserModal({
       <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40"></div>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div className="absolute inset-0 bg-black/40" onClick={closeModal} />
-        <div className="bg-white w-full max-w-lg rounded-xl shadow-2xl border border-[#e7ebf3] overflow-hidden relative z-10">
-          <div className="px-6 py-4 border-b border-[#e7ebf3] flex justify-between items-center">
+        <div className="bg-white w-full max-w-lg rounded-xl shadow-2xl border border-line-soft overflow-hidden relative z-10">
+          <div className="px-6 py-4 border-b border-line-soft flex justify-between items-center">
             <h3 className="text-lg font-bold">Invite New User</h3>
             <button
               type="button"
-              className="text-[#4e6797] hover:text-[#0e121b] transition-colors cursor-pointer"
+              className="text-muted hover:text-ink transition-colors cursor-pointer"
               onClick={closeModal}
             >
               <span className="material-symbols-outlined">close</span>
@@ -147,7 +147,7 @@ export default function InviteUserModal({
 
               <div className="space-y-1.5">
                 <label
-                  className="text-sm font-semibold text-[#4e6797]"
+                  className="text-sm font-semibold text-muted"
                   htmlFor="fullName"
                 >
                   Full Name
@@ -156,7 +156,7 @@ export default function InviteUserModal({
                   id="fullName"
                   type="text"
                   placeholder="e.g. Jason Smith"
-                  className="text-sm py-2 rounded-lg mt-[6px] text-[#0e121b]"
+                  className="text-sm py-2 rounded-lg mt-[6px] text-ink"
                   {...register("fullName")}
                   disabled={isSubmitting}
                 />
@@ -169,7 +169,7 @@ export default function InviteUserModal({
 
               <div className="space-y-1.5">
                 <label
-                  className="text-sm font-semibold text-[#4e6797]"
+                  className="text-sm font-semibold text-muted"
                   htmlFor="email"
                 >
                   Email Address
@@ -178,7 +178,7 @@ export default function InviteUserModal({
                   id="email"
                   type="email"
                   placeholder="e.g. jason@warehouse.com"
-                  className="text-sm py-2 rounded-lg mt-[6px] text-[#0e121b]"
+                  className="text-sm py-2 rounded-lg mt-[6px] text-ink"
                   {...register("email")}
                   disabled={isSubmitting}
                 />
@@ -217,7 +217,7 @@ export default function InviteUserModal({
                 <span className="material-symbols-outlined text-primary text-xl">
                   info
                 </span>
-                <p className="text-xs text-[#4e6797] leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   The user will receive a one-time invitation link via email,
                   valid for{" "}
                   <span className="font-bold text-primary">24 hours.</span>
@@ -239,7 +239,7 @@ export default function InviteUserModal({
               )}
             </div>
 
-            <div className="px-6 py-4 bg-gray-50 border-t border-[#e7ebf3] flex justify-end gap-3">
+            <div className="px-6 py-4 bg-gray-50 border-t border-line-soft flex justify-end gap-3">
               <Button
                 type="button"
                 variant="secondary"

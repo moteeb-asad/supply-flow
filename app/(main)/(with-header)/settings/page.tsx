@@ -36,13 +36,13 @@ export default async function SettingsPage() {
             <h3 className="text-lg font-semibold mb-2">
               General Configuration
             </h3>
-            <p className="text-sm text-[#4e6797]">
+            <p className="text-sm text-muted">
               Manage your organization and personal account preferences.
             </p>
           </div>
           <div className={`grid grid-cols-1 ${gridCols} gap-6`}>
             {isSuperAdmin && (
-              <div className="bg-white p-6 rounded-xl border border-[#e7ebf3] shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-white p-6 rounded-xl border border-line-soft shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between mb-4">
                   <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                     <span
@@ -54,7 +54,7 @@ export default async function SettingsPage() {
                   </div>
                 </div>
                 <h4 className="text-lg font-bold mb-2">User Management</h4>
-                <p className="text-sm text-[#4e6797] mb-6 leading-relaxed">
+                <p className="text-sm text-muted mb-6 leading-relaxed">
                   Manage staff, roles, invitations, and permissions. Control
                   access levels for your warehouse and management team.
                 </p>
@@ -69,7 +69,7 @@ export default async function SettingsPage() {
                 </Link>
               </div>
             )}
-            <div className="bg-white p-6 rounded-xl border border-[#e7ebf3] shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white p-6 rounded-xl border border-line-soft shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                   <span
@@ -81,7 +81,7 @@ export default async function SettingsPage() {
                 </div>
               </div>
               <h4 className="text-lg font-bold mb-2">Account Information</h4>
-              <p className="text-sm text-[#4e6797] mb-6 leading-relaxed">
+              <p className="text-sm text-muted mb-6 leading-relaxed">
                 Manage your personal profile, email, and security settings.
                 Update your contact details and security preferences.
               </p>
@@ -95,7 +95,7 @@ export default async function SettingsPage() {
                 </span>
               </Link>
             </div>
-            <div className="bg-white p-6 rounded-xl border border-[#e7ebf3] shadow-sm hover:shadow-md transition-shadow opacity-60">
+            <div className="bg-white p-6 rounded-xl border border-line-soft shadow-sm hover:shadow-md transition-shadow opacity-60">
               <div className="flex items-start justify-between mb-4">
                 <div className="size-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
                   <span className="material-symbols-outlined text-2xl">
@@ -104,18 +104,18 @@ export default async function SettingsPage() {
                 </div>
               </div>
               <h4 className="text-lg font-bold mb-2">Notifications</h4>
-              <p className="text-sm text-[#4e6797] mb-6 leading-relaxed">
+              <p className="text-sm text-muted mb-6 leading-relaxed">
                 Configure how you receive alerts for inventory levels, order
                 updates, and system reports.
               </p>
               <button
                 disabled
-                className="w-full flex items-center justify-center gap-2 border border-[#e7ebf3] text-[#4e6797] px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-gray-50 transition-colors cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 border border-line-soft text-muted px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-gray-50 transition-colors cursor-not-allowed"
               >
                 <span>Coming Soon</span>
               </button>
             </div>
-            <div className="bg-white p-6 rounded-xl border border-[#e7ebf3] shadow-sm hover:shadow-md transition-shadow opacity-60">
+            <div className="bg-white p-6 rounded-xl border border-line-soft shadow-sm hover:shadow-md transition-shadow opacity-60">
               <div className="flex items-start justify-between mb-4">
                 <div className="size-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
                   <span className="material-symbols-outlined text-2xl">
@@ -124,13 +124,13 @@ export default async function SettingsPage() {
                 </div>
               </div>
               <h4 className="text-lg font-bold mb-2">Data &amp; Export</h4>
-              <p className="text-sm text-[#4e6797] mb-6 leading-relaxed">
+              <p className="text-sm text-muted mb-6 leading-relaxed">
                 Manage data retention, backup schedules, and bulk export tools
                 for your records and audits.
               </p>
               <button
                 disabled
-                className="w-full flex items-center justify-center gap-2 border border-[#e7ebf3] text-[#4e6797] px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-gray-50 transition-colors cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 border border-line-soft text-muted px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-gray-50 transition-colors cursor-not-allowed"
               >
                 <span>Coming Soon</span>
               </button>

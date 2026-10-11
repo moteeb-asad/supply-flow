@@ -9,7 +9,7 @@ export default function SupplierGrid({
 }: SupplierGridProps) {
   if (isLoading && suppliers.length === 0) {
     return (
-      <div className="border border-dashed border-[#d0d7e7] rounded-xl p-8 text-center text-sm text-[#4e6797]">
+      <div className="border border-dashed border-line rounded-xl p-8 text-center text-sm text-muted">
         Loading suppliers...
       </div>
     );
@@ -17,7 +17,7 @@ export default function SupplierGrid({
 
   if (suppliers.length === 0) {
     return (
-      <div className="border border-dashed border-[#d0d7e7] rounded-xl p-8 text-center text-sm text-[#4e6797]">
+      <div className="border border-dashed border-line rounded-xl p-8 text-center text-sm text-muted">
         No suppliers found.
       </div>
     );
@@ -33,7 +33,7 @@ export default function SupplierGrid({
       {hasMore && (
         <div className="pt-8 flex justify-center">
           <button
-            className="px-8 py-3 bg-white border border-[#d0d7e7] rounded-xl text-sm font-bold text-[#4e6797] hover:bg-slate-50 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
+            className="px-8 py-3 bg-white border border-line rounded-xl text-sm font-bold text-muted hover:bg-slate-50 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
             onClick={onLoadMore}
             disabled={isLoading}
           >

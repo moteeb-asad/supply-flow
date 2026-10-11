@@ -19,10 +19,10 @@ const base =
 const variants: Record<ButtonVariant, string> = {
   primary:
     "bg-primary text-white border border-transparent hover:bg-primary/90",
-  secondary: "bg-white text-[#4e6797] border border-[#e7ebf3] hover:bg-gray-50",
+  secondary: "bg-white text-muted border border-line-soft hover:bg-gray-50",
   ghost:
-    "bg-transparent text-[#4e6797] border border-transparent hover:bg-gray-50",
-  icon: "bg-transparent text-[#94a3b8] hover:text-[#4e6797] border-none p-0 font-normal",
+    "bg-transparent text-muted border border-transparent hover:bg-gray-50",
+  icon: "bg-transparent text-subtle hover:text-muted border-none p-0 font-normal",
 };
 
 const sizes: Record<ButtonSize, string> = {

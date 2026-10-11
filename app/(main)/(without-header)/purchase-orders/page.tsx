@@ -5,7 +5,7 @@ export default function PurchaseOrdersPage() {
   return (
     <Suspense
       fallback={
-        <div className="px-8 py-6 text-sm text-[#4e6797]">
+        <div className="px-8 py-6 text-sm text-muted">
           Loading purchase orders...
         </div>
       }

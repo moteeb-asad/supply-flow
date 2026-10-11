@@ -78,10 +78,10 @@ export default function OrderActivityTimeline({
   const events = buildTimelineEvents(purchaseOrder);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h3 className="mb-6 text-base font-bold">Order Activity Timeline</h3>
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <h3 className="mb-3 text-sm font-bold">Order Activity Timeline</h3>
 
-      <div className="relative space-y-6 before:absolute before:bottom-2 before:left-[11px] before:top-2 before:w-[2px] before:bg-slate-200 before:content-['']">
+      <div className="relative space-y-4 before:absolute before:bottom-2 before:left-[11px] before:top-2 before:w-[2px] before:bg-slate-200 before:content-['']">
         {events.map((event) => (
           <div
             key={event.id}

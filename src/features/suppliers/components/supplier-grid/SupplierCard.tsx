@@ -15,7 +15,7 @@ export default function SupplierCard({ supplier }: SupplierCardProps) {
   return (
     <>
       <Link href={`/suppliers/${supplier.id}`} className="block">
-        <div className="bg-white rounded-xl border border-[#d0d7e7] hover:shadow-md transition-shadow group cursor-pointer p-5">
+        <div className="bg-white rounded-xl border border-line hover:shadow-md transition-shadow group cursor-pointer p-5">
           <div className="flex justify-between items-start mb-4">
             <div className="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
               <span className="material-symbols-outlined text-2xl">
@@ -28,32 +28,32 @@ export default function SupplierCard({ supplier }: SupplierCardProps) {
               {status}
             </span>
           </div>
-          <h3 className="text-lg font-bold text-[#0e121b] group-hover:text-primary transition-colors">
+          <h3 className="text-lg font-bold text-ink group-hover:text-primary transition-colors">
             {supplier.name}
           </h3>
-          <p className="text-[#4e6797] text-xs mb-6">
+          <p className="text-muted text-xs mb-6">
             {formatCategory(supplier.category)}
           </p>
           <div className="flex items-center justify-between mb-6">
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-[#4e6797] uppercase tracking-wider mb-1">
+              <span className="text-[10px] font-bold text-muted uppercase tracking-wider mb-1">
                 Lead Time
               </span>
-              <span className="text-sm font-bold text-[#0e121b]">
+              <span className="text-sm font-bold text-ink">
                 {supplier.lead_time_days ?? "-"} Days
               </span>
             </div>
             <div className="flex flex-col items-end">
-              <span className="text-[10px] font-bold text-[#4e6797] uppercase tracking-wider mb-1">
+              <span className="text-[10px] font-bold text-muted uppercase tracking-wider mb-1">
                 Min Order
               </span>
-              <span className="text-sm font-bold text-[#0e121b]">
+              <span className="text-sm font-bold text-ink">
                 {supplier.min_order_qty ?? "-"}
               </span>
             </div>
           </div>
           <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
-            <span className="text-xs font-medium text-[#4e6797]">
+            <span className="text-xs font-medium text-muted">
               {supplier.primary_contact_name ?? "No contact"}
             </span>
             <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">

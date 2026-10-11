@@ -86,13 +86,13 @@ export function MultiSelect({
   return (
     <div className="space-y-1.5">
       {label && (
-        <label className="text-sm font-semibold text-[#4e6797]" htmlFor={id}>
+        <label className="text-sm font-semibold text-muted" htmlFor={id}>
           {label}
         </label>
       )}
       <div className="relative" ref={containerRef}>
         <div
-          className="w-full min-h-[42px] px-2 py-1.5 bg-gray-50 mt-[6px] border border-[#e7ebf3] rounded-lg focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all flex flex-wrap gap-1.5 items-center cursor-pointer"
+          className="w-full min-h-[42px] px-2 py-1.5 bg-gray-50 mt-[6px] border border-line-soft rounded-lg focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all flex flex-wrap gap-1.5 items-center cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
           {value.length > 0 ? (
@@ -136,13 +136,13 @@ export function MultiSelect({
               </div>
             ))
           ) : (
-            <span className="text-[#4e6797] text-sm ml-1 opacity-50">
+            <span className="text-muted text-sm ml-1 opacity-50">
               {placeholder}
             </span>
           )}
           <div className="ml-auto pr-1">
             <span
-              className={`material-symbols-outlined text-[#4e6797] text-xl transition-transform ${
+              className={`material-symbols-outlined text-muted text-xl transition-transform ${
                 isOpen ? "rotate-180" : ""
               }`}
             >
@@ -152,7 +152,7 @@ export function MultiSelect({
         </div>
 
         {isOpen && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#e7ebf3] rounded-lg shadow-xl z-10 overflow-hidden">
+          <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-line-soft rounded-lg shadow-xl z-10 overflow-hidden">
             {options.map((option) => {
               const isSelected = value.includes(option.value);
               return (
@@ -165,7 +165,7 @@ export function MultiSelect({
                     className={`w-4 h-4 rounded border flex items-center justify-center ${
                       isSelected
                         ? "border-primary bg-primary"
-                        : "border-[#e7ebf3] bg-white"
+                        : "border-line-soft bg-white"
                     }`}
                   >
                     {isSelected && (

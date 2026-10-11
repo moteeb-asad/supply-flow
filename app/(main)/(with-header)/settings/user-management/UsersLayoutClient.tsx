@@ -24,12 +24,12 @@ export default function UsersLayoutClient({
 
   const linkActive = "text-primary border-primary";
   const linkInactive =
-    "text-[#4e6797] hover:text-primary border-transparent hover:border-primary";
+    "text-muted hover:text-primary border-transparent hover:border-primary";
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Tabs */}
-      <div className="border-b border-[#e7ebf3] bg-white px-8">
+      <div className="border-b border-line-soft bg-white px-8">
         <nav className="flex gap-6">
           <Link
             href="/settings/user-management"

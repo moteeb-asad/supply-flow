@@ -35,13 +35,13 @@ export default function SuppliersScreen({}: SuppliersScreenProps) {
   return (
     <>
       {/* Header */}
-      <div className="px-8 py-6">
+      <div className="px-6 py-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="text-[#0e121b] text-3xl font-black leading-tight tracking-tight">
+            <h2 className="text-ink text-3xl font-black leading-tight tracking-tight">
               Suppliers
             </h2>
-            <p className="text-[#4e6797] text-sm">
+            <p className="text-muted text-sm">
               Manage and monitor vendor performance
             </p>
           </div>
@@ -60,7 +60,7 @@ export default function SuppliersScreen({}: SuppliersScreenProps) {
 
       <SupplierMetrics />
 
-      <div className="px-8 space-y-6 pb-12">
+      <div className="px-6 space-y-6 pb-12">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <SupplierSearch onSearchChange={setSearchTerm} />
           <CategoryFilter value={category} onChange={setCategory} />

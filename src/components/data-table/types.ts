@@ -58,7 +58,10 @@ export type DataTableConfig<
 export type DataTableColumn<T> = {
   key: string;
   header: React.ReactNode;
+  // Body cell classes (text styles, alignment, width). Padding comes from DataTable.
   className?: string;
+  // Optional header cell classes, e.g. alignment. Body styles do not apply to headers.
+  headerClassName?: string;
   cell: (row: T) => React.ReactNode;
 };
 
