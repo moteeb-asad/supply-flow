@@ -33,21 +33,28 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (!active) return;
       setLoading(true);
 
-      const {
-        data: { user: authUser },
-      } = await supabase.auth.getUser();
+      try {
+        // Display-only context: verify the session JWT locally (cached JWKS)
+        // instead of a Supabase Auth round trip. Security checks live in the
+        // middleware and database RLS.
+        const { data } = await supabase.auth.getClaims();
+        const claims = data?.claims;
 
-      if (!active) return;
+        if (!active) return;
 
-      if (authUser) {
+        if (!claims) {
+          setUser(null);
+          return;
+        }
+
         const { data: profile } = await supabase
           .from("profiles")
           .select("full_name, primary_role_id")
-          .eq("id", authUser.id)
+          .eq("id", claims.sub)
           .maybeSingle<ProfileRoleRow>();
 
         let primaryRole: UserRole | undefined =
-          authUser.user_metadata?.primary_role ?? undefined;
+          claims.user_metadata?.primary_role ?? undefined;
 
         if (profile?.primary_role_id) {
           const { data: role } = await supabase
@@ -64,26 +71,35 @@ export function UserProvider({ children }: { children: ReactNode }) {
         if (!active) return;
 
         setUser({
-          id: authUser.id,
-          email: authUser.email ?? "",
+          id: claims.sub,
+          email: claims.email ?? "",
           fullName:
-            profile?.full_name ?? authUser.user_metadata?.name ?? undefined,
+            profile?.full_name ?? claims.user_metadata?.name ?? undefined,
           primaryRole,
         });
-      } else {
-        setUser(null);
+      } catch (error) {
+        // Aborted or failed request (navigation, network drop): keep the last
+        // known user instead of throwing or clearing it.
+        console.error("Failed to load current user:", error);
+      } finally {
+        if (active) setLoading(false);
       }
-
-      if (!active) return;
-      setLoading(false);
     }
 
-    fetchUser();
+    void fetchUser();
 
+    // Refetch only when the signed-in user actually changes, not on
+    // INITIAL_SESSION (already fetched above) or hourly TOKEN_REFRESHED.
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      void fetchUser();
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (
+        event === "SIGNED_IN" ||
+        event === "SIGNED_OUT" ||
+        event === "USER_UPDATED"
+      ) {
+        void fetchUser();
+      }
     });
 
     return () => {
