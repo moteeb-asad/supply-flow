@@ -40,9 +40,6 @@ export async function middleware(request: NextRequest) {
 
   const isProtectedRoute = !isAuthRoute && !pathname.startsWith("/api");
 
-  // IMPORTANT: When users logout, clear the cached_user_session cookie
-  // In your logout handler, add: cookies().delete("cached_user_session")
-
   // Check if this is a password recovery flow
   const typeParam = request.nextUrl.searchParams.get("type");
   const isPasswordRecovery =
@@ -71,56 +68,20 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Session caching: Check if we have a cached user session
-  const cachedSession = request.cookies.get("cached_user_session");
-  let user = null;
-
-  if (cachedSession) {
-    // Use cached session (no network call needed)
-    try {
-      const cached = JSON.parse(cachedSession.value);
-      // Check if cache is still valid (60 seconds)
-      if (Date.now() - cached.timestamp < 60000) {
-        user = cached.user;
-      }
-    } catch (e) {
-      // Invalid cache, fall through to fetch
-    }
-  }
-
-  // If no valid cache, fetch from Supabase
-  if (!user) {
-    const {
-      data: { user: fetchedUser },
-    } = await supabase.auth.getUser();
-    user = fetchedUser;
-
-    // Cache the session for 60 seconds
-    if (user) {
-      const cacheData = {
-        user: user,
-        timestamp: Date.now(),
-      };
-      response.cookies.set("cached_user_session", JSON.stringify(cacheData), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 60, // 60 seconds
-      });
-    } else {
-      // Clear cache if no user
-      response.cookies.delete("cached_user_session");
-    }
-  }
+  // Verify the session JWT locally with the project's asymmetric signing key
+  // (JWKS is cached), so no Supabase Auth round trip per request. Refreshes an
+  // expired session through setAll above. Never trust unsigned cookie data.
+  const { data } = await supabase.auth.getClaims();
+  const claims = data?.claims ?? null;
 
   // 1️⃣ AUTH CHECK
-  if (isProtectedRoute && !user) {
+  if (isProtectedRoute && !claims) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const primaryRole = user?.user_metadata?.primary_role as string | undefined;
-  const legacyRole = user?.user_metadata?.role as string | undefined;
-  const rolesMetadata = user?.user_metadata?.roles;
+  const primaryRole = claims?.user_metadata?.primary_role as string | undefined;
+  const legacyRole = claims?.user_metadata?.role as string | undefined;
+  const rolesMetadata = claims?.user_metadata?.roles;
   const roles = Array.isArray(rolesMetadata)
     ? (rolesMetadata.filter((value) => typeof value === "string") as string[])
     : primaryRole
@@ -138,7 +99,7 @@ export async function middleware(request: NextRequest) {
   // 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
   if (
     isAuthRoute &&
-    user &&
+    claims &&
     isKnownRole &&
     !isPasswordRecovery &&
     !isResetPasswordRoute
@@ -147,7 +108,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // 3️⃣ ROLE CHECK (⬅️ WRITE YOUR CODE HERE)
-  if (user && isProtectedRoute) {
+  if (claims && isProtectedRoute) {
     // Optimized: Find most specific matching route first, then check permissions once
     const matchedRoute = Object.keys(routePermissions)
       .sort((a, b) => b.length - a.length) // Longest first (most specific route)
