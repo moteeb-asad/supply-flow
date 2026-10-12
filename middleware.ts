@@ -68,20 +68,20 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Always verify the session with Supabase Auth. Never trust user data stored
-  // in a cookie we set ourselves: it is unsigned and can be forged.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Verify the session JWT locally with the project's asymmetric signing key
+  // (JWKS is cached), so no Supabase Auth round trip per request. Refreshes an
+  // expired session through setAll above. Never trust unsigned cookie data.
+  const { data } = await supabase.auth.getClaims();
+  const claims = data?.claims ?? null;
 
   // 1️⃣ AUTH CHECK
-  if (isProtectedRoute && !user) {
+  if (isProtectedRoute && !claims) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const primaryRole = user?.user_metadata?.primary_role as string | undefined;
-  const legacyRole = user?.user_metadata?.role as string | undefined;
-  const rolesMetadata = user?.user_metadata?.roles;
+  const primaryRole = claims?.user_metadata?.primary_role as string | undefined;
+  const legacyRole = claims?.user_metadata?.role as string | undefined;
+  const rolesMetadata = claims?.user_metadata?.roles;
   const roles = Array.isArray(rolesMetadata)
     ? (rolesMetadata.filter((value) => typeof value === "string") as string[])
     : primaryRole
@@ -99,7 +99,7 @@ export async function middleware(request: NextRequest) {
   // 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
   if (
     isAuthRoute &&
-    user &&
+    claims &&
     isKnownRole &&
     !isPasswordRecovery &&
     !isResetPasswordRoute
@@ -108,7 +108,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // 3️⃣ ROLE CHECK (⬅️ WRITE YOUR CODE HERE)
-  if (user && isProtectedRoute) {
+  if (claims && isProtectedRoute) {
     // Optimized: Find most specific matching route first, then check permissions once
     const matchedRoute = Object.keys(routePermissions)
       .sort((a, b) => b.length - a.length) // Longest first (most specific route)
