@@ -3,7 +3,6 @@
 import { createClient } from "@/src/db/supabaseClient";
 import { createAdminClient } from "@/src/db/supabaseAdmin";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import {
   loginSchema,
   resetPasswordSchema,
@@ -82,18 +81,25 @@ export async function logoutAction() {
   const supabase = await createClient();
   await supabase.auth.signOut();
 
-  // Clear the session cache to prevent stale data
-  (await cookies()).delete("cached_user_session");
-
   redirect("/login");
 }
 
+// Current user from the verified session JWT (local check with the cached
+// signing keys, no Supabase Auth round trip). Metadata is the token snapshot,
+// so profile edits appear after the next token refresh.
 export async function getCurrentUser() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+  const { data } = await supabase.auth.getClaims();
+  const claims = data?.claims;
+
+  if (!claims) return null;
+
+  return {
+    id: claims.sub,
+    email: claims.email,
+    user_metadata: claims.user_metadata ?? {},
+    app_metadata: claims.app_metadata ?? {},
+  };
 }
 
 export async function requestPasswordResetAction(
