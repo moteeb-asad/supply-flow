@@ -84,12 +84,22 @@ export async function logoutAction() {
   redirect("/login");
 }
 
+// Current user from the verified session JWT (local check with the cached
+// signing keys, no Supabase Auth round trip). Metadata is the token snapshot,
+// so profile edits appear after the next token refresh.
 export async function getCurrentUser() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+  const { data } = await supabase.auth.getClaims();
+  const claims = data?.claims;
+
+  if (!claims) return null;
+
+  return {
+    id: claims.sub,
+    email: claims.email,
+    user_metadata: claims.user_metadata ?? {},
+    app_metadata: claims.app_metadata ?? {},
+  };
 }
 
 export async function requestPasswordResetAction(
