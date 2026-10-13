@@ -5,23 +5,17 @@ import {
   getCurrentUser,
   logoutAction,
 } from "@/src/features/auth/actions/auth.actions";
-import { getMenuByRole } from "@/src/lib/navigation";
+import { getMenuForRoles } from "@/src/lib/navigation";
 import { formatRole } from "@/src/lib/utils";
-import type { Role } from "@/src/features/auth/types";
+import { getRolesFromMetadata } from "@/src/features/auth/utils/rbac";
 
 const sidebarIconButtonClassName =
   "relative flex size-8 cursor-pointer items-center justify-center rounded-md text-muted transition-colors hover:bg-gray-100";
 
 export default async function Sidebar() {
   const user = await getCurrentUser();
-  const primaryRole = user?.user_metadata?.primary_role;
-  const userRole: Role | null =
-    primaryRole === "super_admin" ||
-    primaryRole === "operations_manager" ||
-    primaryRole === "store_keeper"
-      ? primaryRole
-      : null;
-  const filteredMenuItems = getMenuByRole(userRole, sidebarMenu);
+  const roles = getRolesFromMetadata(user?.user_metadata);
+  const filteredMenuItems = getMenuForRoles(roles, sidebarMenu);
   // Extract name from user metadata
   const userName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";

@@ -1,4 +1,5 @@
 import { createClient } from "@/src/db/supabaseClient";
+import { hasPermission, toRoles } from "@/src/features/auth/utils/rbac";
 
 export async function requireSuperAdmin() {
   const supabase = await createClient();
@@ -16,7 +17,10 @@ export async function requireSuperAdmin() {
     .eq("id", user.id)
     .maybeSingle<{ primary_role: { name: string } | null }>();
 
-  if (profileError || profile?.primary_role?.name !== "super_admin") {
+  if (
+    profileError ||
+    !hasPermission(toRoles(profile?.primary_role?.name), "users:manage")
+  ) {
     throw new Error("Unauthorized");
   }
 
