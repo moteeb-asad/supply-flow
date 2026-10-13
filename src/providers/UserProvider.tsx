@@ -8,7 +8,8 @@ import {
   ReactNode,
 } from "react";
 import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
-import type { UserRole } from "@/src/types/layout";
+import type { Role } from "@/src/features/auth/types";
+import { isRole } from "@/src/features/auth/utils/rbac";
 import type {
   ProfileRoleRow,
   RoleNameRow,
@@ -53,7 +54,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
           .eq("id", claims.sub)
           .maybeSingle<ProfileRoleRow>();
 
-        let primaryRole: UserRole | undefined =
+        let primaryRole: Role | undefined =
           claims.user_metadata?.primary_role ?? undefined;
 
         if (profile?.primary_role_id) {
@@ -63,9 +64,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
             .eq("id", profile.primary_role_id)
             .maybeSingle<RoleNameRow>();
 
-          if (role?.name) {
-            primaryRole = role.name as UserRole;
-          }
+          if (isRole(role?.name)) primaryRole = role.name;
         }
 
         if (!active) return;

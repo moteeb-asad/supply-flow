@@ -7,7 +7,7 @@ import {
 } from "@/src/features/auth/actions/auth.actions";
 import { getMenuByRole } from "@/src/lib/navigation";
 import { formatRole } from "@/src/lib/utils";
-import type { UserRole } from "@/src/types/layout";
+import type { Role } from "@/src/features/auth/types";
 
 const sidebarIconButtonClassName =
   "relative flex size-8 cursor-pointer items-center justify-center rounded-md text-muted transition-colors hover:bg-gray-100";
@@ -15,7 +15,7 @@ const sidebarIconButtonClassName =
 export default async function Sidebar() {
   const user = await getCurrentUser();
   const primaryRole = user?.user_metadata?.primary_role;
-  const userRole: UserRole | null =
+  const userRole: Role | null =
     primaryRole === "super_admin" ||
     primaryRole === "operations_manager" ||
     primaryRole === "store_keeper"

@@ -1,5 +1,6 @@
-export const ROLE_OPTIONS = [
-  { value: "super_admin", label: "Super Admin" },
-  { value: "operations_manager", label: "Operations Manager" },
-  { value: "store_keeper", label: "Store Keeper" },
-];
+import { ROLES, ROLE_LABELS } from "@/src/features/auth/constants/rbac";
+
+export const ROLE_OPTIONS = ROLES.map((role) => ({
+  value: role,
+  label: ROLE_LABELS[role],
+}));

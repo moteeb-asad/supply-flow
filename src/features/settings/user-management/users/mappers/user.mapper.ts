@@ -1,6 +1,10 @@
-import type { User, UserRole } from "../types/user.types";
+import type { User } from "../types/user.types";
+import { isRole } from "@/src/features/auth/utils/rbac";
 
 export function mapUser(row: Record<string, unknown>): User {
+  const primaryRoleName = (row["primary_role"] as { name: string } | null)
+    ?.name;
+
   return {
     id: row["id"] as string,
     full_name: row["full_name"] as string,
@@ -8,9 +12,7 @@ export function mapUser(row: Record<string, unknown>): User {
     created_at: row["created_at"] as string,
     email: row["email"] as string,
     last_login_at: row["last_login_at"] as string | null,
-    primary_role_label:
-      ((row["primary_role"] as { name: string } | null)
-        ?.name as UserRole | null) ?? null,
+    primary_role_label: isRole(primaryRoleName) ? primaryRoleName : null,
     roles: Array.isArray(row["roles"]) ? (row["roles"] as string[]) : [],
   };
 }

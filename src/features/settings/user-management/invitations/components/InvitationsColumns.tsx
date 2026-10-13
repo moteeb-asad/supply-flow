@@ -16,9 +16,9 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
     cell: (invite) => (
       <span
         className={
-          formatRole(invite.role?.name) === "Admin"
+          invite.role?.name === "super_admin"
             ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase text-nowrap"
-            : formatRole(invite.role?.name) === "Operations Manager"
+            : invite.role?.name === "operations_manager"
               ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-600 uppercase text-nowrap"
               : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-muted uppercase text-nowrap"
         }

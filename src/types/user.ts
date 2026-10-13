@@ -1,10 +1,10 @@
-import type { UserRole } from "./layout";
+import type { Role } from "@/src/features/auth/types";
 
 export type UserProfile = {
   id: string;
   email: string;
   fullName?: string;
-  primaryRole?: UserRole;
+  primaryRole?: Role;
 };
 
 export type UserContextValue = {

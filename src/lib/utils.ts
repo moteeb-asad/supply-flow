@@ -1,15 +1,16 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { ROLE_LABELS, type UserRole } from "@/src/features/auth/types";
+import { ROLE_LABELS } from "@/src/features/auth/constants/rbac";
 import { formatDistanceToNow } from "date-fns";
+import { isRole } from "@/src/features/auth/utils/rbac";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatRole(role: string | UserRole | undefined | null): string {
+export function formatRole(role: string | null | undefined): string {
   if (!role) return "User";
-  return ROLE_LABELS[role as UserRole] || role;
+  return isRole(role) ? ROLE_LABELS[role] : role;
 }
 
 export function formatDate(dateString: string | null): string {

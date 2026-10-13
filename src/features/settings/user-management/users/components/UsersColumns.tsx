@@ -29,9 +29,7 @@ export const usersColumns: DataTableColumn<User>[] = [
   {
     key: "email",
     header: "Email",
-    cell: (user) => (
-      <span className="text-sm text-muted">{user.email}</span>
-    ),
+    cell: (user) => <span className="text-sm text-muted">{user.email}</span>,
   },
   {
     key: "role",
@@ -39,7 +37,7 @@ export const usersColumns: DataTableColumn<User>[] = [
     cell: (user) => (
       <span
         className={
-          formatRole(user.primary_role_label) === "Admin"
+          user.primary_role_label === "super_admin"
             ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase text-nowrap"
             : formatRole(user.primary_role_label) === "Operations Manager"
               ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-600 uppercase text-nowrap"

@@ -1,4 +1,4 @@
-import type { UserRole } from "@/src/types/layout";
+import type { Role } from "@/src/features/auth/types";
 import type { SidebarMenuItem } from "@/src/types/navigation";
 
 export function isActivePath(currentPath: string, targetPath: string): boolean {
@@ -14,7 +14,7 @@ export function isActivePath(currentPath: string, targetPath: string): boolean {
 }
 
 export function getMenuByRole(
-  role: UserRole | null | undefined,
+  role: Role | null | undefined,
   items: SidebarMenuItem[],
 ): SidebarMenuItem[] {
   if (!role) {
