@@ -1,4 +1,5 @@
-import type { UserRole } from "@/src/types/layout";
+import type { Role } from "@/src/features/auth/types";
+import { hasPermission } from "@/src/features/auth/utils/rbac";
 import type { SidebarMenuItem } from "@/src/types/navigation";
 
 export function isActivePath(currentPath: string, targetPath: string): boolean {
@@ -13,13 +14,9 @@ export function isActivePath(currentPath: string, targetPath: string): boolean {
   return false;
 }
 
-export function getMenuByRole(
-  role: UserRole | null | undefined,
+export function getMenuForRole(
+  role: Role | null,
   items: SidebarMenuItem[],
 ): SidebarMenuItem[] {
-  if (!role) {
-    return [];
-  }
-
-  return items.filter((item) => item.roles.includes(role));
+  return items.filter((item) => hasPermission(role, item.permission));
 }

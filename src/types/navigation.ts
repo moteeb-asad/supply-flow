@@ -1,8 +1,8 @@
-import type { UserRole } from "./layout";
+import type { Permission } from "@/src/features/auth/types";
 
 export interface SidebarMenuItem {
   label: string;
   path: string;
   icon: string;
-  roles: UserRole[];
+  permission: Permission;
 }

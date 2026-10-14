@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { createClient } from "@/src/db/supabaseClient";
 import { redirect } from "next/navigation";
+import {
+  getRoleFromAppMetadata,
+  hasPermission,
+} from "@/src/features/auth/utils/rbac";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -12,21 +16,11 @@ export default async function SettingsPage() {
     redirect("/login");
   }
 
-  // Get user roles from user metadata
-  const primaryRole = user.user_metadata?.primary_role as string | undefined;
-  const legacyRole = user.user_metadata?.role as string | undefined;
-  const rolesMetadata = user.user_metadata?.roles;
-  const roles = Array.isArray(rolesMetadata)
-    ? (rolesMetadata.filter((value) => typeof value === "string") as string[])
-    : primaryRole
-      ? [primaryRole]
-      : legacyRole
-        ? [legacyRole]
-        : [];
-  const isSuperAdmin = roles.includes("super_admin");
+  const role = getRoleFromAppMetadata(user.app_metadata);
+  const canManageUsers = hasPermission(role, "users:manage");
 
   // Determine grid layout based on visible cards
-  const gridCols = isSuperAdmin ? "md:grid-cols-2" : "md:grid-cols-3";
+  const gridCols = canManageUsers ? "md:grid-cols-2" : "md:grid-cols-3";
 
   return (
     <>
@@ -41,7 +35,7 @@ export default async function SettingsPage() {
             </p>
           </div>
           <div className={`grid grid-cols-1 ${gridCols} gap-6`}>
-            {isSuperAdmin && (
+            {canManageUsers && (
               <div className="bg-white p-6 rounded-xl border border-line-soft shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between mb-4">
                   <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">

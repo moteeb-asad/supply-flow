@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/src/components/ui/Input";
 import { Button } from "@/src/components/ui/Button";
-import { MultiSelect } from "@/src/components/ui/MultiSelect";
 import {
   inviteUserSchema,
   type InviteUserInput,
@@ -24,8 +23,6 @@ export default function InviteUserModal({
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     reset,
     formState: { errors },
   } = useForm<InviteUserInput>({
@@ -33,13 +30,9 @@ export default function InviteUserModal({
     defaultValues: {
       fullName: "",
       email: "",
-      primaryRole: "",
-      roles: [],
+      role: "",
     },
   });
-
-  const selectedRoles = watch("roles");
-  const primaryRole = watch("primaryRole");
 
   // Reset form when modal closes
   useEffect(() => {
@@ -49,21 +42,6 @@ export default function InviteUserModal({
       reset();
     }
   }, [isOpen, reset]);
-
-  const handleRolesChange = (newRoles: string[]) => {
-    setValue("roles", newRoles);
-
-    // If no roles selected, clear primary
-    if (newRoles.length === 0) {
-      setValue("primaryRole", "");
-      return;
-    }
-
-    // If current primary is not in new roles, set first role as primary
-    if (!newRoles.includes(primaryRole)) {
-      setValue("primaryRole", newRoles[0]);
-    }
-  };
 
   const closeModal = () => {
     onClose();
@@ -78,8 +56,7 @@ export default function InviteUserModal({
       const result = await inviteUserAction(
         data.fullName,
         data.email,
-        data.roles,
-        data.primaryRole,
+        data.role,
       );
 
       if (!result.success) {
@@ -189,26 +166,31 @@ export default function InviteUserModal({
                 )}
               </div>
 
-              <div>
-                <MultiSelect
-                  id="roles"
-                  label="Select Role(s)"
-                  options={ROLE_OPTIONS}
-                  value={selectedRoles}
-                  onChange={handleRolesChange}
-                  placeholder="Add roles..."
-                  primaryValue={primaryRole}
-                  onPrimaryChange={(value) => setValue("primaryRole", value)}
-                  primaryLabel="Primary"
-                />
-                {errors.roles && (
+              <div className="space-y-1.5">
+                <label
+                  className="text-sm font-semibold text-muted"
+                  htmlFor="role"
+                >
+                  Role
+                </label>
+                <select
+                  id="role"
+                  className="mt-[6px] block w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-ink outline-none focus:ring-2 focus:ring-primary"
+                  {...register("role")}
+                  disabled={isSubmitting}
+                >
+                  <option value="" disabled>
+                    Select a role
+                  </option>
+                  {ROLE_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {errors.role && (
                   <p className="text-xs text-red-600 mt-1">
-                    {errors.roles.message}
-                  </p>
-                )}
-                {errors.primaryRole && (
-                  <p className="text-xs text-red-600 mt-1">
-                    {errors.primaryRole.message}
+                    {errors.role.message}
                   </p>
                 )}
               </div>

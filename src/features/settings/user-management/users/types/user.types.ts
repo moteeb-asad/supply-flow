@@ -1,5 +1,4 @@
-import type { UserRole } from "@/src/features/auth/types";
-export type { UserRole } from "@/src/features/auth/types";
+import type { Role } from "@/src/features/auth/types";
 
 export interface User {
   id: string;
@@ -8,7 +7,7 @@ export interface User {
   created_at: string;
   email: string;
   last_login_at: string | null;
-  primary_role_label: UserRole | null;
+  primary_role_label: Role | null;
   roles: string[];
 }
 export type UserRoleRow = {

@@ -1,6 +1,7 @@
 import { DataTableColumn } from "@/src/components/data-table/types";
 import { formatRole, formatDate } from "@/src/lib/utils";
 import { Invitation } from "../types";
+import { getRoleBadgeClassName } from "../../shared/constants/role-badge";
 
 export const invitationsColumns: DataTableColumn<Invitation>[] = [
   {
@@ -14,15 +15,7 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
     key: "role",
     header: "Role Assigned",
     cell: (invite) => (
-      <span
-        className={
-          formatRole(invite.role?.name) === "Admin"
-            ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase text-nowrap"
-            : formatRole(invite.role?.name) === "Operations Manager"
-              ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-600 uppercase text-nowrap"
-              : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-muted uppercase text-nowrap"
-        }
-      >
+      <span className={getRoleBadgeClassName(invite.role?.name)}>
         {formatRole(invite.role?.name) ?? "—"}
       </span>
     ),

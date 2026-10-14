@@ -13,8 +13,7 @@ type InviteUserResult =
 export async function inviteUserAction(
   fullName: string,
   email: string,
-  roleNames: string[],
-  primaryRoleName: string,
+  roleName: string,
 ): Promise<InviteUserResult> {
   await requireSuperAdmin();
   try {
@@ -22,8 +21,7 @@ export async function inviteUserAction(
     const validation = inviteUserSchema.safeParse({
       fullName,
       email,
-      primaryRole: primaryRoleName,
-      roles: roleNames,
+      role: roleName,
     });
     if (!validation.success) {
       return {
@@ -38,17 +36,15 @@ export async function inviteUserAction(
     const redirectUrl =
       process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-    // 1. Invite user via Supabase Auth
-    const primaryRole = primaryRoleName;
-    const roles = roleNames;
+    // 1. Invite user via Supabase Auth.
+    // user_metadata holds display data only: users can edit it themselves.
+    // The role reaches app_metadata through the profiles trigger (migration 037).
 
     const { data: authData, error: inviteError } =
       await adminClient.auth.admin.inviteUserByEmail(email, {
         redirectTo: `${redirectUrl}/reset-password`,
         data: {
           full_name: fullName,
-          primary_role: primaryRole,
-          roles,
         },
       });
 
@@ -78,35 +74,25 @@ export async function inviteUserAction(
     await adminClient.auth.admin.updateUserById(userId, {
       user_metadata: {
         full_name: fullName,
-        primary_role: primaryRole,
-        roles,
       },
     });
 
-    // 2. Get role IDs from role names
-    const { data: rolesData, error: rolesError } = await adminClient
+    // 2. Get the role id
+    const { data: roleRow, error: roleError } = await adminClient
       .from("roles")
-      .select("id, name")
-      .in("name", roleNames);
+      .select("id")
+      .eq("name", roleName)
+      .maybeSingle<{ id: number }>();
 
-    if (rolesError || !rolesData || rolesData.length === 0) {
-      console.error("Roles fetch error:", rolesError);
+    if (roleError || !roleRow) {
+      console.error("Role fetch error:", roleError);
       return {
         success: false,
-        error: "Failed to fetch roles from database",
+        error: "Failed to fetch role from database",
       };
     }
 
-    const primaryRoleId = rolesData.find(
-      (role) => role.name === primaryRole,
-    )?.id;
-
-    if (!primaryRoleId) {
-      return {
-        success: false,
-        error: "Primary role is not in selected roles",
-      };
-    }
+    const roleId = roleRow.id;
 
     // 3. Create or update profile entry
     // Note: auth.users triggers may already create a profile row, so use upsert.
@@ -115,7 +101,7 @@ export async function inviteUserAction(
         id: userId,
         email: email,
         full_name: fullName,
-        primary_role_id: primaryRoleId,
+        primary_role_id: roleId,
         updated_at: new Date().toISOString(),
       },
       {
@@ -131,25 +117,41 @@ export async function inviteUserAction(
       };
     }
 
-    // 4. Create user_roles entries
-    const userRoles = rolesData.map((role) => ({
-      user_id: userId,
-      role_id: role.id,
-      assigned_at: new Date().toISOString(),
-    }));
+    // 4. Exactly one user_roles row (used by RLS): drop any other role first,
+    // e.g. when an existing user is re-invited with a different role.
+    const { error: staleRolesError } = await adminClient
+      .from("user_roles")
+      .delete()
+      .eq("user_id", userId)
+      .neq("role_id", roleId);
+
+    if (staleRolesError) {
+      console.error("Stale user roles cleanup error:", staleRolesError);
+      return {
+        success: false,
+        error: `Failed to assign role: ${staleRolesError.message}`,
+      };
+    }
 
     const { error: userRolesError } = await adminClient
       .from("user_roles")
-      .upsert(userRoles, {
-        onConflict: "user_id,role_id",
-        ignoreDuplicates: true,
-      });
+      .upsert(
+        {
+          user_id: userId,
+          role_id: roleId,
+          assigned_at: new Date().toISOString(),
+        },
+        {
+          onConflict: "user_id,role_id",
+          ignoreDuplicates: true,
+        },
+      );
 
     if (userRolesError) {
       console.error("User roles assignment error:", userRolesError);
       return {
         success: false,
-        error: `Failed to assign roles: ${userRolesError.message}`,
+        error: `Failed to assign role: ${userRolesError.message}`,
       };
     }
 
@@ -167,7 +169,7 @@ export async function inviteUserAction(
       .from("invitations")
       .insert({
         email,
-        role_id: primaryRoleId,
+        role_id: roleId,
         invited_by: user.id,
         sent_at: sentAt.toISOString(),
         expires_at: expiresAt.toISOString(),
