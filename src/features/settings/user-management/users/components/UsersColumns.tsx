@@ -1,6 +1,7 @@
 import { DataTableColumn } from "@/src/components/data-table/types";
 import type { User } from "../types/user.types";
 import { formatRole, getInitials, formatLastLogin } from "@/src/lib/utils";
+import { getRoleBadgeClassName } from "../../shared/constants/role-badge";
 
 export const usersColumns: DataTableColumn<User>[] = [
   {
@@ -29,23 +30,13 @@ export const usersColumns: DataTableColumn<User>[] = [
   {
     key: "email",
     header: "Email",
-    cell: (user) => (
-      <span className="text-sm text-muted">{user.email}</span>
-    ),
+    cell: (user) => <span className="text-sm text-muted">{user.email}</span>,
   },
   {
     key: "role",
     header: "Role",
     cell: (user) => (
-      <span
-        className={
-          formatRole(user.primary_role_label) === "Admin"
-            ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase text-nowrap"
-            : formatRole(user.primary_role_label) === "Operations Manager"
-              ? "px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-600 uppercase text-nowrap"
-              : "px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-muted uppercase text-nowrap"
-        }
-      >
+      <span className={getRoleBadgeClassName(user.primary_role_label)}>
         {formatRole(user.primary_role_label)}
       </span>
     ),
@@ -62,7 +53,7 @@ export const usersColumns: DataTableColumn<User>[] = [
   {
     key: "actions",
     header: "Actions",
-    cell: (user) => (
+    cell: () => (
       <div className="flex justify-end gap-2">
         <button
           className="p-1.5 hover:bg-gray-100 rounded-lg text-muted hover:text-primary transition-colors"

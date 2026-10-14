@@ -1,4 +1,8 @@
 import type { ReactNode } from "react";
+import type { PERMISSIONS, ROLES } from "./constants/rbac";
+
+export type Role = (typeof ROLES)[number];
+export type Permission = (typeof PERMISSIONS)[number];
 
 export type SubmitButtonProps = {
   text: string;
@@ -6,12 +10,4 @@ export type SubmitButtonProps = {
   icon?: ReactNode;
   className?: string;
   loading?: boolean;
-};
-
-export type UserRole = "super_admin" | "operations_manager" | "store_keeper";
-
-export const ROLE_LABELS: Record<UserRole, string> = {
-  super_admin: "Admin",
-  operations_manager: "Operations Manager",
-  store_keeper: "Store Keeper",
 };

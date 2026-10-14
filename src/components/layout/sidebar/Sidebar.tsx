@@ -5,23 +5,17 @@ import {
   getCurrentUser,
   logoutAction,
 } from "@/src/features/auth/actions/auth.actions";
-import { getMenuByRole } from "@/src/lib/navigation";
+import { getMenuForRole } from "@/src/lib/navigation";
 import { formatRole } from "@/src/lib/utils";
-import type { UserRole } from "@/src/types/layout";
+import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
 
 const sidebarIconButtonClassName =
   "relative flex size-8 cursor-pointer items-center justify-center rounded-md text-muted transition-colors hover:bg-gray-100";
 
 export default async function Sidebar() {
   const user = await getCurrentUser();
-  const primaryRole = user?.user_metadata?.primary_role;
-  const userRole: UserRole | null =
-    primaryRole === "super_admin" ||
-    primaryRole === "operations_manager" ||
-    primaryRole === "store_keeper"
-      ? primaryRole
-      : null;
-  const filteredMenuItems = getMenuByRole(userRole, sidebarMenu);
+  const role = getRoleFromAppMetadata(user?.app_metadata);
+  const filteredMenuItems = getMenuForRole(role, sidebarMenu);
   // Extract name from user metadata
   const userName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
@@ -52,7 +46,7 @@ export default async function Sidebar() {
               {userName}
             </p>
             <p className="truncate text-xs leading-none text-muted">
-              {formatRole(user?.user_metadata.primary_role)}
+              {formatRole(role)}
             </p>
           </div>
           <div className="flex shrink-0 items-center">

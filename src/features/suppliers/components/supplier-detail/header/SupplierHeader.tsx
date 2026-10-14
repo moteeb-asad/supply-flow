@@ -3,13 +3,17 @@ import Link from "next/link";
 import { formatStatus } from "@/src/features/suppliers/utils/status";
 import { Button } from "@/src/components/ui/Button";
 import { useUser } from "@/src/providers/UserProvider";
+import { hasPermission } from "@/src/features/auth/utils/rbac";
 
 export default function SupplierHeader({
   supplier,
   onEditClick,
 }: SupplierHeaderProps) {
   const { user } = useUser();
-  const userRole = user?.primaryRole;
+  const canManageSuppliers = hasPermission(
+    user?.primaryRole,
+    "suppliers:manage",
+  );
   const status = supplier.status ?? "active";
   const statusStyles =
     status === "active"
@@ -66,8 +70,7 @@ export default function SupplierHeader({
               </span>
               <span className="text-nowrap">Export Report</span>
             </Button>
-            {(userRole === "super_admin" ||
-              userRole === "operations_manager") && (
+            {canManageSuppliers && (
               <Button
                 className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer"
                 onClick={onEditClick}
