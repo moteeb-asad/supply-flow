@@ -1,6 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { routePermissions } from "@/src/lib/route-permissions";
+import { getRoutePermission } from "@/src/lib/route-permissions";
+import {
+  getRolesFromMetadata,
+  hasPermission,
+} from "@/src/features/auth/utils/rbac";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -79,22 +83,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const primaryRole = claims?.user_metadata?.primary_role as string | undefined;
-  const legacyRole = claims?.user_metadata?.role as string | undefined;
-  const rolesMetadata = claims?.user_metadata?.roles;
-  const roles = Array.isArray(rolesMetadata)
-    ? (rolesMetadata.filter((value) => typeof value === "string") as string[])
-    : primaryRole
-      ? [primaryRole]
-      : legacyRole
-        ? [legacyRole]
-        : [];
-  const isKnownRole = roles.some(
-    (value) =>
-      value === "super_admin" ||
-      value === "operations_manager" ||
-      value === "store_keeper",
-  );
+  const roles = getRolesFromMetadata(claims?.user_metadata);
+  const isKnownRole = roles.length > 0;
 
   // 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
   if (
@@ -107,21 +97,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // 3️⃣ ROLE CHECK (⬅️ WRITE YOUR CODE HERE)
+  // 3️⃣ PERMISSION CHECK
   if (claims && isProtectedRoute) {
-    // Optimized: Find most specific matching route first, then check permissions once
-    const matchedRoute = Object.keys(routePermissions)
-      .sort((a, b) => b.length - a.length) // Longest first (most specific route)
-      .find((route) => pathname.startsWith(route));
+    const requiredPermission = getRoutePermission(pathname);
 
-    if (matchedRoute) {
-      const allowedRoles = routePermissions[matchedRoute];
-      const isAllowed = roles.some((value) => allowedRoles.includes(value));
-      if (!isAllowed) {
-        return NextResponse.redirect(
-          new URL("/login?unauthorized=1", request.url),
-        );
-      }
+    if (requiredPermission && !hasPermission(roles, requiredPermission)) {
+      return NextResponse.redirect(
+        new URL("/login?unauthorized=1", request.url),
+      );
     }
   }
 
