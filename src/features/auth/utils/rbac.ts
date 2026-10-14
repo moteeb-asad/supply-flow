@@ -7,33 +7,27 @@ export function isRole(value: unknown): value is Role {
   );
 }
 
-// Turns untrusted input (token claims, DB rows) into a clean Role[].
-export function toRoles(value: unknown): Role[] {
-  const list = Array.isArray(value) ? value : [value];
-  return [...new Set(list.filter(isRole))];
-}
-
+// One role per user; null (no or unknown role) has no permissions.
 export function hasPermission(
-  roles: readonly Role[],
+  role: Role | null | undefined,
   permission: Permission,
 ): boolean {
-  return roles.some((role) => ROLE_PERMISSIONS[role].includes(permission));
+  return role ? ROLE_PERMISSIONS[role].includes(permission) : false;
 }
 
 export function hasAnyPermission(
-  roles: readonly Role[],
+  role: Role | null | undefined,
   permissions: readonly Permission[],
 ): boolean {
-  return permissions.some((permission) => hasPermission(roles, permission));
+  return permissions.some((permission) => hasPermission(role, permission));
 }
 
-// Roles from auth metadata: the `roles` array, else `primary_role`, else the
-// legacy `role`. The one place that knows where roles live in the user record.
-export function getRolesFromMetadata(
-  metadata: Record<string, unknown> | null | undefined,
-): Role[] {
-  if (!metadata) return [];
-  const roles = toRoles(metadata.roles);
-  if (roles.length > 0) return roles;
-  return toRoles(metadata.primary_role ?? metadata.role);
+// The user's role from app_metadata, which only the server can write (synced
+// from profiles.primary_role_id by migration 037). Never read roles from
+// user_metadata: users can edit it themselves.
+export function getRoleFromAppMetadata(
+  appMetadata: Record<string, unknown> | null | undefined,
+): Role | null {
+  const role = appMetadata?.role;
+  return isRole(role) ? role : null;
 }

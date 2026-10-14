@@ -16,7 +16,3 @@ export type ProfileRoleRow = {
   full_name: string | null;
   primary_role_id: string | null;
 };
-
-export type RoleNameRow = {
-  name: string;
-};

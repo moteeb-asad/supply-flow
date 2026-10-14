@@ -2,7 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/src/db/supabaseClient";
 import { redirect } from "next/navigation";
 import {
-  getRolesFromMetadata,
+  getRoleFromAppMetadata,
   hasPermission,
 } from "@/src/features/auth/utils/rbac";
 
@@ -16,8 +16,8 @@ export default async function SettingsPage() {
     redirect("/login");
   }
 
-  const roles = getRolesFromMetadata(user.user_metadata);
-  const canManageUsers = hasPermission(roles, "users:manage");
+  const role = getRoleFromAppMetadata(user.app_metadata);
+  const canManageUsers = hasPermission(role, "users:manage");
 
   // Determine grid layout based on visible cards
   const gridCols = canManageUsers ? "md:grid-cols-2" : "md:grid-cols-3";

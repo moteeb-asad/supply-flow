@@ -14,9 +14,9 @@ export function isActivePath(currentPath: string, targetPath: string): boolean {
   return false;
 }
 
-export function getMenuForRoles(
-  roles: readonly Role[],
+export function getMenuForRole(
+  role: Role | null,
   items: SidebarMenuItem[],
 ): SidebarMenuItem[] {
-  return items.filter((item) => hasPermission(roles, item.permission));
+  return items.filter((item) => hasPermission(role, item.permission));
 }

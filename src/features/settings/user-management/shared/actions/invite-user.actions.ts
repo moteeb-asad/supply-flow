@@ -38,17 +38,16 @@ export async function inviteUserAction(
     const redirectUrl =
       process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-    // 1. Invite user via Supabase Auth
+    // 1. Invite user via Supabase Auth.
+    // user_metadata holds display data only: users can edit it themselves.
+    // The role reaches app_metadata through the profiles trigger (migration 037).
     const primaryRole = primaryRoleName;
-    const roles = roleNames;
 
     const { data: authData, error: inviteError } =
       await adminClient.auth.admin.inviteUserByEmail(email, {
         redirectTo: `${redirectUrl}/reset-password`,
         data: {
           full_name: fullName,
-          primary_role: primaryRole,
-          roles,
         },
       });
 
@@ -78,8 +77,6 @@ export async function inviteUserAction(
     await adminClient.auth.admin.updateUserById(userId, {
       user_metadata: {
         full_name: fullName,
-        primary_role: primaryRole,
-        roles,
       },
     });
 

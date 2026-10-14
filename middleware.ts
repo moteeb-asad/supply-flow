@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getRoutePermission } from "@/src/lib/route-permissions";
 import {
-  getRolesFromMetadata,
+  getRoleFromAppMetadata,
   hasPermission,
 } from "@/src/features/auth/utils/rbac";
 
@@ -83,14 +83,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const roles = getRolesFromMetadata(claims?.user_metadata);
-  const isKnownRole = roles.length > 0;
+  const role = getRoleFromAppMetadata(claims?.app_metadata);
 
   // 2️⃣ AUTH ROUTE GUARD (allow password recovery flow)
   if (
     isAuthRoute &&
     claims &&
-    isKnownRole &&
+    role &&
     !isPasswordRecovery &&
     !isResetPasswordRoute
   ) {
@@ -101,7 +100,7 @@ export async function middleware(request: NextRequest) {
   if (claims && isProtectedRoute) {
     const requiredPermission = getRoutePermission(pathname);
 
-    if (requiredPermission && !hasPermission(roles, requiredPermission)) {
+    if (requiredPermission && !hasPermission(role, requiredPermission)) {
       return NextResponse.redirect(
         new URL("/login?unauthorized=1", request.url),
       );

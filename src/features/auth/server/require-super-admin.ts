@@ -1,5 +1,5 @@
 import { createClient } from "@/src/db/supabaseClient";
-import { hasPermission, toRoles } from "@/src/features/auth/utils/rbac";
+import { hasPermission, isRole } from "@/src/features/auth/utils/rbac";
 
 export async function requireSuperAdmin() {
   const supabase = await createClient();
@@ -17,10 +17,11 @@ export async function requireSuperAdmin() {
     .eq("id", user.id)
     .maybeSingle<{ primary_role: { name: string } | null }>();
 
-  if (
-    profileError ||
-    !hasPermission(toRoles(profile?.primary_role?.name), "users:manage")
-  ) {
+  // Checked against the database (not the token) before admin client access.
+  const roleName = profile?.primary_role?.name;
+  const role = isRole(roleName) ? roleName : null;
+
+  if (profileError || !hasPermission(role, "users:manage")) {
     throw new Error("Unauthorized");
   }
 

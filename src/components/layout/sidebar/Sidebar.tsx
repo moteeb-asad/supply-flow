@@ -5,17 +5,17 @@ import {
   getCurrentUser,
   logoutAction,
 } from "@/src/features/auth/actions/auth.actions";
-import { getMenuForRoles } from "@/src/lib/navigation";
+import { getMenuForRole } from "@/src/lib/navigation";
 import { formatRole } from "@/src/lib/utils";
-import { getRolesFromMetadata } from "@/src/features/auth/utils/rbac";
+import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
 
 const sidebarIconButtonClassName =
   "relative flex size-8 cursor-pointer items-center justify-center rounded-md text-muted transition-colors hover:bg-gray-100";
 
 export default async function Sidebar() {
   const user = await getCurrentUser();
-  const roles = getRolesFromMetadata(user?.user_metadata);
-  const filteredMenuItems = getMenuForRoles(roles, sidebarMenu);
+  const role = getRoleFromAppMetadata(user?.app_metadata);
+  const filteredMenuItems = getMenuForRole(role, sidebarMenu);
   // Extract name from user metadata
   const userName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
@@ -46,7 +46,7 @@ export default async function Sidebar() {
               {userName}
             </p>
             <p className="truncate text-xs leading-none text-muted">
-              {formatRole(user?.user_metadata.primary_role)}
+              {formatRole(role)}
             </p>
           </div>
           <div className="flex shrink-0 items-center">

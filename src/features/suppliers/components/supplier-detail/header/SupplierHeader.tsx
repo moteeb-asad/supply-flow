@@ -3,7 +3,7 @@ import Link from "next/link";
 import { formatStatus } from "@/src/features/suppliers/utils/status";
 import { Button } from "@/src/components/ui/Button";
 import { useUser } from "@/src/providers/UserProvider";
-import { hasPermission, toRoles } from "@/src/features/auth/utils/rbac";
+import { hasPermission } from "@/src/features/auth/utils/rbac";
 
 export default function SupplierHeader({
   supplier,
@@ -11,7 +11,7 @@ export default function SupplierHeader({
 }: SupplierHeaderProps) {
   const { user } = useUser();
   const canManageSuppliers = hasPermission(
-    toRoles(user?.primaryRole),
+    user?.primaryRole,
     "suppliers:manage",
   );
   const status = supplier.status ?? "active";

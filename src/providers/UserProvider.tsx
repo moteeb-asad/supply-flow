@@ -8,11 +8,9 @@ import {
   ReactNode,
 } from "react";
 import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
-import type { Role } from "@/src/features/auth/types";
-import { isRole } from "@/src/features/auth/utils/rbac";
+import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
 import type {
   ProfileRoleRow,
-  RoleNameRow,
   UserContextValue,
   UserProfile,
 } from "@/src/types/user";
@@ -48,24 +46,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
           return;
         }
 
+        // Role comes from the verified token (app_metadata); only the display
+        // name needs the profile row.
         const { data: profile } = await supabase
           .from("profiles")
-          .select("full_name, primary_role_id")
+          .select("full_name")
           .eq("id", claims.sub)
-          .maybeSingle<ProfileRoleRow>();
+          .maybeSingle<Pick<ProfileRoleRow, "full_name">>();
 
-        let primaryRole: Role | undefined =
-          claims.user_metadata?.primary_role ?? undefined;
-
-        if (profile?.primary_role_id) {
-          const { data: role } = await supabase
-            .from("roles")
-            .select("name")
-            .eq("id", profile.primary_role_id)
-            .maybeSingle<RoleNameRow>();
-
-          if (isRole(role?.name)) primaryRole = role.name;
-        }
+        const primaryRole =
+          getRoleFromAppMetadata(claims.app_metadata) ?? undefined;
 
         if (!active) return;
 
