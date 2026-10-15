@@ -1,11 +1,15 @@
+import { Suspense } from "react";
 import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
-import { StatCard } from "@/src/components/ui/StatCard";
+import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
+import DashboardKpis from "@/src/features/dashboard/components/DashboardKpis";
+import DashboardKpisSkeleton from "@/src/features/dashboard/components/DashboardKpisSkeleton";
 import SupplierPerformanceChart from "@/src/features/dashboard/components/SupplierPerformanceChart";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   const displayName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
+  const role = getRoleFromAppMetadata(user?.app_metadata);
 
   return (
     <>
@@ -18,53 +22,9 @@ export default async function DashboardPage() {
             Here&apos;s what&apos;s happening in your warehouse today.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            label="Open Purchase Orders"
-            icon="description"
-            value="24"
-            hint={
-              <span className="text-xs font-medium text-muted">
-                8 pending approval
-              </span>
-            }
-          />
-          <StatCard
-            label="Pending Deliveries"
-            icon="schedule"
-            className="border-transparent bg-primary shadow-lg shadow-primary/20"
-            iconClassName="bg-white/20 text-white"
-            labelClassName="text-white/80"
-            valueClassName="text-white"
-            value="12"
-            hint={
-              <span className="rounded bg-white/20 px-1.5 py-0.5 text-xs font-bold text-white">
-                4 Urgent
-              </span>
-            }
-          />
-          <StatCard
-            label="Low Stock Alerts"
-            icon="warning"
-            iconClassName="bg-danger/10 text-danger"
-            valueClassName="text-danger"
-            value="15"
-            hint={
-              <span className="text-xs font-bold text-danger">
-                Critical Level
-              </span>
-            }
-          />
-          <StatCard
-            label="Total Monthly Spend"
-            icon="payments"
-            iconClassName="bg-success/10 text-success"
-            value="$142.5k"
-            hint={
-              <span className="text-xs font-medium text-success">+4.2%</span>
-            }
-          />
-        </div>
+        <Suspense fallback={<DashboardKpisSkeleton />}>
+          <DashboardKpis role={role} />
+        </Suspense>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div className="bg-white rounded-xl border border-line-soft overflow-hidden">
             <div className="p-6 border-b border-line-soft flex justify-between items-center">
