@@ -1,9 +1,9 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   CategoryScale,
   Chart as ChartJS,
-  Filler,
   LineElement,
   LinearScale,
   PointElement,
@@ -12,98 +12,94 @@ import {
   type ChartOptions,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { CHART_SERIES_COLORS } from "../constants/chart";
+import type { SupplierPerformanceTrends } from "../types";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Filler,
-);
+// Register only what a line chart needs (keeps the bundle small).
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip);
 
-const chartData: ChartData<"line"> = {
-  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-  datasets: [
-    {
-      label: "Global Produce",
-      data: [5, 10, 25, 35, 38, 32, 35],
-      borderColor: "#195de6",
-      backgroundColor: "#195de6",
-      borderWidth: 3,
-      tension: 0.4,
-      pointRadius: 0,
-      pointHoverRadius: 6,
-    },
-    {
-      label: "Fine Grain",
-      data: [8, 12, 18, 20, 22, 24, 26],
-      borderColor: "#10b981",
-      backgroundColor: "#10b981",
-      borderWidth: 3,
-      tension: 0.4,
-      pointRadius: 0,
-      pointHoverRadius: 6,
-    },
-    {
-      label: "Dairy Co.",
-      data: [30, 25, 20, 10, 5, 4, 12],
-      borderColor: "#f59e0b",
-      backgroundColor: "#f59e0b",
-      borderWidth: 3,
-      tension: 0.4,
-      pointRadius: 0,
-      pointHoverRadius: 6,
-    },
-  ],
-};
+const readThemeColor = (cssVar: string, fallback: string) =>
+  getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim() ||
+  fallback;
 
-const chartOptions: ChartOptions<"line"> = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false,
-    },
-    tooltip: {
-      mode: "index",
-      intersect: false,
-      padding: 12,
-      titleFont: { size: 12, weight: "bold" },
-      bodyFont: { size: 12 },
-      usePointStyle: true,
-    },
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
-      grid: {
-        color: "rgba(231, 235, 243, 0.5)",
-      },
-      ticks: {
-        display: false,
-      },
-    },
-    x: {
-      grid: {
-        display: false,
-      },
-      ticks: {
-        font: {
-          size: 10,
-          weight: 500,
+// Client-only (loaded with ssr: false). Receives already-aggregated points,
+// so rendering cost is constant no matter how much history exists.
+export default function SupplierPerformanceChart({
+  labels,
+  series,
+}: SupplierPerformanceTrends) {
+  const { data, options } = useMemo(() => {
+    const muted = readThemeColor("--color-muted", "#4e6797");
+    const grid = readThemeColor("--color-line-soft", "#e7ebf3");
+
+    const chartData: ChartData<"line", (number | null)[], string> = {
+      labels,
+      datasets: series.map((item, index) => {
+        const color = readThemeColor(
+          CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length].cssVar,
+          "#195de6",
+        );
+        return {
+          label: item.name,
+          data: item.values,
+          borderColor: color,
+          backgroundColor: color,
+          borderWidth: 2.5,
+          tension: 0.35,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          // Weeks without deliveries are null: connect across them.
+          spanGaps: true,
+        };
+      }),
+    };
+
+    const chartOptions: ChartOptions<"line"> = {
+      responsive: true,
+      maintainAspectRatio: false,
+      // Data is pre-sorted with unique labels; skip Chart.js checks.
+      normalized: true,
+      animation: { duration: 300 },
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          padding: 10,
+          usePointStyle: true,
+          callbacks: {
+            label: (context) =>
+              context.parsed.y === null
+                ? `${context.dataset.label}: no deliveries`
+                : `${context.dataset.label}: ${context.parsed.y}% on time`,
+          },
         },
-        color: "#4e6797",
-        autoSkip: false,
       },
-    },
-  },
-};
+      scales: {
+        y: {
+          min: 0,
+          max: 100,
+          grid: { color: grid },
+          border: { display: false },
+          ticks: {
+            stepSize: 25,
+            color: muted,
+            font: { size: 10 },
+            callback: (value) => `${value}%`,
+          },
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: muted, font: { size: 10, weight: 500 } },
+        },
+      },
+    };
 
-export default function SupplierPerformanceChart() {
+    return { data: chartData, options: chartOptions };
+  }, [labels, series]);
+
   return (
-    <div className="relative h-48 w-full mt-4">
-      <Line data={chartData} options={chartOptions} />
+    <div className="relative h-48 w-full">
+      <Line data={data} options={options} />
     </div>
   );
 }

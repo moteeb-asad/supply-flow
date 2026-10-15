@@ -6,7 +6,8 @@ import DashboardKpisSkeleton from "@/src/features/dashboard/components/Dashboard
 import QuickTasks from "@/src/features/dashboard/components/QuickTasks";
 import RecentReceivingActivity from "@/src/features/dashboard/components/RecentReceivingActivity";
 import RecentReceivingActivitySkeleton from "@/src/features/dashboard/components/RecentReceivingActivitySkeleton";
-import SupplierPerformanceChart from "@/src/features/dashboard/components/SupplierPerformanceChart";
+import SupplierPerformance from "@/src/features/dashboard/components/SupplierPerformance";
+import SupplierPerformanceSkeleton from "@/src/features/dashboard/components/SupplierPerformanceSkeleton";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -32,28 +33,9 @@ export default async function DashboardPage() {
           <Suspense fallback={<RecentReceivingActivitySkeleton />}>
             <RecentReceivingActivity role={role} />
           </Suspense>
-          <div className="bg-white rounded-xl border border-line-soft p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h4 className="font-bold">Supplier Performance Trends</h4>
-              <div className="flex gap-4">
-                <div className="flex items-center gap-1.5">
-                  <span className="size-2 rounded-full bg-primary"></span>
-                  <span className="text-[10px] text-muted">
-                    Global Produce
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="size-2 rounded-full bg-success"></span>
-                  <span className="text-[10px] text-muted">Fine Grain</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="size-2 rounded-full bg-warning"></span>
-                  <span className="text-[10px] text-muted">Dairy Co.</span>
-                </div>
-              </div>
-            </div>
-            <SupplierPerformanceChart />
-          </div>
+          <Suspense fallback={<SupplierPerformanceSkeleton />}>
+            <SupplierPerformance role={role} />
+          </Suspense>
         </div>
         <QuickTasks role={role} />
       </div>

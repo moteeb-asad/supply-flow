@@ -43,3 +43,18 @@ export type QuickTask =
       icon: string;
       disabled: true;
     };
+
+// Row returned by public.get_supplier_performance_trends().
+export type SupplierPerformanceRow = {
+  supplier_id: string;
+  supplier_name: string | null;
+  week_start: string;
+  deliveries: number;
+  on_time_deliveries: number;
+};
+
+// Chart-ready shape: one value per week, null where there were no deliveries.
+export type SupplierPerformanceTrends = {
+  labels: string[];
+  series: { name: string; values: (number | null)[] }[];
+};
