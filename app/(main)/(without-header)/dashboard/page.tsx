@@ -3,6 +3,8 @@ import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
 import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
 import DashboardKpis from "@/src/features/dashboard/components/DashboardKpis";
 import DashboardKpisSkeleton from "@/src/features/dashboard/components/DashboardKpisSkeleton";
+import RecentReceivingActivity from "@/src/features/dashboard/components/RecentReceivingActivity";
+import RecentReceivingActivitySkeleton from "@/src/features/dashboard/components/RecentReceivingActivitySkeleton";
 import SupplierPerformanceChart from "@/src/features/dashboard/components/SupplierPerformanceChart";
 
 export default async function DashboardPage() {
@@ -26,96 +28,9 @@ export default async function DashboardPage() {
           <DashboardKpis role={role} />
         </Suspense>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div className="bg-white rounded-xl border border-line-soft overflow-hidden">
-            <div className="p-6 border-b border-line-soft flex justify-between items-center">
-              <h4 className="font-bold">Recent Receiving Activity</h4>
-              <button className="text-primary text-xs font-bold hover:underline">
-                View All Logs
-              </button>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-background-light">
-                  <tr>
-                    <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-muted">
-                      SKU / Item
-                    </th>
-                    <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-muted">
-                      Vendor
-                    </th>
-                    <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-muted">
-                      Qty
-                    </th>
-                    <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-muted">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-line-soft">
-                  <tr>
-                    <td className="px-6 py-4">
-                      <p className="text-sm font-semibold">SKU-2938</p>
-                      <p className="text-[10px] text-muted">
-                        Organic Avocado 48ct
-                      </p>
-                    </td>
-                    <td className="px-6 py-4 text-sm">Global Produce</td>
-                    <td className="px-6 py-4 text-sm">45 cs</td>
-                    <td className="px-6 py-4">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-success/10 text-success">
-                        Verified
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4">
-                      <p className="text-sm font-semibold">SKU-1102</p>
-                      <p className="text-[10px] text-muted">
-                        Whole Milk 1gal
-                      </p>
-                    </td>
-                    <td className="px-6 py-4 text-sm">Dairy Co.</td>
-                    <td className="px-6 py-4 text-sm">120 units</td>
-                    <td className="px-6 py-4">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-warning/10 text-warning">
-                        In-Review
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4">
-                      <p className="text-sm font-semibold">SKU-4491</p>
-                      <p className="text-[10px] text-muted">
-                        Bread Flour 50lb
-                      </p>
-                    </td>
-                    <td className="px-6 py-4 text-sm">Fine Grain Mill</td>
-                    <td className="px-6 py-4 text-sm">10 sk</td>
-                    <td className="px-6 py-4">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-success/10 text-success">
-                        Verified
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 border-b-0">
-                      <p className="text-sm font-semibold">SKU-5502</p>
-                      <p className="text-[10px] text-muted">
-                        Tomato Sauce 10#
-                      </p>
-                    </td>
-                    <td className="px-6 py-4 text-sm border-b-0">Pizza Port</td>
-                    <td className="px-6 py-4 text-sm border-b-0">30 cs</td>
-                    <td className="px-6 py-4 border-b-0">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-danger/10 text-danger">
-                        Partial
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <Suspense fallback={<RecentReceivingActivitySkeleton />}>
+            <RecentReceivingActivity role={role} />
+          </Suspense>
           <div className="bg-white rounded-xl border border-line-soft p-6">
             <div className="flex justify-between items-center mb-6">
               <h4 className="font-bold">Supplier Performance Trends</h4>
