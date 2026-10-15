@@ -1,3 +1,5 @@
+import type { Permission } from "@/src/features/auth/types";
+
 // Row returned by public.get_dashboard_metrics().
 export type DashboardMetrics = {
   open_po_count: number;
@@ -24,3 +26,20 @@ export type RecentReceivingActivityItem = {
   qty_received: number;
   qty_rejected: number;
 };
+
+// A dashboard quick task: a link guarded by a permission, or a disabled
+// placeholder for a feature that is not available yet.
+export type QuickTask =
+  | {
+      label: string;
+      description: string;
+      icon: string;
+      href: string;
+      permission: Permission;
+    }
+  | {
+      label: string;
+      description: string;
+      icon: string;
+      disabled: true;
+    };

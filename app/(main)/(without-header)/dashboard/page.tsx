@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
 import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
 import DashboardKpis from "@/src/features/dashboard/components/DashboardKpis";
 import DashboardKpisSkeleton from "@/src/features/dashboard/components/DashboardKpisSkeleton";
+import QuickTasks from "@/src/features/dashboard/components/QuickTasks";
 import RecentReceivingActivity from "@/src/features/dashboard/components/RecentReceivingActivity";
 import RecentReceivingActivitySkeleton from "@/src/features/dashboard/components/RecentReceivingActivitySkeleton";
 import SupplierPerformanceChart from "@/src/features/dashboard/components/SupplierPerformanceChart";
@@ -54,57 +55,7 @@ export default async function DashboardPage() {
             <SupplierPerformanceChart />
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-line-soft p-6">
-          <h4 className="font-bold mb-4">Quick Tasks</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button className="flex items-center gap-3 p-4 bg-background-light rounded-lg hover:bg-primary/5 transition-colors text-left group">
-              <div className="size-10 bg-white rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
-                <span className="material-symbols-outlined">receipt_long</span>
-              </div>
-              <div>
-                <p className="text-sm font-bold">Generate Bill</p>
-                <p className="text-[10px] text-muted">
-                  Process pending invoices
-                </p>
-              </div>
-            </button>
-            <button className="flex items-center gap-3 p-4 bg-background-light rounded-lg hover:bg-primary/5 transition-colors text-left group">
-              <div className="size-10 bg-white rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
-                <span className="material-symbols-outlined">
-                  add_shopping_cart
-                </span>
-              </div>
-              <div>
-                <p className="text-sm font-bold">New Order</p>
-                <p className="text-[10px] text-muted">
-                  Restock low inventory
-                </p>
-              </div>
-            </button>
-            <button className="flex items-center gap-3 p-4 bg-background-light rounded-lg hover:bg-primary/5 transition-colors text-left group">
-              <div className="size-10 bg-white rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
-                <span className="material-symbols-outlined">groups</span>
-              </div>
-              <div>
-                <p className="text-sm font-bold">Manage Vendors</p>
-                <p className="text-[10px] text-muted">
-                  Update performance scores
-                </p>
-              </div>
-            </button>
-            <button className="flex items-center gap-3 p-4 bg-background-light rounded-lg hover:bg-primary/5 transition-colors text-left group">
-              <div className="size-10 bg-white rounded-lg flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
-                <span className="material-symbols-outlined">inventory</span>
-              </div>
-              <div>
-                <p className="text-sm font-bold">Cycle Count</p>
-                <p className="text-[10px] text-muted">
-                  Reconcile physical stock
-                </p>
-              </div>
-            </button>
-          </div>
-        </div>
+        <QuickTasks role={role} />
       </div>
     </>
   );
