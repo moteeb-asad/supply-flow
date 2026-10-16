@@ -1,13 +1,13 @@
 import { Suspense } from "react";
 import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
 import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
-import DashboardKpis from "@/src/features/dashboard/components/DashboardKpis";
-import DashboardKpisSkeleton from "@/src/features/dashboard/components/DashboardKpisSkeleton";
-import QuickTasks from "@/src/features/dashboard/components/QuickTasks";
-import RecentReceivingActivity from "@/src/features/dashboard/components/RecentReceivingActivity";
-import RecentReceivingActivitySkeleton from "@/src/features/dashboard/components/RecentReceivingActivitySkeleton";
-import SupplierPerformance from "@/src/features/dashboard/components/SupplierPerformance";
-import SupplierPerformanceSkeleton from "@/src/features/dashboard/components/SupplierPerformanceSkeleton";
+import DashboardKpis from "@/src/features/dashboard/components/kpis/DashboardKpis";
+import DashboardKpisSkeleton from "@/src/features/dashboard/components/kpis/DashboardKpisSkeleton";
+import QuickTasks from "@/src/features/dashboard/components/quick-tasks/QuickTasks";
+import RecentReceivingActivity from "@/src/features/dashboard/components/recent-receiving-activity/RecentReceivingActivity";
+import RecentReceivingActivitySkeleton from "@/src/features/dashboard/components/recent-receiving-activity/RecentReceivingActivitySkeleton";
+import SupplierPerformance from "@/src/features/dashboard/components/supplier-performance/SupplierPerformance";
+import SupplierPerformanceSkeleton from "@/src/features/dashboard/components/supplier-performance/SupplierPerformanceSkeleton";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();

@@ -1,7 +1,7 @@
 import type { Role } from "@/src/features/auth/types";
 import { hasPermission } from "@/src/features/auth/utils/rbac";
-import { CHART_SERIES_COLORS } from "../constants/chart";
-import { getSupplierPerformance } from "../server/get-supplier-performance";
+import { CHART_SERIES_COLORS } from "../../constants/chart";
+import { getSupplierPerformance } from "../../server/get-supplier-performance";
 import SupplierPerformanceCard from "./SupplierPerformanceCard";
 import SupplierPerformanceChartLazy from "./SupplierPerformanceChartLazy";
 

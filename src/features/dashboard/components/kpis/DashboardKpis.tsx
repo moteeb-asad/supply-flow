@@ -1,12 +1,12 @@
 import { StatCard } from "@/src/components/ui/StatCard";
 import type { Permission, Role } from "@/src/features/auth/types";
 import { hasPermission } from "@/src/features/auth/utils/rbac";
-import { getDashboardMetrics } from "../server/get-dashboard-metrics";
+import { getDashboardMetrics } from "../../server/get-dashboard-metrics";
 import {
   formatCount,
   formatCurrency,
   getPercentChange,
-} from "../utils/format";
+} from "../../utils/format";
 
 type DashboardKpisProps = {
   role: Role | null;

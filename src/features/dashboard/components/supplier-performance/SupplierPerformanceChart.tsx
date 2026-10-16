@@ -12,8 +12,8 @@ import {
   type ChartOptions,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { CHART_SERIES_COLORS } from "../constants/chart";
-import type { SupplierPerformanceTrends } from "../types";
+import { CHART_SERIES_COLORS } from "../../constants/chart";
+import type { SupplierPerformanceTrends } from "../../types";
 
 // Register only what a line chart needs (keeps the bundle small).
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip);
@@ -46,10 +46,21 @@ export default function SupplierPerformanceChart({
           backgroundColor: color,
           borderWidth: 2.5,
           tension: 0.35,
+          // Smooth without overshooting past 0% / 100%.
+          cubicInterpolationMode: "monotone" as const,
           pointRadius: 3,
           pointHoverRadius: 5,
-          // Weeks without deliveries are null: connect across them.
+          // Draw at the 0% / 100% edges instead of clipping half the line.
+          clip: false as const,
+          // Weeks without deliveries are null: connect across them, dashed.
           spanGaps: true,
+          segment: {
+            borderDash: (context: {
+              p0DataIndex: number;
+              p1DataIndex: number;
+            }) =>
+              context.p1DataIndex - context.p0DataIndex > 1 ? [4, 4] : undefined,
+          },
         };
       }),
     };
@@ -60,6 +71,8 @@ export default function SupplierPerformanceChart({
       // Data is pre-sorted with unique labels; skip Chart.js checks.
       normalized: true,
       animation: { duration: 300 },
+      // Room for unclipped lines and points at the 0% / 100% edges.
+      layout: { padding: { top: 6, bottom: 2 } },
       interaction: { mode: "index", intersect: false },
       plugins: {
         legend: { display: false },

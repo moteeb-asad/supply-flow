@@ -6,8 +6,8 @@ import {
   SKU_RECEIVING_STATUS_STYLES,
 } from "@/src/features/sku-receiving/constants/statuses";
 import type { SKUReceivingStatus } from "@/src/features/sku-receiving/types";
-import { getRecentReceivingActivity } from "../server/get-recent-receiving-activity";
-import { formatCount, formatRelativeTime } from "../utils/format";
+import { getRecentReceivingActivity } from "../../server/get-recent-receiving-activity";
+import { formatCount, formatRelativeTime } from "../../utils/format";
 import RecentReceivingActivityCard from "./RecentReceivingActivityCard";
 
 type RecentReceivingActivityProps = {

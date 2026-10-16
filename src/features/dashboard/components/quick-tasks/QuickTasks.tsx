@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { Role } from "@/src/features/auth/types";
 import { hasPermission } from "@/src/features/auth/utils/rbac";
-import { QUICK_TASKS } from "../constants/quick-tasks";
-import type { QuickTask } from "../types";
+import { QUICK_TASKS } from "../../constants/quick-tasks";
+import type { QuickTask } from "../../types";
 
 type QuickTasksProps = {
   role: Role | null;
