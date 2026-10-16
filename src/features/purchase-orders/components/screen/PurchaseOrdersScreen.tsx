@@ -8,10 +8,11 @@ import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/lis
 import PurchaseOrdersStatusTabs from "@/src/features/purchase-orders/components/list/PurchaseOrdersStatusTabs";
 import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/PurchaseOrdersTable";
 import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
+import { useOpenFromQueryParam } from "@/src/hooks/useOpenFromQueryParam";
 import { PurchaseOrdersFiltersValue } from "../../types";
 
 export default function PurchaseOrdersScreen() {
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useOpenFromQueryParam();
   const [filters, setFilters] = useState<PurchaseOrdersFiltersValue>({});
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const queryClient = useQueryClient();

@@ -1,6 +1,7 @@
 "use client";
 
 import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
+import { useOpenFromQueryParam } from "@/src/hooks/useOpenFromQueryParam";
 import SkuReceivingMetrics from "../list/SkuReceivingMetrics";
 import SkuReceivingTable from "../list/SkuReceivingTable";
 import { useState } from "react";
@@ -9,7 +10,7 @@ import SkuReceivingCreateDrawer from "../create-receiving/CreateReceivingDrawer"
 
 export default function SkuReceivingScreen() {
   const [filters, setFilters] = useState<SkuReceivingFiltersValue>({});
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useOpenFromQueryParam();
 
   return (
     <>
