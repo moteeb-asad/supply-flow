@@ -5,9 +5,7 @@ export default function InventoryPage() {
   return (
     <Suspense
       fallback={
-        <div className="px-8 py-6 text-sm text-muted">
-          Loading inventory...
-        </div>
+        <div className="px-8 py-6 text-sm text-muted">Loading inventory...</div>
       }
     >
       <InventoryManagementScreen />

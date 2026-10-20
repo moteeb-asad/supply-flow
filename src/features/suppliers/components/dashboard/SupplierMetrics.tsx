@@ -17,9 +17,7 @@ export default function SupplierMetrics() {
           className="border-line"
           iconClassName="bg-green-50 text-green-600"
           value="88%"
-          hint={
-            <span className="text-xs font-bold text-green-500">+2.4%</span>
-          }
+          hint={<span className="text-xs font-bold text-green-500">+2.4%</span>}
         />
         <StatCard
           label="Total Spend (YTD)"

@@ -5,8 +5,7 @@ import { randomUUID } from "crypto";
 import { AddInventoryItemSchema } from "../validators/inventory-item.schema";
 
 type AddInventoryItemResult =
-  | { error?: string; success?: string; resetKey: string }
-  | undefined;
+  { error?: string; success?: string; resetKey: string } | undefined;
 
 export default async function addInventoryItemAction(
   _prevState: AddInventoryItemResult,
@@ -44,7 +43,7 @@ export default async function addInventoryItemAction(
   }
 
   // Single atomic transaction via RPC
-  const { data, error } = await supabase.rpc("add_inventory_item_transaction", {
+  const { error } = await supabase.rpc("add_inventory_item_transaction", {
     p_sku_code: validation.data.skuCode,
     p_name: validation.data.itemName,
     p_unit: validation.data.unit,

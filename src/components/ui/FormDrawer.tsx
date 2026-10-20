@@ -44,9 +44,7 @@ export function FormDrawer({
       role="dialog"
       aria-modal="true"
     >
-      <aside
-        className="flex h-full w-full max-w-lg flex-col bg-white shadow-2xl transition-transform duration-300"
-      >
+      <aside className="flex h-full w-full max-w-lg flex-col bg-white shadow-2xl transition-transform duration-300">
         <header className="z-10 flex items-center justify-between gap-3 border-b border-line-soft bg-white px-5 py-4">
           <div className="min-w-0">
             <h3 className="truncate text-lg font-bold text-ink">{title}</h3>

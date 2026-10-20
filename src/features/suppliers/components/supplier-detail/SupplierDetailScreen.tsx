@@ -10,12 +10,7 @@ export default function SupplierDetailScreen({
   supplier,
 }: SupplierDetailScreenProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const {
-    data: supplierData,
-    isLoading,
-    error,
-    refetch,
-  } = useSupplier(supplier.id);
+  const { data: supplierData, refetch } = useSupplier(supplier.id);
 
   const openEditDrawer = () => setDrawerOpen(true);
 
@@ -65,13 +60,9 @@ export default function SupplierDetailScreen({
         {/* KPI Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-white flex flex-col gap-2 rounded-xl p-6 border border-line shadow-sm">
-            <p className="text-muted text-sm font-medium">
-              Avg Lead Time
-            </p>
+            <p className="text-muted text-sm font-medium">Avg Lead Time</p>
             <div className="flex items-baseline gap-2">
-              <p className="text-ink text-3xl font-black">
-                3.2 Days
-              </p>
+              <p className="text-ink text-3xl font-black">3.2 Days</p>
               <span className="text-red-500 text-sm font-bold flex items-center">
                 -0.5%
               </span>
@@ -84,13 +75,9 @@ export default function SupplierDetailScreen({
             </div>
           </div>
           <div className="bg-white flex flex-col gap-2 rounded-xl p-6 border border-line shadow-sm">
-            <p className="text-muted text-sm font-medium">
-              On-Time Rate
-            </p>
+            <p className="text-muted text-sm font-medium">On-Time Rate</p>
             <div className="flex items-baseline gap-2">
-              <p className="text-ink text-3xl font-black">
-                94.2%
-              </p>
+              <p className="text-ink text-3xl font-black">94.2%</p>
               <span className="text-red-500 text-sm font-bold flex items-center">
                 -1.2%
               </span>
@@ -107,9 +94,7 @@ export default function SupplierDetailScreen({
               Fulfillment Accuracy
             </p>
             <div className="flex items-baseline gap-2">
-              <p className="text-ink text-3xl font-black">
-                98.5%
-              </p>
+              <p className="text-ink text-3xl font-black">98.5%</p>
               <span className="text-green-500 text-sm font-bold flex items-center">
                 +0.4%
               </span>
@@ -122,13 +107,9 @@ export default function SupplierDetailScreen({
             </div>
           </div>
           <div className="bg-white flex flex-col gap-2 rounded-xl p-6 border border-line shadow-sm">
-            <p className="text-muted text-sm font-medium">
-              Active POs
-            </p>
+            <p className="text-muted text-sm font-medium">Active POs</p>
             <div className="flex items-baseline gap-2">
-              <p className="text-ink text-3xl font-black">
-                12
-              </p>
+              <p className="text-ink text-3xl font-black">12</p>
               <span className="text-green-500 text-sm font-bold flex items-center">
                 +2
               </span>
@@ -364,7 +345,7 @@ export default function SupplierDetailScreen({
           supplier={supplierData!}
           onClose={() => setDrawerOpen(false)}
           onSuccess={() => {
-            refetch();
+            void refetch();
           }}
         />
       )}

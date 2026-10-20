@@ -35,9 +35,7 @@ export function Modal({
       <div className="w-full max-w-[480px] overflow-hidden rounded-xl border border-line-soft bg-white shadow-2xl">
         {(title || description) && (
           <div className="px-8 pt-8 pb-4">
-            {title && (
-              <h2 className="text-xl font-bold text-ink">{title}</h2>
-            )}
+            {title && <h2 className="text-xl font-bold text-ink">{title}</h2>}
             {description && (
               <p className="mt-1 text-sm text-muted">{description}</p>
             )}

@@ -95,16 +95,10 @@ export default function OrderActivityTimeline({
               }`}
             ></div>
             <div>
-              <p className="text-sm font-bold text-slate-900">
-                {event.label}
-              </p>
-              <p className="text-xs text-slate-500">
-                {event.timestamp}
-              </p>
+              <p className="text-sm font-bold text-slate-900">{event.label}</p>
+              <p className="text-xs text-slate-500">{event.timestamp}</p>
               {event.details ? (
-                <p className="mt-1 text-xs text-slate-600">
-                  {event.details}
-                </p>
+                <p className="mt-1 text-xs text-slate-600">{event.details}</p>
               ) : null}
             </div>
           </div>
