@@ -66,8 +66,7 @@ export type GetReceivablePurchaseOrdersResult = {
 };
 
 export type ConfirmSkuReceivingResult =
-  | { success: true; receivingId: string }
-  | { success: false; error: string };
+  { success: true; receivingId: string } | { success: false; error: string };
 
 // ISO timestamps for the start of the user's local day and month.
 export type SkuReceivingMetricsInput = {

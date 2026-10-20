@@ -127,7 +127,9 @@ export default function LoginForm() {
             loadingText="Signing in..."
             loading={isPending}
             icon={
-              <span className="material-symbols-outlined !text-[18px]">login</span>
+              <span className="material-symbols-outlined !text-[18px]">
+                login
+              </span>
             }
           />
         </form>

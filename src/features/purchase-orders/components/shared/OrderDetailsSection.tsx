@@ -28,9 +28,7 @@ export default function OrderDetailsSection({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-ink">
-            Order Date
-          </label>
+          <label className="text-sm font-semibold text-ink">Order Date</label>
           <input
             className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
             {...register("orderDate")}

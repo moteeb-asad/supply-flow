@@ -33,9 +33,7 @@ export default function LineItemsReceivingSection({
             Showing {lineItems.length} active lines
           </span>
         </div>
-        {listError ? (
-          <p className="text-xs text-red-600">{listError}</p>
-        ) : null}
+        {listError ? <p className="text-xs text-red-600">{listError}</p> : null}
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-gray-50/50">
           <table className="w-full min-w-[440px] border-collapse text-left text-sm">
             <thead>
@@ -60,12 +58,8 @@ export default function LineItemsReceivingSection({
                     key={item.purchase_order_item_id}
                   >
                     <td className="px-3 py-3">
-                      <p className="font-bold text-ink">
-                        {item.sku_code}
-                      </p>
-                      <p className="text-[10px] text-muted">
-                        {item.item_name}
-                      </p>
+                      <p className="font-bold text-ink">{item.sku_code}</p>
+                      <p className="text-[10px] text-muted">{item.item_name}</p>
                     </td>
                     <td className="px-3 py-3 text-center font-medium text-ink">
                       {item.ordered_qty}

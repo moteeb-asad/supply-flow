@@ -159,9 +159,7 @@ export default function CategoryPicker({
                     {category.name}
                   </p>
                   {category.description ? (
-                    <p className="text-xs text-muted">
-                      {category.description}
-                    </p>
+                    <p className="text-xs text-muted">{category.description}</p>
                   ) : null}
                 </button>
               ))
@@ -182,13 +180,9 @@ export default function CategoryPicker({
       {error ? (
         <p className="text-xs text-red-600">{error}</p>
       ) : selectedCategory ? (
-        <p className="text-xs text-muted">
-          Selected: {selectedCategory.name}
-        </p>
+        <p className="text-xs text-muted">Selected: {selectedCategory.name}</p>
       ) : (
-        <p className="text-xs text-muted">
-          Select a category from results.
-        </p>
+        <p className="text-xs text-muted">Select a category from results.</p>
       )}
     </div>
   );

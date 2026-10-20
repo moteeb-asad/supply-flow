@@ -6,8 +6,7 @@ import { createClient } from "@/src/db/supabaseClient";
 import { requireSuperAdmin } from "@/src/features/auth/server/require-super-admin";
 
 type InviteUserResult =
-  | { success: true; message: string }
-  | { success: false; error: string };
+  { success: true; message: string } | { success: false; error: string };
 
 // Accept currentUser as argument for audit fields
 export async function inviteUserAction(
@@ -159,7 +158,6 @@ export async function inviteUserAction(
     const supabase = await createClient();
     const {
       data: { user },
-      error,
     } = await supabase.auth.getUser();
     if (!user) throw new Error("User not authenticated");
 

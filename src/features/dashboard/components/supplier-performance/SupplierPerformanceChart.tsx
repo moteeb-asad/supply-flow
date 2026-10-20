@@ -16,7 +16,13 @@ import { CHART_SERIES_COLORS } from "../../constants/chart";
 import type { SupplierPerformanceTrends } from "../../types";
 
 // Register only what a line chart needs (keeps the bundle small).
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+);
 
 const readThemeColor = (cssVar: string, fallback: string) =>
   getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim() ||
@@ -59,7 +65,9 @@ export default function SupplierPerformanceChart({
               p0DataIndex: number;
               p1DataIndex: number;
             }) =>
-              context.p1DataIndex - context.p0DataIndex > 1 ? [4, 4] : undefined,
+              context.p1DataIndex - context.p0DataIndex > 1
+                ? [4, 4]
+                : undefined,
           },
         };
       }),

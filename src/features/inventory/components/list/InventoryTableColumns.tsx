@@ -27,8 +27,7 @@ export const inventoryTableColumns: DataTableColumn<InventoryItem>[] = [
   {
     key: "sku",
     header: "SKU",
-    className:
-      "text-sm font-bold text-primary text-wrap max-w-[100px]",
+    className: "text-sm font-bold text-primary text-wrap max-w-[100px]",
     cell: (row) => row.skuCode,
   },
   {

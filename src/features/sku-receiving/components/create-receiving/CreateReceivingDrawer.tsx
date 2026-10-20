@@ -45,9 +45,9 @@ export default function CreateReceivingDrawer({
         return;
       }
 
-      AFFECTED_QUERY_KEYS.forEach((queryKey) =>
-        queryClient.invalidateQueries({ queryKey }),
-      );
+      AFFECTED_QUERY_KEYS.forEach((queryKey) => {
+        void queryClient.invalidateQueries({ queryKey });
+      });
       onSuccess?.();
     });
   };
