@@ -27,7 +27,7 @@ export default function SuppliersScreen({}: SuppliersScreenProps) {
     if (!hasNextPage || isFetching) {
       return;
     }
-    fetchNextPage();
+    void fetchNextPage();
   };
 
   const list = useMemo(() => suppliers, [suppliers]);

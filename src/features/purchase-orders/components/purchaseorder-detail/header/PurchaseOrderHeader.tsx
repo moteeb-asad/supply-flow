@@ -79,7 +79,9 @@ export default function PurchaseOrderHeader({
               }}
               type="button"
             >
-              <span className="material-symbols-outlined !text-[18px]">edit</span>
+              <span className="material-symbols-outlined !text-[18px]">
+                edit
+              </span>
               <span>Edit PO</span>
             </button>
           </div>

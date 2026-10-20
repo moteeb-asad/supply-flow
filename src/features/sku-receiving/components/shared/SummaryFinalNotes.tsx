@@ -48,9 +48,7 @@ export default function SummaryFinalNotes({
           <div className="space-y-2 rounded-xl border border-gray-200 bg-gray-50 p-5">
             <div className="flex justify-between text-xs">
               <span className="text-muted">Total Lines</span>
-              <span className="font-bold text-ink">
-                {summary.totalLines}
-              </span>
+              <span className="font-bold text-ink">{summary.totalLines}</span>
             </div>
             <div className="flex justify-between text-xs">
               <span className="text-muted">Total Qty Receiving</span>

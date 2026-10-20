@@ -136,7 +136,7 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
     key: "actions",
     header: "Actions",
     className: "text-sm text-muted text-right",
-    cell: (row) => (
+    cell: () => (
       <div className="flex justify-end gap-2">
         <button
           disabled

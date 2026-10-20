@@ -4,7 +4,7 @@
 
 SupplyFlow is a B2B internal operations platform for supplier performance, inventory movement, and outlet stock operations.
 
-It is designed to replace fragmented spreadsheets and manual follow-ups with a single role-aware workflow across receiving, issuing, and tracking.
+It is designed to replace fragmented spreadsheets and manual follow-ups with a single role-aware workflow across purchasing, receiving, and stock tracking.
 
 Core outcomes:
 
@@ -28,11 +28,12 @@ SupplyFlow solves this by providing:
 
 - Secure authentication with Supabase Auth.
 - Role-based access control for `super_admin`, `operations_manager`, and `store_keeper`.
-- Supplier management and performance tracking.
-- Inventory receiving and stock movement workflows.
-- Purchase orders listing and operational tracking foundations.
-- Analytics and reporting screens for operations monitoring.
-- Responsive dashboard UI with shared layout and reusable table patterns.
+- Supplier management with on-time delivery tracking.
+- Purchase order workflows: create, edit, detail view, and status tracking.
+- SKU receiving against purchase orders, with accepted and rejected quantities per line.
+- Inventory list with stock status (low and critical alerts).
+- Live dashboard: KPI cards, recent receiving activity per SKU line, and a weekly supplier on-time delivery chart.
+- Responsive UI with a shared layout and reusable table patterns.
 
 ### Screenshots
 
@@ -72,7 +73,8 @@ Result looks like:
 - Nested layouts for persistent shell composition (sidebar/header).
 - Feature-based organization under `src/features`.
 - Reusable UI system under `src/components`.
-- Shared permission and navigation logic under `lib`.
+- Shared permission and navigation logic under `src/lib`.
+- Dashboard data comes from SQL functions that aggregate in the database, so the app receives only small result sets.
 
 ## Environment Variables
 
@@ -114,29 +116,38 @@ Notes:
 1. Super Admin (`super_admin`)
 
 - Full system access.
-- User and permission management.
-- Audit and governance visibility.
+- User management and invitations.
 
 2. Operations Manager (`operations_manager`)
 
-- Supplier and inventory oversight.
-- Purchase order and stock movement workflows.
-- Operations analytics and reporting.
+- Suppliers, inventory, and purchase orders.
+- SKU receiving and reports.
 
 3. Store Keeper (`store_keeper`)
 
-- SKU receiving and stock execution tasks.
-- Operational inventory handling.
+- SKU receiving.
+- Dashboard and own account settings.
+
+### How RBAC Works
+
+- Each user has exactly one role, stored in Supabase Auth `app_metadata.role`. Users cannot edit `app_metadata`, and database triggers keep it in sync with the roles table (migration 037).
+- Permissions per role are defined in one place: `ROLE_PERMISSIONS` in `src/features/auth/constants/rbac.ts`. Use `hasPermission` and `hasAnyPermission` from `src/features/auth/utils/rbac.ts` to check them.
+- Routes map to a permission in `src/lib/route-permissions.ts`.
+- Middleware verifies the session with `supabase.auth.getClaims()` (local JWT verification), reads the role from the claims, and redirects users without the route's permission.
+- The database enforces the same rules with RLS, so hidden UI is never the only protection.
 
 ### Route Permissions
 
-Access is enforced by role-aware UI and server-side permission checks.
-
-- `/dashboard`: all authenticated users.
-- `/suppliers`: super admin and operations manager.
-- `/purchase-orders`: super admin and operations manager.
-- `/inventory/*`: operations manager and store keeper (with role-specific capabilities).
-- `/settings/*`: super admin.
+| Route                            | Permission             | Roles                           |
+| -------------------------------- | ---------------------- | ------------------------------- |
+| `/dashboard`                     | `dashboard:view`       | All roles                       |
+| `/sku-receiving`                 | `receiving:view`       | All roles                       |
+| `/inventory`                     | `inventory:view`       | Super admin, operations manager |
+| `/suppliers`                     | `suppliers:view`       | Super admin, operations manager |
+| `/purchase-orders`               | `purchase_orders:view` | Super admin, operations manager |
+| `/reports`                       | `reports:view`         | Super admin, operations manager |
+| `/settings`, `/settings/account` | `settings:view`        | All roles                       |
+| `/settings/user-management`      | `users:manage`         | Super admin                     |
 
 ## Getting Started
 
@@ -168,7 +179,7 @@ NEXT_PUBLIC_SUPABASE_URL=your_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-4. Apply database migrations from `supabase/migrations/` in your Supabase project.
+4. Apply database migrations from `supabase/migrations/` in your Supabase project (see [Database Migrations](#database-migrations)).
 
 5. Run development server.
 
@@ -185,19 +196,32 @@ npm run build
 npm start
 ```
 
+## Database Migrations
+
+- Run the files in `supabase/migrations/` in numeric order. Later migrations depend on earlier ones.
+- Run `038_remove_roles_from_user_metadata.sql` only after the app version that reads roles from `app_metadata` is deployed. Running it earlier logs users out of their permissions.
+- `supabase/schema-backup.sql` is a snapshot of the production schema, for reference only.
+
 ## Testing
 
-- Linting: `npm run lint`
-- Type checking: TypeScript strict mode is enabled
-- CI: lint + build checks on pull requests to `develop` and `main`
+- Linting: `npm run lint` (type-aware ESLint, zero warnings allowed)
+- Type checking: `npm run typecheck` (`tsc --noEmit`, strict mode)
+- Formatting: `npm run format` to fix, `npm run format:check` to verify (Prettier)
+- CI: format check, lint, typecheck, knip, and build on pull requests to `develop` and `main`
 
 ## Roadmap
 
 Short-term:
 
-- Complete purchase order add/edit and detail workflows.
-- Expand inventory receive and issue actions.
+- Purchase order approvals and permission-based actions.
+- Category management.
 - Improve supplier insights and drill-down metrics.
+
+Done:
+
+- Purchase order create, edit, and detail workflows.
+- SKU receiving against purchase orders.
+- Live dashboard with supplier on-time delivery trends.
 
 Mid-term:
 

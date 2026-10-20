@@ -107,8 +107,11 @@ export default function LineItemsSection({
                         {...skuNameField}
                         value={field.skuName}
                         onChange={(event) => {
-                          skuNameField.onChange(event);
-                          handleSkuNameChange(index, event.currentTarget.value);
+                          void skuNameField.onChange(event);
+                          void handleSkuNameChange(
+                            index,
+                            event.currentTarget.value,
+                          );
                         }}
                       />
                     </td>
@@ -122,8 +125,8 @@ export default function LineItemsSection({
                           Number.isFinite(field.quantity) ? field.quantity : 0
                         }
                         onChange={(event) => {
-                          quantityField.onChange(event);
-                          handleQuantityChange(
+                          void quantityField.onChange(event);
+                          void handleQuantityChange(
                             index,
                             event.currentTarget.value,
                           );
@@ -145,8 +148,8 @@ export default function LineItemsSection({
                               : 0
                           }
                           onChange={(event) => {
-                            unitPriceField.onChange(event);
-                            handleUnitPriceChange(
+                            void unitPriceField.onChange(event);
+                            void handleUnitPriceChange(
                               index,
                               event.currentTarget.value,
                             );

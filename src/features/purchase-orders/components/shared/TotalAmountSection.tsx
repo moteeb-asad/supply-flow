@@ -12,9 +12,7 @@ export default function TotalAmountSection({
       <div className="space-y-2 text-sm">
         <div className="flex justify-between text-muted">
           <span>Subtotal</span>
-          <span className="font-medium text-ink">
-            {formatAmount(subtotal)}
-          </span>
+          <span className="font-medium text-ink">{formatAmount(subtotal)}</span>
         </div>
         <div className="flex justify-between text-muted">
           <span>{taxLabel}</span>

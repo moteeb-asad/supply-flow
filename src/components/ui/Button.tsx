@@ -20,8 +20,7 @@ const variants: Record<ButtonVariant, string> = {
   primary:
     "bg-primary text-white border border-transparent hover:bg-primary/90",
   secondary: "bg-white text-muted border border-line-soft hover:bg-gray-50",
-  ghost:
-    "bg-transparent text-muted border border-transparent hover:bg-gray-50",
+  ghost: "bg-transparent text-muted border border-transparent hover:bg-gray-50",
   icon: "bg-transparent text-subtle hover:text-muted border-none p-0 font-normal",
 };
 

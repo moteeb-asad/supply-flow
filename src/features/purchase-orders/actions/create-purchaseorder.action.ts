@@ -5,8 +5,7 @@ import { randomBytes } from "crypto";
 import { createPurchaseOrderSchema } from "../validators/purchase-order.schema";
 
 type CreatePurchaseOrderActionResult =
-  | { error?: string; success?: string; purchaseOrderId?: string }
-  | undefined;
+  { error?: string; success?: string; purchaseOrderId?: string } | undefined;
 
 function buildPurchaseOrderNumber(): string {
   const now = new Date();

@@ -1,5 +1,4 @@
 import CategoryPicker from "@/src/features/shared/categories/components/CategoryPicker";
-import type { InventoryItemFormValues } from "../../types/form.types";
 import type { GeneralInformationSectionProps } from "../../types/form.types";
 export default function GeneralInformationSection({
   errors,
@@ -19,9 +18,7 @@ export default function GeneralInformationSection({
       </div>
       <div className="grid gap-4">
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-ink">
-            Item Name
-          </label>
+          <label className="text-sm font-semibold text-ink">Item Name</label>
           <input
             className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
             placeholder="e.g. Ergonomic Office Chair"

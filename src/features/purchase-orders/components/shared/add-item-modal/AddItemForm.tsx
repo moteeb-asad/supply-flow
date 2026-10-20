@@ -35,7 +35,7 @@ export default function AddItemForm({
     const search = query.trim();
     const delay = search ? 280 : 0;
 
-    const handle = setTimeout(async () => {
+    const loadSkus = async () => {
       setIsLoadingSkus(true);
       const results = await getPurchaseOrderSkusAction({
         search,
@@ -48,7 +48,9 @@ export default function AddItemForm({
 
       setSkuOptions(results);
       setIsLoadingSkus(false);
-    }, delay);
+    };
+
+    const handle = setTimeout(() => void loadSkus(), delay);
 
     return () => {
       active = false;

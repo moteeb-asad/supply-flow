@@ -38,13 +38,7 @@ export default function DataTable<
   T extends { id: string | number },
   P = unknown,
   TFilters extends object = Record<string, never>,
->({
-  config,
-  onRowClick,
-  refreshKey,
-  filters,
-  onFiltersChange,
-}: DataTableProps<T, P, TFilters>) {
+>({ config, onRowClick, refreshKey, filters }: DataTableProps<T, P, TFilters>) {
   // Filters
   const [filtersOpen, setFiltersOpen] = useState(false);
   const router = useRouter();

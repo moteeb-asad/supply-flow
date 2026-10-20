@@ -5,8 +5,7 @@ import { supplierFormSchema } from "@/src/features/suppliers/validators/supplier
 import { randomUUID } from "crypto";
 
 type ActionState =
-  | { error?: string; success?: string; resetKey?: string }
-  | undefined;
+  { error?: string; success?: string; resetKey?: string } | undefined;
 
 export async function createSupplierAction(
   _prevState: ActionState,

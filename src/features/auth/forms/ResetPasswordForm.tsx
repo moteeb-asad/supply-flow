@@ -83,7 +83,7 @@ export default function ResetPasswordForm() {
       }
     };
 
-    checkSession();
+    void checkSession();
   }, []);
 
   const {

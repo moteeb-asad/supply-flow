@@ -34,9 +34,7 @@ export default function SupplierHeader({
             Suppliers
           </Link>
           <span className="text-muted">/</span>
-          <span className="text-ink font-medium">
-            {supplier.name}
-          </span>
+          <span className="text-ink font-medium">{supplier.name}</span>
         </div>
       </div>
       <div className="px-8 py-6">

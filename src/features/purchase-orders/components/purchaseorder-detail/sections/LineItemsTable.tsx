@@ -62,18 +62,14 @@ export default function LineItemsTable({ lineItems }: LineItemsTableProps) {
 
                 return (
                   <tr
-                    className={
-                      isUnderReceived ? "bg-rose-50/30" : ""
-                    }
+                    className={isUnderReceived ? "bg-rose-50/30" : ""}
                     key={item.id}
                   >
                     <td className="px-4 py-2.5">
                       <p className="text-sm font-bold text-slate-900">
                         {item.sku_code}
                       </p>
-                      <p className="text-xs text-slate-500">
-                        {item.sku_name}
-                      </p>
+                      <p className="text-xs text-slate-500">{item.sku_name}</p>
                     </td>
                     <td className="px-4 py-2.5 text-right text-sm font-medium text-slate-900">
                       {formatQuantity(item.ordered_qty)}

@@ -20,23 +20,21 @@ export default function SupplierInformationCard({
           <span className="material-symbols-outlined !text-[18px] text-slate-400">
             person
           </span>
-          <p className="truncate text-sm text-slate-600">
-            {contactName}
-          </p>
+          <p className="truncate text-sm text-slate-600">{contactName}</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined !text-[18px] text-slate-400">mail</span>
-          <p className="truncate text-sm text-slate-600">
-            {contactEmail}
-          </p>
+          <span className="material-symbols-outlined !text-[18px] text-slate-400">
+            mail
+          </span>
+          <p className="truncate text-sm text-slate-600">{contactEmail}</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined !text-[18px] text-slate-400">call</span>
-          <p className="truncate text-sm text-slate-600">
-            {contactPhone}
-          </p>
+          <span className="material-symbols-outlined !text-[18px] text-slate-400">
+            call
+          </span>
+          <p className="truncate text-sm text-slate-600">{contactPhone}</p>
         </div>
 
         <button

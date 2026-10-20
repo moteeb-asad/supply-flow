@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { set } from "zod";
 
 export default function useDataTableState<TFilters extends object>(
   initialFilters: TFilters,
