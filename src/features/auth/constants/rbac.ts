@@ -27,6 +27,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
   operations_manager: PERMISSIONS.filter((p) => p !== "users:manage"),
   store_keeper: [
     "dashboard:view",
+    "inventory:view",
     "receiving:view",
     "receiving:create",
     "settings:view",
