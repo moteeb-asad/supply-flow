@@ -7,11 +7,18 @@ import InventoryTable from "../list/InventoryTable";
 import AddInventoryItemDrawer from "@/src/features/inventory/components/create-item/AddInventoryItemDrawer";
 import type { InventoryItemFiltersValue } from "../../types/query.types";
 import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
+import { useUser } from "@/src/providers/UserProvider";
+import { hasPermission } from "@/src/features/auth/utils/rbac";
 
 export default function InventoryManagementScreen() {
   const [filters, setFilters] = useState<InventoryItemFiltersValue>({});
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const queryClient = useQueryClient();
+  const { user } = useUser();
+  const canManageInventory = hasPermission(
+    user?.primaryRole,
+    "inventory:manage",
+  );
 
   return (
     <>
@@ -36,14 +43,16 @@ export default function InventoryManagementScreen() {
               </span>{" "}
               Export CSV
             </button>
-            <button
-              className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer"
-              onClick={() => setIsCreateDrawerOpen(true)}
-              type="button"
-            >
-              <span className="material-symbols-outlined text-lg">add</span>
-              <span role="button">Add Item</span>
-            </button>
+            {canManageInventory && (
+              <button
+                className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer"
+                onClick={() => setIsCreateDrawerOpen(true)}
+                type="button"
+              >
+                <span className="material-symbols-outlined text-lg">add</span>
+                <span role="button">Add Item</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -54,7 +63,7 @@ export default function InventoryManagementScreen() {
         <InventoryTable filters={filters} onFiltersChange={setFilters} />
       </ErrorBoundary>
 
-      {isCreateDrawerOpen && (
+      {canManageInventory && isCreateDrawerOpen && (
         <AddInventoryItemDrawer
           open={isCreateDrawerOpen}
           onClose={() => setIsCreateDrawerOpen(false)}

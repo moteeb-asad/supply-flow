@@ -1,6 +1,8 @@
 import { StockStatus } from "@/src/features/inventory/types/query.types";
 import { InventoryItem } from "../../types/domain.types";
 import { DataTableColumn } from "@/src/components/data-table/types";
+import { useUser } from "@/src/providers/UserProvider";
+import { hasPermission } from "@/src/features/auth/utils/rbac";
 
 const stockStatusStyles: Record<
   StockStatus,
@@ -91,21 +93,34 @@ export const inventoryTableColumns: DataTableColumn<InventoryItem>[] = [
     key: "actions",
     header: "Actions",
     className: "text-sm text-muted",
-    cell: (_row) => (
-      <div className="flex justify-end gap-2">
+    cell: () => <InventoryRowActions />,
+  },
+];
+
+// A component (not inline in cell) so it can read the user's permissions.
+function InventoryRowActions() {
+  const { user } = useUser();
+  const canManageInventory = hasPermission(
+    user?.primaryRole,
+    "inventory:manage",
+  );
+
+  return (
+    <div className="flex justify-end gap-2">
+      {canManageInventory && (
         <button
           type="button"
           className="rounded border border-slate-300 px-3 py-1 text-xs font-medium hover:bg-slate-50 transition-colors"
         >
           Adjust
         </button>
-        <button
-          type="button"
-          className="rounded border border-slate-300 px-3 py-1 text-xs font-medium hover:bg-slate-50 transition-colors"
-        >
-          History
-        </button>
-      </div>
-    ),
-  },
-];
+      )}
+      <button
+        type="button"
+        className="rounded border border-slate-300 px-3 py-1 text-xs font-medium hover:bg-slate-50 transition-colors"
+      >
+        History
+      </button>
+    </div>
+  );
+}
