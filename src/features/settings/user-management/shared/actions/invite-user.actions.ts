@@ -1,8 +1,8 @@
 "use server";
 
-import { createAdminClient } from "@/src/db/supabaseAdmin";
+import { createAdminSupabaseClient } from "@/src/db/supabaseAdmin";
 import { inviteUserSchema } from "../../users/validators/invite-user.schema";
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { requireSuperAdmin } from "@/src/features/auth/server/require-super-admin";
 
 type InviteUserResult =
@@ -29,7 +29,7 @@ export async function inviteUserAction(
       };
     }
 
-    const adminClient = createAdminClient();
+    const adminClient = createAdminSupabaseClient();
 
     // Use absolute URL with protocol and host
     const redirectUrl =
@@ -155,7 +155,7 @@ export async function inviteUserAction(
     }
 
     // 5. Insert invitation record
-    const supabase = await createClient();
+    const supabase = await createServerSupabaseClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();

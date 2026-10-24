@@ -12,7 +12,7 @@ import {
 import AuthShell from "@/src/features/auth/components/AuthShell";
 import AuthHeader from "@/src/features/auth/components/AuthHeader";
 import SubmitButton from "@/src/features/auth/components/SubmitButton";
-import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
+import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowser";
 
 export default function ResetPasswordForm() {
   const [state, formAction] = useActionState(resetPasswordAction, undefined);

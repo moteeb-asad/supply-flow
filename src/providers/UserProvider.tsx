@@ -7,7 +7,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
+import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowser";
 import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
 import type {
   ProfileRoleRow,

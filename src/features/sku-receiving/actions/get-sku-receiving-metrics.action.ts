@@ -1,13 +1,13 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import type { SkuReceivingMetrics, SkuReceivingMetricsInput } from "../types";
 
 export async function getSkuReceivingMetricsAction({
   dayStart,
   monthStart,
 }: SkuReceivingMetricsInput) {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   const { data, error } = await supabase
     .rpc("get_sku_receiving_metrics", {

@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import type {
   GetActiveSuppliersInput,
   GetActiveSuppliersResult,
@@ -13,7 +13,7 @@ const MAX_LIMIT = 20;
 export async function getActiveSuppliersAction(
   input: GetActiveSuppliersInput = {},
 ): Promise<GetActiveSuppliersResult> {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const search = input.search?.trim();
   const limit = Math.min(Math.max(input.limit ?? DEFAULT_LIMIT, 1), MAX_LIMIT);
   const offset = Math.max(input.offset ?? 0, 0);

@@ -1,6 +1,6 @@
 "use server";
 
-import { createAdminClient } from "@/src/db/supabaseAdmin";
+import { createAdminSupabaseClient } from "@/src/db/supabaseAdmin";
 import { mapInvitation } from "../mappers/invitation.mapper";
 import { requireSuperAdmin } from "@/src/features/auth/server/require-super-admin";
 import { buildInvitationsQuery } from "../lib/build-invitations-query";
@@ -8,7 +8,7 @@ import { Filters } from "../../users/types/filters";
 
 export async function getInvitationsAction(params: Filters) {
   await requireSuperAdmin();
-  const adminClient = createAdminClient();
+  const adminClient = createAdminSupabaseClient();
 
   const { query, from, to } = buildInvitationsQuery(adminClient, params);
   const { data, count, error } = await query.range(from, to);

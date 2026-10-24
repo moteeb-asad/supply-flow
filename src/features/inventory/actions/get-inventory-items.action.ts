@@ -1,13 +1,13 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { InventoryItemQueryParams } from "../types/query.types";
 import { mapInventoryItem } from "../mappers/inventoryitem.mapper";
 
 export default async function getInventoryItemsAction(
   params: InventoryItemQueryParams,
 ) {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const { page, pageSize, search, filters } = params;
   const searchTerm = search?.trim();
   const selectedStockStatus = filters?.stockStatus;

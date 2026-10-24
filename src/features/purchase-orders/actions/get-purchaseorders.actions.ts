@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import type {
   PurchaseOrder,
   PurchaseOrdersFiltersValue,
@@ -37,7 +37,7 @@ function mapPurchaseOrderDTO(row: PurchaseOrderRow): PurchaseOrder {
 export async function getPurchaseOrdersAction(
   params: PurchaseOrdersQueryParams,
 ) {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const { page, pageSize, search, filters } = params;
   const searchTerm = search?.trim();
 

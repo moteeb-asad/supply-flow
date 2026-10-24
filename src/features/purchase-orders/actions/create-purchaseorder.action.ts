@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { randomBytes } from "crypto";
 import { createPurchaseOrderSchema } from "../validators/purchase-order.schema";
 
@@ -44,7 +44,7 @@ export async function createPurchaseOrderAction(
     };
   }
 
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -202,7 +202,7 @@ export async function createPurchaseOrderAction(
 //     return { success: false, error: "Add at least one valid line item." };
 //   }
 
-//   const supabase = await createClient();
+//   const supabase = await createServerSupabaseClient();
 //   const {
 //     data: { user },
 //   } = await supabase.auth.getUser();
