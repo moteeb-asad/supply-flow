@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { getFilterDate } from "@/src/lib/date-range-utils";
 import type { SkuReceivingItem, SkuReceivingQueryParams } from "../types";
 
@@ -8,7 +8,7 @@ const LIST_COLUMNS =
   "id, purchase_order_id, po_number, supplier_id, supplier_name, receipt_datetime, receiving_location, status, sku_count, qty_ordered, qty_received, qty_rejected, qty_expected";
 
 export async function getSkuReceivingsAction(params: SkuReceivingQueryParams) {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const { page, pageSize, search, filters } = params;
   // Characters that would break PostgREST's or() filter syntax.
   const searchTerm = search?.trim().replace(/[,()]/g, "");

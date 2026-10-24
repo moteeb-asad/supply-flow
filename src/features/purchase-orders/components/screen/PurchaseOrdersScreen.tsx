@@ -1,6 +1,6 @@
 "use client";
 
-import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
+import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowser";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import CreatePurchaseOrderDrawer from "../create-po/CreatePurchaseOrderDrawer";

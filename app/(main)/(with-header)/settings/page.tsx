@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { redirect } from "next/navigation";
 import {
   getRoleFromAppMetadata,
@@ -7,7 +7,7 @@ import {
 } from "@/src/features/auth/utils/rbac";
 
 export default async function SettingsPage() {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

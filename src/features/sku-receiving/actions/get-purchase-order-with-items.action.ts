@@ -1,13 +1,13 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { RECEIVABLE_PO_STATUSES } from "../constants/statuses";
 import type { PurchaseOrderWithItemsRow } from "../types";
 
 export async function getPurchaseOrderWithItemsAction(
   purchaseOrderId: string,
 ): Promise<PurchaseOrderWithItemsRow | null> {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   const { data, error } = await supabase
     .from("purchase_orders")

@@ -1,10 +1,10 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { changePasswordSchema } from "../validators/password.schema";
 
 export async function changePassword(formData: FormData) {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   // Get current user
   const {

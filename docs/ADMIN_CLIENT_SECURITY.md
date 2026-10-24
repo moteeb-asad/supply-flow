@@ -29,11 +29,11 @@ When using `adminClient` (Supabase service role key) in this project, **strictly
 ```typescript
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
-import { createAdminClient } from "@/src/db/supabaseAdmin";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
+import { createAdminSupabaseClient } from "@/src/db/supabaseAdmin";
 
 export async function adminOnlyAction() {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   // Step 1: Get user
   const {
@@ -53,7 +53,7 @@ export async function adminOnlyAction() {
   }
 
   // Step 3: Now safe to use adminClient
-  const adminClient = createAdminClient();
+  const adminClient = createAdminSupabaseClient();
   const { data } = await adminClient.from("sensitive_table").select("*");
 
   return { data };
@@ -130,17 +130,17 @@ console.warn(`Unauthorized access attempt to ${actionName} by user ${user.id}`);
 
 ```typescript
 // Bad: Conditional client selection
-const client = isAdmin ? createAdminClient() : supabase;
+const client = isAdmin ? createAdminSupabaseClient() : supabase;
 
 // Good: Separate functions
 async function regularUserAction() {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   // ...
 }
 
 async function adminOnlyAction() {
   // Check permission first
-  const adminClient = createAdminClient();
+  const adminClient = createAdminSupabaseClient();
   // ...
 }
 ```

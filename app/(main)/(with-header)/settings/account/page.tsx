@@ -1,9 +1,9 @@
 import ProfileCard from "@/src/features/settings/account/components/ProfileCard";
 import SecuritySection from "@/src/features/settings/account/components/SecuritySection";
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 
 export default async function AccountSettingsPage() {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
