@@ -1,8 +1,7 @@
 "use client";
 
-import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowser";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import CreatePurchaseOrderDrawer from "../create-po/CreatePurchaseOrderDrawer";
 import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/list/PurchaseOrdersMetrics";
 import PurchaseOrdersStatusTabs from "@/src/features/purchase-orders/components/list/PurchaseOrdersStatusTabs";
@@ -10,35 +9,13 @@ import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/
 import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
 import { useOpenFromQueryParam } from "@/src/hooks/useOpenFromQueryParam";
 import { PurchaseOrdersFiltersValue } from "../../types";
+import { usePurchaseOrdersRealtime } from "../../hooks/usePurchaseOrdersRealtime";
 
 export default function PurchaseOrdersScreen() {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useOpenFromQueryParam();
   const [filters, setFilters] = useState<PurchaseOrdersFiltersValue>({});
-  const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const channel = supabase
-      .channel("purchase-orders-live")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "purchase_orders",
-        },
-        () => {
-          void queryClient.invalidateQueries({
-            queryKey: ["purchase-orders-table"],
-          });
-        },
-      )
-      .subscribe();
-
-    return () => {
-      void supabase.removeChannel(channel);
-    };
-  }, [queryClient, supabase]);
+  usePurchaseOrdersRealtime();
 
   return (
     <>

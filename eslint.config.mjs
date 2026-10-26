@@ -4,6 +4,17 @@ import nextTs from "eslint-config-next/typescript";
 import prettier from "eslint-config-prettier/flat";
 import tseslint from "typescript-eslint";
 
+const nextRouterPath = {
+  name: "next/router",
+  message: "Use next/navigation in the App Router.",
+};
+
+const adminClientPath = {
+  name: "@/src/db/supabaseAdmin",
+  message:
+    "The admin client bypasses RLS. Import it only in server actions or server folders.",
+};
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
@@ -42,17 +53,7 @@ const eslintConfig = defineConfig([
       "no-restricted-imports": [
         "error",
         {
-          paths: [
-            {
-              name: "next/router",
-              message: "Use next/navigation in the App Router.",
-            },
-            {
-              name: "@/src/db/supabaseAdmin",
-              message:
-                "The admin client bypasses RLS. Import it only in server actions or server folders.",
-            },
-          ],
+          paths: [nextRouterPath, adminClientPath],
         },
       ],
     },
@@ -64,12 +65,42 @@ const eslintConfig = defineConfig([
       "no-restricted-imports": [
         "error",
         {
-          paths: [
+          paths: [nextRouterPath],
+        },
+      ],
+    },
+  },
+  {
+    // UI files must not access the database or the network directly. Use a
+    // hook (hooks/), a server action (actions/) or a server loader (server/).
+    files: [
+      "src/components/**",
+      "src/features/**/components/**",
+      "src/features/**/forms/**",
+    ],
+    rules: {
+      // Flat config replaces this rule for these files, so the shared paths
+      // are repeated here; leaving them out would drop the admin-client rule.
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [nextRouterPath, adminClientPath],
+          patterns: [
             {
-              name: "next/router",
-              message: "Use next/navigation in the App Router.",
+              group: ["@/src/db/*", "@supabase/*"],
+              allowTypeImports: true,
+              message:
+                "No database access in UI. Move it into a hook, server action or server loader.",
             },
           ],
+        },
+      ],
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "CallExpression[callee.name='fetch']",
+          message:
+            "No fetch() in UI. Use a server action, server loader or React Query hook.",
         },
       ],
     },
