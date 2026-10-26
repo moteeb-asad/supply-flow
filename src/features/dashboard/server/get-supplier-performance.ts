@@ -1,4 +1,4 @@
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import type {
   SupplierPerformanceRow,
   SupplierPerformanceTrends,
@@ -17,7 +17,7 @@ const weekLabelFormatter = new Intl.DateTimeFormat("en-US", {
 // Server-only loader: the SQL function does all aggregation and returns at most
 // TOP_SUPPLIERS x WEEKS rows; this only reshapes them for the chart.
 export async function getSupplierPerformance(): Promise<SupplierPerformanceTrends | null> {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const timezone = await getRequestTimezone();
 
   const { data, error } = await supabase.rpc(

@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import type { SupplierFormValues } from "@/src/features/suppliers/types/suppliers.types";
 import { supplierFormSchema } from "@/src/features/suppliers/validators/suppliers.schema";
 
@@ -19,7 +19,7 @@ export async function updateSupplierAction(
       return { success: false, error: firstError?.message ?? "Invalid data" };
     }
 
-    const supabase = await createClient();
+    const supabase = await createServerSupabaseClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();

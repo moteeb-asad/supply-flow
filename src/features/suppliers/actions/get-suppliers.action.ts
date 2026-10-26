@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import type {
   CategoryFilterValue,
   Supplier,
@@ -15,7 +15,7 @@ import type { GetSuppliersInput } from "@/src/features/suppliers/types/suppliers
 export async function getSuppliersAction(
   input: GetSuppliersInput = {},
 ): Promise<SuppliersPage> {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const pageSize = Math.min(
     Math.max(input.limit ?? SUPPLIERS_PAGE_SIZE, 1),
     MAX_PAGE_SIZE,

@@ -2,7 +2,7 @@
 
 import { resetPasswordAction } from "@/src/features/auth/actions/auth.actions";
 import { Input } from "@/src/components/ui/Input";
-import { useActionState, useEffect, useState, startTransition } from "react";
+import { useActionState, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -12,79 +12,14 @@ import {
 import AuthShell from "@/src/features/auth/components/AuthShell";
 import AuthHeader from "@/src/features/auth/components/AuthHeader";
 import SubmitButton from "@/src/features/auth/components/SubmitButton";
-import { createBrowserSupabaseClient } from "@/src/db/supabaseBrowserClient";
+import { useRecoverySession } from "@/src/features/auth/hooks/useRecoverySession";
 
 export default function ResetPasswordForm() {
-  const [state, formAction] = useActionState(resetPasswordAction, undefined);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [sessionReady, setSessionReady] = useState(false);
-  const [isInvite, setIsInvite] = useState(false);
-  const [tokenError, setTokenError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const hashParams = new URLSearchParams(
-          window.location.hash.substring(1),
-        );
-        const searchParams = new URLSearchParams(window.location.search);
-        const accessToken = hashParams.get("access_token");
-        const refreshToken = hashParams.get("refresh_token");
-        const hashType = hashParams.get("type");
-        const queryType = searchParams.get("type");
-        const type = hashType || queryType;
-        const code = searchParams.get("code");
-
-        setIsInvite(type === "invite");
-
-        const supabase = createBrowserSupabaseClient();
-
-        if (accessToken && refreshToken) {
-          const { error } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          });
-
-          if (error) {
-            console.error("Supabase setSession error:", error);
-            setTokenError(
-              "Invalid or expired reset link. Please request a new one.",
-            );
-          }
-        } else if (!code && (type === "recovery" || type === "invite")) {
-          setTokenError(
-            "Invalid or expired reset link. Please request a new one.",
-          );
-        }
-
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-
-        if (
-          !session &&
-          (accessToken ||
-            refreshToken ||
-            code ||
-            type === "recovery" ||
-            type === "invite")
-        ) {
-          setTokenError(
-            "Invalid or expired reset link. Please request a new one.",
-          );
-        }
-      } catch (error) {
-        console.error("Reset password session check failed:", error);
-        setTokenError(
-          "Unable to reach the authentication server. Check your Supabase URL and key.",
-        );
-      } finally {
-        setSessionReady(true);
-      }
-    };
-
-    void checkSession();
-  }, []);
+  const [state, formAction, isPending] = useActionState(
+    resetPasswordAction,
+    undefined,
+  );
+  const { sessionReady, isInvite, tokenError } = useRecoverySession();
 
   const {
     register,
@@ -93,12 +28,6 @@ export default function ResetPasswordForm() {
   } = useForm<ResetPasswordInput>({
     resolver: zodResolver(resetPasswordSchema),
   });
-
-  useEffect(() => {
-    if (state?.error || state?.success) {
-      setIsSubmitting(false);
-    }
-  }, [state]);
 
   return (
     <AuthShell>
@@ -153,7 +82,6 @@ export default function ResetPasswordForm() {
           className="space-y-6"
           noValidate
           onSubmit={handleSubmit((data) => {
-            setIsSubmitting(true);
             const formData = new FormData();
             formData.append("password", data.password);
             formData.append("confirmPassword", data.confirmPassword);
@@ -212,7 +140,7 @@ export default function ResetPasswordForm() {
             className="cursor-pointer"
             text={isInvite ? "Create Password" : "Update Password"}
             loadingText={isInvite ? "Creating..." : "Updating..."}
-            loading={isSubmitting}
+            loading={isPending}
             icon={
               <span className="material-symbols-outlined text-xl">
                 {isInvite ? "check_circle" : "lock_reset"}

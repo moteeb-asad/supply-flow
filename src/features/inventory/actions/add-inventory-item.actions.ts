@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { randomUUID } from "crypto";
 import { AddInventoryItemSchema } from "../validators/inventory-item.schema";
 
@@ -30,7 +30,7 @@ export default async function addInventoryItemAction(
     };
   }
 
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

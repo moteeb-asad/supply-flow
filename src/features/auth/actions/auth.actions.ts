@@ -1,7 +1,7 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
-import { createAdminClient } from "@/src/db/supabaseAdmin";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
+import { createAdminSupabaseClient } from "@/src/db/supabaseAdmin";
 import { redirect } from "next/navigation";
 import {
   loginSchema,
@@ -9,7 +9,7 @@ import {
 } from "@/src/features/auth/validators/auth.schema";
 
 async function markInvitationAccepted(email: string, userId: string) {
-  const adminClient = createAdminClient();
+  const adminClient = createAdminSupabaseClient();
   const normalizedEmail = email.toLowerCase();
 
   const { data: invitation, error: invitationLookupError } = await adminClient
@@ -61,7 +61,7 @@ export async function loginAction(
     };
   }
 
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -78,7 +78,7 @@ export async function loginAction(
 }
 
 export async function logoutAction() {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   await supabase.auth.signOut();
 
   redirect("/login");
@@ -88,7 +88,7 @@ export async function logoutAction() {
 // signing keys, no Supabase Auth round trip). Metadata is the token snapshot,
 // so profile edits appear after the next token refresh.
 export async function getCurrentUser() {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const { data } = await supabase.auth.getClaims();
   const claims = data?.claims;
 
@@ -112,7 +112,7 @@ export async function requestPasswordResetAction(
     return { error: "Email is required." };
   }
 
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   // Use absolute URL with protocol and host
   const redirectUrl =
@@ -151,7 +151,7 @@ export async function resetPasswordAction(
     return { error: firstError.message };
   }
 
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   // Check if user is authenticated (has valid session from recovery token)
   const {

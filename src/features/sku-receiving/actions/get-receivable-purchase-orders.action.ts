@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { RECEIVABLE_PO_STATUSES } from "../constants/statuses";
 import { mapPurchaseOrderRowsToOptions } from "../mappers/purchase-order.mapper";
 import type {
@@ -15,7 +15,7 @@ const MAX_LIMIT = 20;
 export async function getReceivablePurchaseOrdersAction(
   input: GetReceivablePurchaseOrdersInput = {},
 ): Promise<GetReceivablePurchaseOrdersResult> {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const search = input.search?.trim();
   const limit = Math.min(Math.max(input.limit ?? DEFAULT_LIMIT, 1), MAX_LIMIT);
   const offset = Math.max(input.offset ?? 0, 0);

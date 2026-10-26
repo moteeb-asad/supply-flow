@@ -3,9 +3,9 @@ import { cookies } from "next/headers";
 
 /**
  * Server-side Supabase client for Server Components, Server Actions, and Route Handlers
- * Do NOT import this in Client Components - use supabaseBrowserClient.ts instead
+ * Do NOT import this in Client Components - use supabaseBrowser.ts instead
  */
-export async function createClient() {
+export async function createServerSupabaseClient() {
   const cookieStore = await cookies();
 
   return createServerClient(

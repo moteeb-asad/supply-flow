@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { createPurchaseOrderSchema } from "../validators/purchase-order.schema";
 
 type UpdatePurchaseOrderActionResult =
@@ -46,7 +46,7 @@ export async function updatePurchaseOrderAction(
 
   const values = validation.data;
 
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

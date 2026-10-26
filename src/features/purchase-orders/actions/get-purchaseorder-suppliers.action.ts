@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import type {
   GetPurchaseOrderSuppliersInput,
   PurchaseOrderSupplierOption,
@@ -12,7 +12,7 @@ const MAX_LIMIT = 20;
 export async function getPurchaseOrderSuppliersAction(
   input: GetPurchaseOrderSuppliersInput = {},
 ): Promise<PurchaseOrderSupplierOption[]> {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const search = input.search?.trim();
   const limit = Math.min(Math.max(input.limit ?? DEFAULT_LIMIT, 1), MAX_LIMIT);
 

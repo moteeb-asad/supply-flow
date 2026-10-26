@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import type { Supplier } from "@/src/features/suppliers/types/suppliers.types";
 
 const isUuid = (value: string) =>
@@ -15,7 +15,7 @@ export async function getSupplierAction(
     return null;
   }
 
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   const { data, error } = await supabase
     .from("suppliers")

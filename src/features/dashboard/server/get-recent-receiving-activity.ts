@@ -1,4 +1,4 @@
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import type { RecentReceivingActivityItem } from "../types";
 
 const RECENT_ACTIVITY_LIMIT = 5;
@@ -7,7 +7,7 @@ const RECENT_ACTIVITY_LIMIT = 5;
 export async function getRecentReceivingActivity(): Promise<
   RecentReceivingActivityItem[] | null
 > {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   const { data, error } = await supabase.rpc("get_recent_receiving_activity", {
     p_limit: RECENT_ACTIVITY_LIMIT,
