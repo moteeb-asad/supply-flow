@@ -1,6 +1,6 @@
 "use server";
 
-import { createAdminClient } from "@/src/db/supabaseAdmin";
+import { createAdminSupabaseClient } from "@/src/db/supabaseAdmin";
 import { requireSuperAdmin } from "@/src/features/auth/server/require-super-admin";
 import { buildUsersQuery } from "@/src/features/settings/user-management/users/lib/build-users-query";
 import type { Filters } from "@/src/features/settings/user-management/users/types/filters";
@@ -9,7 +9,7 @@ import { mapUser } from "../mappers/user.mapper";
 export async function getUsersAction(params: Filters) {
   await requireSuperAdmin();
 
-  const adminClient = createAdminClient();
+  const adminClient = createAdminSupabaseClient();
   const { query, from, to } = buildUsersQuery(adminClient, params);
 
   const { data, count, error } = await query.range(from, to);

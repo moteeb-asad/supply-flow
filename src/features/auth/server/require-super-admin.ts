@@ -1,8 +1,8 @@
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { hasPermission, isRole } from "@/src/features/auth/utils/rbac";
 
 export async function requireSuperAdmin() {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

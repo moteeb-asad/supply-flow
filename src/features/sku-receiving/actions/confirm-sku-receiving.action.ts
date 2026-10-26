@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { NO_VARIANCE_REASON } from "../constants/form-options";
 import { startReceivingSchema } from "../validators/sku-receiving.schema";
 import type {
@@ -23,7 +23,7 @@ export async function confirmSkuReceivingAction(
   }
 
   const values = validation.data;
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   // Only ids and quantities are sent; the DB derives sku_id and remaining qty.
   const lineItems = values.line_items

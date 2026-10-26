@@ -204,6 +204,7 @@ npm start
 
 ## Testing
 
+- Before pushing: `npm run check` (format check, lint, typecheck and knip in one command; stops at the first failure)
 - Linting: `npm run lint` (type-aware ESLint, zero warnings allowed)
 - Type checking: `npm run typecheck` (`tsc --noEmit`, strict mode)
 - Formatting: `npm run format` to fix, `npm run format:check` to verify (Prettier)

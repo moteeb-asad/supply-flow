@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/src/db/supabaseClient";
+import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import type {
   PurchaseOrder,
   PurchaseOrderDetailLineItem,
@@ -108,7 +108,7 @@ export async function getPurchaseOrderAction(
     return null;
   }
 
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
 
   const { data, error } = await supabase
     .from("purchase_orders")

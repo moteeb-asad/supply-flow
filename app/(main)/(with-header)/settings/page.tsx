@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { createClient } from "@/src/db/supabaseClient";
+import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
 import { redirect } from "next/navigation";
 import {
   getRoleFromAppMetadata,
@@ -7,10 +7,7 @@ import {
 } from "@/src/features/auth/utils/rbac";
 
 export default async function SettingsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   if (!user) {
     redirect("/login");
