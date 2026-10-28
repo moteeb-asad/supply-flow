@@ -87,6 +87,7 @@ export type EditSupplierDrawerProps = {
 
 export type CreateSupplierDrawerProps = {
   onClose?: () => void;
+  onSuccess?: () => void;
 };
 
 export type GetSuppliersInput = {

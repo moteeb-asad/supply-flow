@@ -6,6 +6,7 @@ import type {
   StockStatus,
 } from "./types/query.types";
 import { inventoryItemsFetcher } from "./fetchers/inventoryitems.fetcher";
+import { inventoryKeys } from "@/src/features/inventory/constants/query-keys";
 import InventoryTableFilters from "@/src/features/inventory/components/list/InventoryTableFilters";
 import { inventoryTableColumns } from "./components/list/InventoryTableColumns";
 import {
@@ -39,7 +40,7 @@ export const InventoryTableConfig: DataTableConfig<
   InventoryItemFiltersValue
 > = {
   fetcher: inventoryItemsFetcher,
-  queryKey: (params) => ["inventory-table", params],
+  queryKey: (params) => inventoryKeys.table(params),
   filters: InventoryTableFilters,
   columns: inventoryTableColumns,
   searchPlaceholder: "Search by SKU or item name...",

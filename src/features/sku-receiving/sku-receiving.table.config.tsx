@@ -5,6 +5,10 @@ import { skuReceivingFetcher } from "./fetchers/sku-receiving.fetcher";
 import { skuReceivingTableColumns } from "./components/list/SkuReceivingColumns";
 import SkuReceivingFilters from "./components/list/SkuReceivingFilters";
 import { SKU_RECEIVING_STATUSES } from "./constants/statuses";
+import {
+  receivingKeys,
+  RECEIVING_REFETCH_INTERVAL_MS,
+} from "@/src/features/sku-receiving/constants/query-keys";
 import type {
   SKUReceivingStatus,
   SkuReceivingFiltersValue,
@@ -23,7 +27,8 @@ export const skuReceivingTableConfig: DataTableConfig<
   SkuReceivingFiltersValue
 > = {
   fetcher: skuReceivingFetcher,
-  queryKey: (params) => ["sku-receiving-table", params],
+  queryKey: (params) => receivingKeys.table(params),
+  refetchInterval: RECEIVING_REFETCH_INTERVAL_MS,
   filters: SkuReceivingFilters,
   columns: skuReceivingTableColumns,
   searchPlaceholder: "Search by PO# or supplier name...",

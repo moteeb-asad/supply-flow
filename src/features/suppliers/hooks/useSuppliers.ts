@@ -10,10 +10,11 @@ import type {
   SuppliersPage,
 } from "@/src/features/suppliers/types/suppliers.types";
 import { SUPPLIERS_PAGE_SIZE } from "@/src/features/suppliers/constants/pagination";
+import { supplierKeys } from "@/src/features/suppliers/constants/query-keys";
 
 export function useSuppliers({ category, search }: UseSuppliersParams) {
   const query = useInfiniteQuery({
-    queryKey: ["suppliers", { category, search }],
+    queryKey: supplierKeys.list({ category, search }),
     queryFn: ({ pageParam }) =>
       getSuppliersAction({
         category,
@@ -23,9 +24,6 @@ export function useSuppliers({ category, search }: UseSuppliersParams) {
       }),
     initialPageParam: null as SupplierCursor | null,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-    staleTime: 5 * 60_000, // 5 minutes
-    gcTime: 30 * 60_000, // 30 minutes
-    refetchOnWindowFocus: false,
   });
 
   const suppliers = useMemo<Supplier[]>(() => {

@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { purchaseOrderKeys } from "@/src/features/purchase-orders/constants/query-keys";
 import { StatCard } from "@/src/components/ui/StatCard";
 import { purchaseOrdersFetcher } from "@/src/features/purchase-orders/fetchers/purchaseorders.fetcher";
 import type { PurchaseOrder } from "@/src/features/purchase-orders/types";
 
 export default function PurchaseOrdersMetrics() {
   const { data, isPending } = useQuery({
-    queryKey: ["purchase-orders-metrics"],
+    queryKey: purchaseOrderKeys.metrics,
     queryFn: async () => {
       // Fetch all orders (up to 1000 for metrics)
       const result = await purchaseOrdersFetcher({ page: 1, pageSize: 1000 });

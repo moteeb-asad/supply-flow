@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getReceivablePurchaseOrdersAction } from "../../actions/get-receivable-purchase-orders.action";
 import { getPurchaseOrderWithItemsAction } from "../../actions/get-purchase-order-with-items.action";
+import { purchaseOrderKeys } from "@/src/features/purchase-orders/constants/query-keys";
 import { mapPurchaseOrderToLoadedPayload } from "../../mappers/purchase-order.mapper";
 import { formatDate } from "@/src/lib/utils";
 import type { PoLookupSectionProps, PurchaseOrderOption } from "../../types";
@@ -27,7 +28,7 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ["po-lookup-suggestions", debouncedQuery],
+      queryKey: purchaseOrderKeys.receivable(debouncedQuery),
       initialPageParam: 0,
       queryFn: ({ pageParam }) =>
         getReceivablePurchaseOrdersAction({

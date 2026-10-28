@@ -53,6 +53,8 @@ export type DataTableConfig<
   searchPlaceholder?: string;
   parseFiltersFromUrl?: (searchParams: URLSearchParams) => TFilters;
   writeFiltersToUrl?: (filters: TFilters, params: URLSearchParams) => void;
+  // Poll for changes by other users (ms). Paused while the tab is hidden.
+  refetchInterval?: number;
 };
 
 export type DataTableColumn<T> = {
@@ -77,6 +79,9 @@ export type DataTableProps<
 > = {
   config: DataTableConfig<T, P, TFilters>;
   refreshKey?: string | number;
+  // Changing this value moves the table back to page 1 (e.g. after a create,
+  // so the new row, sorted first, is visible).
+  resetPageKey?: number;
   onRowClick?: (row: T, event: React.MouseEvent) => void;
 
   filters: TFilters;

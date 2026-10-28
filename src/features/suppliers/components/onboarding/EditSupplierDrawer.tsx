@@ -10,12 +10,15 @@ type EditSupplierDrawerPropsWithSuccess = EditSupplierDrawerProps & {
 };
 import { updateSupplierAction } from "@/src/features/suppliers/actions/update-supplier.action";
 import { useState, useTransition } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { supplierKeys } from "@/src/features/suppliers/constants/query-keys";
 
 export function EditSupplierDrawer({
   onClose,
   supplier,
   onSuccess,
 }: EditSupplierDrawerPropsWithSuccess) {
+  const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | undefined>(undefined);
 
@@ -45,6 +48,7 @@ export function EditSupplierDrawer({
     startTransition(async () => {
       const result = await updateSupplierAction(supplier.id, values);
       if (result.success) {
+        void queryClient.invalidateQueries({ queryKey: supplierKeys.all });
         onSuccess?.();
         onClose?.();
       } else {

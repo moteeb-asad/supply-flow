@@ -62,7 +62,9 @@ export async function getPurchaseOrdersAction(
     `,
       { count: "exact" },
     )
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    // Tie-breaker: rows with the same created_at keep a stable order across pages.
+    .order("id", { ascending: false });
 
   if (searchTerm) {
     const { data: matchedSuppliers, error: supplierSearchError } =

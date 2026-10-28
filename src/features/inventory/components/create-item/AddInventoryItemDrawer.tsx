@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useTransition } from "react";
+import { useActionState, useEffect, useTransition } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { FormDrawer } from "@/src/components/ui/FormDrawer";
 import type { InventoryItemFormValues } from "@/src/features/inventory/types/form.types";
 import InventoryItemForm, {
@@ -8,13 +9,24 @@ import InventoryItemForm, {
 } from "@/src/features/inventory/components/shared/InventoryItemForm";
 import addInventoryItemAction from "../../actions/add-inventory-item.actions";
 import type { AddInventoryItemDrawerProps } from "../../types/component-props.types";
+import { inventoryKeys } from "@/src/features/inventory/constants/query-keys";
 
 export default function AddInventoryItemDrawer({
   onClose,
+  onSuccess,
 }: AddInventoryItemDrawerProps) {
+  const queryClient = useQueryClient();
   const [state, formAction] = useActionState(addInventoryItemAction, undefined);
   const [isPending, startTransition] = useTransition();
   const formKey = state?.resetKey ?? "initial";
+
+  useEffect(() => {
+    if (state?.success) {
+      void queryClient.invalidateQueries({ queryKey: inventoryKeys.all });
+      onSuccess?.();
+      onClose?.();
+    }
+  }, [state?.success, state?.resetKey, queryClient, onClose, onSuccess]);
 
   const handleDrawerSubmit = (values: InventoryItemFormValues) => {
     const formData = new FormData();

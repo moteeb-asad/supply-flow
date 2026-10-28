@@ -10,9 +10,11 @@ import { useRouter } from "next/navigation";
 export default function PurchaseOrdersTable({
   filters,
   onFiltersChange,
+  resetPageKey,
 }: {
   filters: PurchaseOrdersFiltersValue;
   onFiltersChange: (filters: PurchaseOrdersFiltersValue) => void;
+  resetPageKey?: number;
 }) {
   const router = useRouter();
   return (
@@ -25,6 +27,7 @@ export default function PurchaseOrdersTable({
       refreshKey={JSON.stringify(filters)}
       filters={filters}
       onFiltersChange={onFiltersChange}
+      resetPageKey={resetPageKey}
       onRowClick={(row) => {
         router.push(`/purchase-orders/${row.id}`);
       }}
