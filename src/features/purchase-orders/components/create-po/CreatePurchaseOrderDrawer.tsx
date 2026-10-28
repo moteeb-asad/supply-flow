@@ -2,6 +2,7 @@
 
 import { FormDrawer } from "@/src/components/ui/FormDrawer";
 import { useQueryClient } from "@tanstack/react-query";
+import { purchaseOrderKeys } from "@/src/features/purchase-orders/constants/query-keys";
 import {
   useActionState,
   useState,
@@ -24,6 +25,7 @@ import type { UseFieldArrayAppend } from "react-hook-form";
 export default function CreatePurchaseOrderDrawer({
   onClose,
   onAddItemClick,
+  onSuccess,
 }: CreatePurchaseOrderDrawerProps) {
   const queryClient = useQueryClient();
   const [state, formAction] = useActionState(
@@ -42,15 +44,11 @@ export default function CreatePurchaseOrderDrawer({
 
   useEffect(() => {
     if (state?.success && state?.purchaseOrderId) {
-      void queryClient.invalidateQueries({
-        queryKey: ["purchase-orders-table"],
-      });
-      void queryClient.invalidateQueries({
-        queryKey: ["purchase-orders-metrics"],
-      });
+      void queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all });
+      onSuccess?.();
       onClose?.();
     }
-  }, [state?.success, state?.purchaseOrderId, queryClient, onClose]);
+  }, [state?.success, state?.purchaseOrderId, queryClient, onClose, onSuccess]);
 
   const handleDrawerSubmit = async (values: PurchaseOrderFormValues) => {
     const formData = new FormData();

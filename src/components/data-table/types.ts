@@ -77,6 +77,9 @@ export type DataTableProps<
 > = {
   config: DataTableConfig<T, P, TFilters>;
   refreshKey?: string | number;
+  // Changing this value moves the table back to page 1 (e.g. after a create,
+  // so the new row, sorted first, is visible).
+  resetPageKey?: number;
   onRowClick?: (row: T, event: React.MouseEvent) => void;
 
   filters: TFilters;

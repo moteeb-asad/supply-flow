@@ -38,7 +38,13 @@ export default function DataTable<
   T extends { id: string | number },
   P = unknown,
   TFilters extends object = Record<string, never>,
->({ config, onRowClick, refreshKey, filters }: DataTableProps<T, P, TFilters>) {
+>({
+  config,
+  onRowClick,
+  refreshKey,
+  filters,
+  resetPageKey,
+}: DataTableProps<T, P, TFilters>) {
   // Filters
   const [filtersOpen, setFiltersOpen] = useState(false);
   const router = useRouter();
@@ -64,6 +70,14 @@ export default function DataTable<
   const setPage = (page: number) => {
     setPagination((p) => ({ ...p, page }));
   };
+
+  // Back to page 1 when the parent changes resetPageKey. Adjusting state during
+  // render (not in an effect) avoids an extra render with the old page.
+  const [prevResetPageKey, setPrevResetPageKey] = useState(resetPageKey);
+  if (resetPageKey !== prevResetPageKey) {
+    setPrevResetPageKey(resetPageKey);
+    setPagination((p) => ({ ...p, page: 1 }));
+  }
 
   const params = useMemo(
     () =>

@@ -3,6 +3,7 @@
 import { FormDrawer } from "@/src/components/ui/FormDrawer";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, useTransition } from "react";
+import { purchaseOrderKeys } from "@/src/features/purchase-orders/constants/query-keys";
 import { confirmSkuReceivingAction } from "../../actions/confirm-sku-receiving.action";
 import type {
   CreateReceivingDrawerProps,
@@ -17,8 +18,7 @@ const AFFECTED_QUERY_KEYS = [
   ["sku-receiving-table"],
   ["sku-receiving-metrics"],
   ["po-lookup-suggestions"],
-  ["purchase-orders-table"],
-  ["purchase-orders-metrics"],
+  purchaseOrderKeys.all,
   ["inventory-table"],
 ];
 
