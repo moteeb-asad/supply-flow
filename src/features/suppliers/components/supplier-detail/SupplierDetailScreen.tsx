@@ -10,7 +10,7 @@ export default function SupplierDetailScreen({
   supplier,
 }: SupplierDetailScreenProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { data: supplierData, refetch } = useSupplier(supplier.id);
+  const { data: supplierData } = useSupplier(supplier.id);
 
   const openEditDrawer = () => setDrawerOpen(true);
 
@@ -344,9 +344,6 @@ export default function SupplierDetailScreen({
         <EditSupplierDrawer
           supplier={supplierData!}
           onClose={() => setDrawerOpen(false)}
-          onSuccess={() => {
-            void refetch();
-          }}
         />
       )}
     </>

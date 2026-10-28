@@ -7,12 +7,26 @@ import type {
   SupplierFormValues,
 } from "@/src/features/suppliers/types/suppliers.types";
 import { createSupplierAction } from "@/src/features/suppliers/actions/create-supplier.action";
-import { useActionState, useTransition } from "react";
+import { useActionState, useEffect, useTransition } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { supplierKeys } from "@/src/features/suppliers/constants/query-keys";
 
-export function CreateSupplierDrawer({ onClose }: CreateSupplierDrawerProps) {
+export function CreateSupplierDrawer({
+  onClose,
+  onSuccess,
+}: CreateSupplierDrawerProps) {
+  const queryClient = useQueryClient();
   const [state, formAction] = useActionState(createSupplierAction, undefined);
   const [isPending, startTransition] = useTransition();
   const formKey = state?.resetKey ?? "initial";
+
+  useEffect(() => {
+    if (state?.success) {
+      void queryClient.invalidateQueries({ queryKey: supplierKeys.all });
+      onSuccess?.();
+      onClose?.();
+    }
+  }, [state?.success, state?.resetKey, queryClient, onClose, onSuccess]);
 
   const handleSubmit = (values: SupplierFormValues) => {
     const formData = new FormData();
