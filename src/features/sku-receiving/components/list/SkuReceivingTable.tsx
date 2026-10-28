@@ -10,6 +10,7 @@ import { skuReceivingTableConfig } from "../../sku-receiving.table.config";
 export default function SkuReceivingTable({
   filters,
   onFiltersChange,
+  resetPageKey,
 }: SkuReceivingTableProps) {
   return (
     <DataTable<
@@ -21,6 +22,7 @@ export default function SkuReceivingTable({
       refreshKey={JSON.stringify(filters)}
       filters={filters}
       onFiltersChange={onFiltersChange}
+      resetPageKey={resetPageKey}
     />
   );
 }

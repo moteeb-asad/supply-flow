@@ -134,6 +134,7 @@ export default function DataTable<
     queryKey,
     queryFn: () => config.fetcher(params),
     placeholderData: keepPreviousData,
+    refetchInterval: config.refetchInterval,
   });
 
   const data = queryData?.data ?? [];

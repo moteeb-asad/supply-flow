@@ -6,4 +6,7 @@ export const purchaseOrderKeys = {
   metrics: ["purchase-orders", "metrics"] as const,
   detail: (purchaseOrderId: string) =>
     ["purchase-orders", "detail", purchaseOrderId] as const,
+  // POs that can still be received (SKU receiving PO lookup).
+  receivable: (search: string) =>
+    ["purchase-orders", "receivable", search] as const,
 };

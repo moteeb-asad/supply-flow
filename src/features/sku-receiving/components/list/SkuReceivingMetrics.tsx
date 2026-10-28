@@ -4,6 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { StatCard } from "@/src/components/ui/StatCard";
 import { getSkuReceivingMetricsAction } from "../../actions/get-sku-receiving-metrics.action";
 import { getMetricsWindow } from "../../utils/metrics-window";
+import {
+  receivingKeys,
+  RECEIVING_REFETCH_INTERVAL_MS,
+} from "@/src/features/sku-receiving/constants/query-keys";
 
 const unitsFormatter = new Intl.NumberFormat("en-US");
 const valueFormatter = new Intl.NumberFormat("en-US", {
@@ -18,7 +22,7 @@ export default function SkuReceivingMetrics() {
   const metricsWindow = getMetricsWindow();
 
   const { data, isPending, isError } = useQuery({
-    queryKey: ["sku-receiving-metrics", metricsWindow.dayStart],
+    queryKey: receivingKeys.metrics(metricsWindow.dayStart),
     queryFn: async () => {
       const result = await getSkuReceivingMetricsAction(metricsWindow);
       if (!result.success) {
@@ -27,6 +31,7 @@ export default function SkuReceivingMetrics() {
       return result.data;
     },
     staleTime: 60_000,
+    refetchInterval: RECEIVING_REFETCH_INTERVAL_MS,
   });
 
   const display = (value: (n: number) => string, raw?: number) => {

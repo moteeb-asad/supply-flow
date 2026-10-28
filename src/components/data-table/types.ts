@@ -53,6 +53,8 @@ export type DataTableConfig<
   searchPlaceholder?: string;
   parseFiltersFromUrl?: (searchParams: URLSearchParams) => TFilters;
   writeFiltersToUrl?: (filters: TFilters, params: URLSearchParams) => void;
+  // Poll for changes by other users (ms). Paused while the tab is hidden.
+  refetchInterval?: number;
 };
 
 export type DataTableColumn<T> = {
