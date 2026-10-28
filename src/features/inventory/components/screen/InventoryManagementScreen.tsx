@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import InventoryMetrics from "../list/InventoryMetrics";
 import InventoryTable from "../list/InventoryTable";
 import AddInventoryItemDrawer from "@/src/features/inventory/components/create-item/AddInventoryItemDrawer";
@@ -13,7 +12,8 @@ import { hasPermission } from "@/src/features/auth/utils/rbac";
 export default function InventoryManagementScreen() {
   const [filters, setFilters] = useState<InventoryItemFiltersValue>({});
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
-  const queryClient = useQueryClient();
+  // Bumped after a create so the table returns to page 1 (newest first).
+  const [createdCount, setCreatedCount] = useState(0);
   const { user } = useUser();
   const canManageInventory = hasPermission(
     user?.primaryRole,
@@ -60,19 +60,18 @@ export default function InventoryManagementScreen() {
       <InventoryMetrics />
 
       <ErrorBoundary>
-        <InventoryTable filters={filters} onFiltersChange={setFilters} />
+        <InventoryTable
+          filters={filters}
+          onFiltersChange={setFilters}
+          resetPageKey={createdCount}
+        />
       </ErrorBoundary>
 
       {canManageInventory && isCreateDrawerOpen && (
         <AddInventoryItemDrawer
           open={isCreateDrawerOpen}
           onClose={() => setIsCreateDrawerOpen(false)}
-          onSuccess={() => {
-            void queryClient.invalidateQueries({
-              queryKey: ["inventory-items-table"],
-            });
-            setIsCreateDrawerOpen(false);
-          }}
+          onSuccess={() => setCreatedCount((count) => count + 1)}
         />
       )}
     </>
