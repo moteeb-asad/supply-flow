@@ -11,6 +11,8 @@ import SkuReceivingCreateDrawer from "../create-receiving/CreateReceivingDrawer"
 export default function SkuReceivingScreen() {
   const [filters, setFilters] = useState<SkuReceivingFiltersValue>({});
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useOpenFromQueryParam();
+  // Bumped after a receipt so the table returns to page 1 (newest first).
+  const [createdCount, setCreatedCount] = useState(0);
 
   return (
     <>
@@ -50,7 +52,11 @@ export default function SkuReceivingScreen() {
       </div>
       <div className="space-y-6">
         <ErrorBoundary>
-          <SkuReceivingTable filters={filters} onFiltersChange={setFilters} />
+          <SkuReceivingTable
+            filters={filters}
+            onFiltersChange={setFilters}
+            resetPageKey={createdCount}
+          />
         </ErrorBoundary>
       </div>
 
@@ -58,6 +64,7 @@ export default function SkuReceivingScreen() {
         <SkuReceivingCreateDrawer
           onClose={() => setIsCreateDrawerOpen(false)}
           onSuccess={() => {
+            setCreatedCount((count) => count + 1);
             setIsCreateDrawerOpen(false);
           }}
         />

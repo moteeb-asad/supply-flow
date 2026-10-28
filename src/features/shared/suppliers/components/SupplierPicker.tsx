@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getActiveSuppliersAction } from "@/src/features/shared/suppliers/actions/get-active-suppliers.action";
 import type { SharedSupplierOption } from "@/src/features/shared/suppliers/types";
 import type { SupplierPickerProps } from "../types";
+import { supplierKeys } from "@/src/features/suppliers/constants/query-keys";
 
 const PAGE_SIZE = 5;
 
@@ -45,7 +46,7 @@ export default function SupplierPicker({
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ["supplier-picker", debouncedQuery],
+      queryKey: supplierKeys.picker(debouncedQuery),
       initialPageParam: 0,
       queryFn: ({ pageParam }) =>
         getActiveSuppliersAction({

@@ -9,9 +9,11 @@ import {
 export default function InventoryTable({
   filters,
   onFiltersChange,
+  resetPageKey,
 }: {
   filters: InventoryItemFiltersValue;
   onFiltersChange: (filters: InventoryItemFiltersValue) => void;
+  resetPageKey?: number;
 }) {
   return (
     <DataTable<
@@ -22,6 +24,7 @@ export default function InventoryTable({
       config={InventoryTableConfig}
       filters={filters}
       onFiltersChange={onFiltersChange}
+      resetPageKey={resetPageKey}
     />
   );
 }

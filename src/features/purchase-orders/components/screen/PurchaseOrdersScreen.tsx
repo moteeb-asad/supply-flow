@@ -1,6 +1,5 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import CreatePurchaseOrderDrawer from "../create-po/CreatePurchaseOrderDrawer";
 import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/list/PurchaseOrdersMetrics";
@@ -9,13 +8,12 @@ import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/
 import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
 import { useOpenFromQueryParam } from "@/src/hooks/useOpenFromQueryParam";
 import { PurchaseOrdersFiltersValue } from "../../types";
-import { usePurchaseOrdersRealtime } from "../../hooks/usePurchaseOrdersRealtime";
 
 export default function PurchaseOrdersScreen() {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useOpenFromQueryParam();
   const [filters, setFilters] = useState<PurchaseOrdersFiltersValue>({});
-  const queryClient = useQueryClient();
-  usePurchaseOrdersRealtime();
+  // Bumped after a create so the table returns to page 1 (newest first).
+  const [createdCount, setCreatedCount] = useState(0);
 
   return (
     <>
@@ -64,7 +62,11 @@ export default function PurchaseOrdersScreen() {
       </div>
       <div className="space-y-6">
         <ErrorBoundary>
-          <PurchaseOrdersTable filters={filters} onFiltersChange={setFilters} />
+          <PurchaseOrdersTable
+            filters={filters}
+            onFiltersChange={setFilters}
+            resetPageKey={createdCount}
+          />
         </ErrorBoundary>
       </div>
       <div className="px-6 pb-6">
@@ -73,12 +75,7 @@ export default function PurchaseOrdersScreen() {
       {isCreateDrawerOpen && (
         <CreatePurchaseOrderDrawer
           onClose={() => setIsCreateDrawerOpen(false)}
-          onSuccess={() => {
-            void queryClient.invalidateQueries({
-              queryKey: ["purchase-orders-table"],
-            });
-            setIsCreateDrawerOpen(false);
-          }}
+          onSuccess={() => setCreatedCount((count) => count + 1)}
         />
       )}
     </>

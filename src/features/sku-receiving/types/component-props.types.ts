@@ -9,6 +9,7 @@ export type CreateReceivingDrawerProps = {
 export type SkuReceivingTableProps = {
   filters: SkuReceivingFiltersValue;
   onFiltersChange: (filters: SkuReceivingFiltersValue) => void;
+  resetPageKey?: number;
 };
 
 export type SkuReceivingFiltersProps = {

@@ -2,6 +2,7 @@
 
 import { FormDrawer } from "@/src/components/ui/FormDrawer";
 import { useQueryClient } from "@tanstack/react-query";
+import { purchaseOrderKeys } from "@/src/features/purchase-orders/constants/query-keys";
 import {
   useActionState,
   useState,
@@ -60,12 +61,7 @@ export default function EditPurchaseOrderDrawer({
 
   useEffect(() => {
     if (state?.success && state?.purchaseOrderId) {
-      void queryClient.invalidateQueries({
-        queryKey: ["purchase-orders-table"],
-      });
-      void queryClient.invalidateQueries({
-        queryKey: ["purchase-orders-metrics"],
-      });
+      void queryClient.invalidateQueries({ queryKey: purchaseOrderKeys.all });
       onSuccess?.();
       onClose?.();
     }

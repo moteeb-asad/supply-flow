@@ -3,6 +3,9 @@
 import { FormDrawer } from "@/src/components/ui/FormDrawer";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, useTransition } from "react";
+import { purchaseOrderKeys } from "@/src/features/purchase-orders/constants/query-keys";
+import { inventoryKeys } from "@/src/features/inventory/constants/query-keys";
+import { receivingKeys } from "@/src/features/sku-receiving/constants/query-keys";
 import { confirmSkuReceivingAction } from "../../actions/confirm-sku-receiving.action";
 import type {
   CreateReceivingDrawerProps,
@@ -14,12 +17,9 @@ const CREATE_RECEIVING_FORM_ID = "create-receiving-form";
 
 // Everything a confirmed receipt changes: receipts, PO lookup/status, stock.
 const AFFECTED_QUERY_KEYS = [
-  ["sku-receiving-table"],
-  ["sku-receiving-metrics"],
-  ["po-lookup-suggestions"],
-  ["purchase-orders-table"],
-  ["purchase-orders-metrics"],
-  ["inventory-table"],
+  receivingKeys.all,
+  purchaseOrderKeys.all, // includes the receivable PO lookup
+  inventoryKeys.all,
 ];
 
 export default function CreateReceivingDrawer({
