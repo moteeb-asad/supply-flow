@@ -16,12 +16,12 @@ export function DataTableBody<
   onRowClick?: (row: T, event: React.MouseEvent) => void;
 }) {
   return (
-    <tbody className="divide-y divide-line">
+    <tbody className="divide-y divide-line-soft text-[13px] text-ink">
       {data.length === 0 ? (
         <tr>
           <td
             colSpan={config.columns.length}
-            className="text-center py-10 text-sm font-medium text-muted"
+            className="py-12 text-center text-[13px] text-muted"
           >
             No results found
           </td>
@@ -30,14 +30,11 @@ export function DataTableBody<
         data.map((row: T) => (
           <tr
             key={row.id}
-            className={`hover:bg-slate-50/50 transition-colors ${config.rowHref ? "cursor-pointer" : ""}`}
+            className={`transition-colors hover:bg-background-light/60 ${config.rowHref ? "cursor-pointer" : ""}`}
             onClick={onRowClick ? (event) => onRowClick(row, event) : undefined}
           >
             {config.columns.map((col) => (
-              <td
-                key={col.key}
-                className={`px-4 py-2.5 ${col.className ?? ""}`}
-              >
+              <td key={col.key} className={`px-4 py-3 ${col.className ?? ""}`}>
                 {col.cell(row)}
               </td>
             ))}

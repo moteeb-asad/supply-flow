@@ -22,12 +22,16 @@ export default function FormErrorBanner({
 
   return (
     <div
-      className={`p-4 bg-danger/10 border border-danger/20 rounded-xl flex gap-3 ${align === "center" ? "items-center" : "items-start"} ${className}`.trim()}
+      role="alert"
+      className={`flex gap-2.5 rounded-card bg-danger-soft px-4 py-3 ${align === "center" ? "items-center" : "items-start"} ${className}`.trim()}
     >
-      <span className="material-symbols-outlined text-danger text-xl">
+      <span
+        aria-hidden="true"
+        className="material-symbols-outlined shrink-0 !text-[18px] text-danger"
+      >
         error
       </span>
-      <div className="text-sm text-danger font-medium">{message}</div>
+      <div className="text-[13px] font-medium text-danger">{message}</div>
     </div>
   );
 }

@@ -23,29 +23,34 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6 modal-overlay"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/30 px-4 py-6"
       role="dialog"
       aria-modal="true"
+      aria-label={title}
       onClick={(event) => {
         if (event.target === event.currentTarget) {
           onClose();
         }
       }}
     >
-      <div className="w-full max-w-[480px] overflow-hidden rounded-xl border border-line-soft bg-white shadow-2xl">
+      <div className="w-full max-w-[480px] overflow-hidden rounded-sheet bg-surface shadow-overlay">
         {(title || description) && (
-          <div className="px-8 pt-8 pb-4">
-            {title && <h2 className="text-xl font-bold text-ink">{title}</h2>}
+          <div className="px-6 pb-2 pt-5">
+            {title && (
+              <h2 className="text-lg font-semibold tracking-[-0.01em] text-ink">
+                {title}
+              </h2>
+            )}
             {description && (
-              <p className="mt-1 text-sm text-muted">{description}</p>
+              <p className="mt-0.5 text-[13px] text-muted">{description}</p>
             )}
           </div>
         )}
 
-        {children && <div className="px-8 py-4">{children}</div>}
+        {children && <div className="px-6 py-4">{children}</div>}
 
         {footer && (
-          <div className="flex flex-col gap-3 px-8 pt-4 pb-8 sm:flex-row">
+          <div className="flex flex-col-reverse gap-2 border-t border-line bg-background-light px-6 py-4 sm:flex-row sm:justify-end">
             {footer}
           </div>
         )}
