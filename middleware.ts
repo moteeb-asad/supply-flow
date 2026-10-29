@@ -112,8 +112,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Exclude: _next, static files, auth routes (login, forgot-password, reset-password)
+    // Exclude: _next, static files, app icons (icon, apple-icon), auth routes
+    // (login, forgot-password, reset-password)
     // This prevents middleware from running on /login after logout, saving ~200-500ms
-    "/((?!_next|favicon.ico|login|forgot-password|reset-password|api|.*\\.(?:css|js|map|json|png|jpg|jpeg|svg|woff2)).*)",
+    "/((?!_next|favicon.ico|icon|apple-icon|login|forgot-password|reset-password|api|.*\\.(?:css|js|map|json|png|jpg|jpeg|svg|woff2)).*)",
   ],
 };

@@ -21,7 +21,7 @@ export default function SubmitButton({
       type="submit"
       text={isLoading ? loadingText : text}
       icon={icon}
-      className={cn("py-2.5 text-sm", className)}
+      className={cn(className)}
     />
   );
 }
