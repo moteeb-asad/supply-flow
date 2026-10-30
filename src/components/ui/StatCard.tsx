@@ -70,12 +70,15 @@ export function StatCard({
 export function StatStrip({
   children,
   className,
+  "aria-label": ariaLabel,
 }: {
   children: React.ReactNode;
   className?: string;
+  "aria-label"?: string;
 }) {
   return (
     <section
+      aria-label={ariaLabel}
       className={cn(
         "grid gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-2 lg:grid-flow-col lg:grid-cols-none lg:auto-cols-fr",
         // Cells lose their own border; an odd last cell spans the row on sm.

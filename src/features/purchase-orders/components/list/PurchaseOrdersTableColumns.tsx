@@ -1,9 +1,7 @@
 import { DataTableColumn } from "@/src/components/data-table/types";
 import { PurchaseOrder, PurchaseOrderStatus } from "../../types";
-import {
-  formatAmount,
-  formatPurchaseOrderDate,
-} from "@/src/features/purchase-orders/utils/formatters";
+import { formatAmount } from "@/src/features/purchase-orders/utils/formatters";
+import { formatDate } from "@/src/lib/dates";
 
 const statusStyles: Record<
   PurchaseOrderStatus,
@@ -77,7 +75,7 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
     key: "order_date",
     header: "Order Date",
     className: "text-sm text-muted",
-    cell: (row) => formatPurchaseOrderDate(row.order_date),
+    cell: (row) => formatDate(row.order_date),
   },
   {
     key: "expected_delivery_date",
@@ -87,7 +85,7 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
       const isOverdue = row.status === "overdue";
       return (
         <span className={isOverdue ? "text-red-600 font-medium" : ""}>
-          {formatPurchaseOrderDate(row.expected_delivery_date)}
+          {formatDate(row.expected_delivery_date)}
         </span>
       );
     },

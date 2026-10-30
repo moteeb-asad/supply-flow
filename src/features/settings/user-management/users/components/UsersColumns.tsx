@@ -1,6 +1,7 @@
 import { DataTableColumn } from "@/src/components/data-table/types";
 import type { User } from "../types/user.types";
-import { formatRole, getInitials, formatLastLogin } from "@/src/lib/utils";
+import { formatRole, getInitials } from "@/src/lib/utils";
+import { formatRelative } from "@/src/lib/dates";
 import { getRoleBadgeClassName } from "../../shared/constants/role-badge";
 
 export const usersColumns: DataTableColumn<User>[] = [
@@ -46,7 +47,7 @@ export const usersColumns: DataTableColumn<User>[] = [
     header: "Last Login",
     cell: (user) => (
       <span className="text-sm text-muted">
-        {formatLastLogin(user.last_login_at)}
+        {formatRelative(user.last_login_at, "Never")}
       </span>
     ),
   },

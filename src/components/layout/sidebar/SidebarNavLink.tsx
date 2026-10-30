@@ -4,14 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { isActivePath } from "@/src/lib/navigation";
 import { cn } from "@/src/lib/utils";
+import AppIcon, { type AppIconName } from "@/src/components/ui/AppIcon";
 
 type SidebarNavLinkProps = {
   href: string;
-  icon: string;
+  icon: AppIconName;
   label: string;
-  // Number shown at the right, e.g. open purchase orders.
   count?: number;
-  // Small pill shown at the right, e.g. "Soon".
   badge?: string;
 };
 
@@ -36,16 +35,16 @@ export default function SidebarNavLink({
           : "text-muted hover:bg-surface/70 hover:text-ink",
       )}
     >
-      <span
-        aria-hidden="true"
+      <AppIcon
+        name={icon}
         className={cn(
-          "material-symbols-outlined !text-[18px]",
+          "size-[18px] shrink-0",
           isActive ? "text-ink" : "text-subtle",
         )}
-      >
-        {icon}
-      </span>
+      />
+
       <span className="truncate">{label}</span>
+
       {badge ? (
         <span className="ml-auto rounded-full border border-line px-1.5 text-[11px] leading-4 text-subtle">
           {badge}

@@ -8,17 +8,22 @@ export default function RecentReceivingActivityCard({
   children: ReactNode;
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-line-soft bg-white">
-      <div className="flex items-center justify-between border-b border-line-soft px-4 py-3">
-        <h4 className="text-sm font-bold">Recent Receiving Activity</h4>
+    <section
+      aria-labelledby="recent-receiving-title"
+      className="h-full min-w-0 overflow-hidden rounded-card border border-line"
+    >
+      <div className="flex items-center justify-between gap-3 px-5 py-4">
+        <h2 id="recent-receiving-title" className="text-[15px] font-semibold">
+          Recent receiving
+        </h2>
         <Link
-          className="text-xs font-bold text-primary hover:underline"
+          className="text-[13px] font-medium text-primary hover:underline"
           href="/sku-receiving"
         >
-          View All Logs
+          View all
         </Link>
       </div>
       {children}
-    </div>
+    </section>
   );
 }
