@@ -1,5 +1,6 @@
 import { DataTableColumn } from "@/src/components/data-table/types";
-import { formatRole, formatDate } from "@/src/lib/utils";
+import { formatRole } from "@/src/lib/utils";
+import { formatDate } from "@/src/lib/dates";
 import { Invitation } from "../types";
 import { getRoleBadgeClassName } from "../../shared/constants/role-badge";
 
@@ -35,9 +36,7 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
     key: "sent_at",
     header: "Sent Date",
     cell: (invite) => (
-      <span className="text-sm text-muted">
-        {invite.sent_at ? formatDate(invite.sent_at) : "-"}
-      </span>
+      <span className="text-sm text-muted">{formatDate(invite.sent_at)}</span>
     ),
   },
   {
@@ -51,7 +50,7 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
             : "text-sm text-muted"
         }
       >
-        {invite.expires_at ? formatDate(invite.expires_at) : "-"}
+        {formatDate(invite.expires_at)}
       </span>
     ),
   },

@@ -1,23 +1,23 @@
 import Link from "next/link";
+import { StatusPill } from "@/src/components/ui/StatusPill";
 import type { Role } from "@/src/features/auth/types";
 import { hasPermission } from "@/src/features/auth/utils/rbac";
-import {
-  SKU_RECEIVING_STATUSES,
-  SKU_RECEIVING_STATUS_STYLES,
-} from "@/src/features/sku-receiving/constants/statuses";
-import type { SKUReceivingStatus } from "@/src/features/sku-receiving/types";
 import { getRecentReceivingActivity } from "../../server/get-recent-receiving-activity";
-import { formatCount, formatRelativeTime } from "../../utils/format";
+import { formatRelative } from "@/src/lib/dates";
+import { formatCount } from "../../utils/format";
 import RecentReceivingActivityCard from "./RecentReceivingActivityCard";
 
 type RecentReceivingActivityProps = {
   role: Role | null;
 };
 
-const getStatusStyle = (status: string) =>
-  SKU_RECEIVING_STATUSES.includes(status as SKUReceivingStatus)
-    ? SKU_RECEIVING_STATUS_STYLES[status as SKUReceivingStatus]
-    : SKU_RECEIVING_STATUS_STYLES.pending;
+const HEADERS: { label: string; className: string }[] = [
+  { label: "Item", className: "px-5" },
+  { label: "Supplier", className: "px-3" },
+  { label: "Qty", className: "px-3 text-right" },
+  { label: "Status", className: "px-3" },
+  { label: "Received", className: "px-5 text-right" },
+];
 
 // Async Server Component in its own Suspense boundary: loads independently of
 // the KPI cards and the chart.
@@ -31,7 +31,7 @@ export default async function RecentReceivingActivity({
   if (!items) {
     return (
       <RecentReceivingActivityCard>
-        <p className="px-4 py-8 text-center text-sm text-muted">
+        <p className="border-t border-line px-5 py-10 text-center text-[13px] text-muted">
           Couldn&apos;t load recent activity. Please refresh the page.
         </p>
       </RecentReceivingActivityCard>
@@ -41,14 +41,14 @@ export default async function RecentReceivingActivity({
   if (items.length === 0) {
     return (
       <RecentReceivingActivityCard>
-        <div className="flex flex-col items-center gap-2 px-4 py-8 text-center">
-          <p className="text-sm text-muted">No receipts yet.</p>
+        <div className="flex flex-col items-center gap-2 border-t border-line px-5 py-10 text-center">
+          <p className="text-[13px] text-muted">No receipts yet.</p>
           {hasPermission(role, "receiving:create") ? (
             <Link
-              className="text-sm font-bold text-primary hover:underline"
-              href="/sku-receiving"
+              className="text-[13px] font-medium text-primary hover:underline"
+              href="/sku-receiving?create=1"
             >
-              Start Receiving
+              Start receiving
             </Link>
           ) : null}
         </div>
@@ -58,67 +58,63 @@ export default async function RecentReceivingActivity({
 
   return (
     <RecentReceivingActivityCard>
-      <div className="scrollbar-thin overflow-x-auto">
-        <table className="w-full min-w-[520px] text-left">
-          <thead className="border-b border-line-soft bg-slate-50">
-            <tr>
-              {["SKU / Item", "Vendor", "Qty", "Status", "Received"].map(
-                (header) => (
-                  <th
-                    key={header}
-                    className="whitespace-nowrap px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-muted"
-                  >
-                    {header}
-                  </th>
-                ),
-              )}
+      <div className="scrollbar-thin relative overflow-x-auto">
+        <table className="w-full min-w-[560px] border-collapse text-left text-[13px]">
+          <thead className="bg-background-light text-xs text-subtle">
+            <tr className="border-y border-line">
+              {HEADERS.map(({ label, className }) => (
+                <th
+                  key={label}
+                  scope="col"
+                  className={`${className} py-2.5 font-medium`}
+                >
+                  {label}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-line-soft">
             {items.map((item) => {
-              const style = getStatusStyle(item.receipt_status);
               const rejected = Number(item.qty_rejected);
+              const quantity = `${formatCount(Number(item.qty_received))}${
+                item.unit ? ` ${item.unit}` : ""
+              }`;
 
               return (
-                <tr key={item.line_item_id}>
-                  <td className="whitespace-nowrap px-4 py-2">
-                    <p className="text-[13px] font-semibold text-ink">
+                <tr
+                  key={item.line_item_id}
+                  className="hover:bg-background-light/60"
+                >
+                  <td className="px-5 py-3">
+                    <p className="font-medium">{item.sku_name}</p>
+                    <p className="font-mono text-xs text-subtle">
                       {item.sku_code}
                     </p>
-                    <p className="text-[11px] text-muted">{item.sku_name}</p>
                   </td>
-                  <td className="max-w-[160px] px-4 py-2">
+                  <td className="max-w-[180px] px-3 py-3">
                     <p
-                      className="truncate text-[13px] text-ink"
+                      className="truncate text-ink"
                       title={item.supplier_name ?? undefined}
                     >
-                      {item.supplier_name ?? "Unknown Supplier"}
+                      {item.supplier_name ?? "Unknown supplier"}
                     </p>
-                    <p className="truncate text-[11px] text-muted">
-                      #{item.po_number}
+                    <p className="font-mono text-xs text-subtle">
+                      {item.po_number}
                     </p>
                   </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-[13px] text-ink">
-                    {formatCount(Number(item.qty_received))}
-                    {item.unit ? ` ${item.unit}` : ""}
+                  <td className="whitespace-nowrap px-3 py-3 text-right">
+                    <p className="tabular-nums">{quantity}</p>
                     {rejected > 0 ? (
-                      <span className="ml-1.5 text-[11px] font-medium text-danger">
-                        · {formatCount(rejected)} rejected
-                      </span>
+                      <p className="text-xs text-danger">
+                        {formatCount(rejected)} rejected
+                      </p>
                     ) : null}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-2">
-                    <span
-                      className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-bold ${style.className}`}
-                    >
-                      <span
-                        className={`size-1.5 rounded-full ${style.dotClass}`}
-                      />
-                      {style.label}
-                    </span>
+                  <td className="px-3 py-3">
+                    <StatusPill status={item.receipt_status} />
                   </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-[11px] text-muted">
-                    {formatRelativeTime(item.receipt_datetime)}
+                  <td className="whitespace-nowrap px-5 py-3 text-right text-muted">
+                    {formatRelative(item.receipt_datetime)}
                   </td>
                 </tr>
               );

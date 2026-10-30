@@ -1,5 +1,5 @@
 import type { PurchaseOrder } from "@/src/features/purchase-orders/types";
-import { formatDateTime } from "@/src/features/purchase-orders/utils/formatters";
+import { formatDateTime } from "@/src/lib/dates";
 import type { TimelineEvent } from "@/src/features/purchase-orders/types";
 
 const statusLabels: Record<PurchaseOrder["status"], string> = {

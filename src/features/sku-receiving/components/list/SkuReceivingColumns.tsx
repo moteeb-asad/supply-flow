@@ -1,5 +1,5 @@
 import { DataTableColumn } from "@/src/components/data-table/types";
-import { formatDate } from "@/src/lib/utils";
+import { formatDate } from "@/src/lib/dates";
 import { SKU_RECEIVING_STATUS_STYLES } from "../../constants/statuses";
 import type { SkuReceivingItem } from "../../types";
 

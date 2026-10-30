@@ -1,9 +1,7 @@
 import { StatCard } from "@/src/components/ui/StatCard";
 import type { PurchaseOrder } from "../../../types";
-import {
-  formatPurchaseOrderAmount,
-  formatPurchaseOrderDate,
-} from "@/src/features/purchase-orders/utils/formatters";
+import { formatPurchaseOrderAmount } from "@/src/features/purchase-orders/utils/formatters";
+import { formatDate } from "@/src/lib/dates";
 
 type QuickStatsCardsProps = {
   purchaseOrder: PurchaseOrder;
@@ -40,13 +38,13 @@ export default function QuickStatsCards({
         {...cardProps}
         label="Order Date"
         icon="calendar_today"
-        value={formatPurchaseOrderDate(purchaseOrder.order_date)}
+        value={formatDate(purchaseOrder.order_date)}
       />
       <StatCard
         {...cardProps}
         label="Expected Delivery"
         icon="event_upcoming"
-        value={formatPurchaseOrderDate(purchaseOrder.expected_delivery_date)}
+        value={formatDate(purchaseOrder.expected_delivery_date)}
       />
       <StatCard
         {...cardProps}
