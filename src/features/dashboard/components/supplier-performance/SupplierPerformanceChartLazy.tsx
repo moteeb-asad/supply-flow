@@ -9,7 +9,7 @@ const SupplierPerformanceChartLazy = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-48 w-full animate-pulse rounded-lg bg-gray-50" />
+      <div className="h-52 w-full animate-pulse rounded-control bg-background-light" />
     ),
   },
 );

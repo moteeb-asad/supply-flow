@@ -1,4 +1,11 @@
-import type { SidebarMenuItem } from "@/src/types/navigation";
+import type { SidebarMenuGroup, SidebarMenuItem } from "@/src/types/navigation";
+
+// Group order and headings in the sidebar.
+export const sidebarGroups: { id: SidebarMenuGroup; label: string }[] = [
+  { id: "operations", label: "Operations" },
+  { id: "partners", label: "Partners" },
+  { id: "insights", label: "Insights" },
+];
 
 export const sidebarMenu: SidebarMenuItem[] = [
   {
@@ -6,35 +13,42 @@ export const sidebarMenu: SidebarMenuItem[] = [
     path: "/dashboard",
     icon: "dashboard",
     permission: "dashboard:view",
+    group: "operations",
   },
   {
-    label: "Suppliers",
-    path: "/suppliers",
-    icon: "local_shipping",
-    permission: "suppliers:view",
+    label: "Purchase orders",
+    path: "/purchase-orders",
+    icon: "purchaseOrders",
+    permission: "purchase_orders:view",
+    group: "operations",
+  },
+  {
+    label: "SKU receiving",
+    path: "/sku-receiving",
+    icon: "receiving",
+    permission: "receiving:view",
+    group: "operations",
   },
   {
     label: "Inventory",
     path: "/inventory",
-    icon: "package_2",
+    icon: "inventory",
     permission: "inventory:view",
+    group: "operations",
   },
   {
-    label: "Purchase Orders",
-    path: "/purchase-orders",
-    icon: "description",
-    permission: "purchase_orders:view",
+    label: "Suppliers",
+    path: "/suppliers",
+    icon: "suppliers",
+    permission: "suppliers:view",
+    group: "partners",
   },
   {
     label: "Reports",
     path: "/reports",
-    icon: "analytics",
+    icon: "reports",
     permission: "reports:view",
-  },
-  {
-    label: "SKU Receiving",
-    path: "/sku-receiving",
-    icon: "inventory_2",
-    permission: "receiving:view",
+    group: "insights",
+    badge: "Soon",
   },
 ];

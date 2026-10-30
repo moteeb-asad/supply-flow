@@ -4,7 +4,7 @@ import { getReceivablePurchaseOrdersAction } from "../../actions/get-receivable-
 import { getPurchaseOrderWithItemsAction } from "../../actions/get-purchase-order-with-items.action";
 import { purchaseOrderKeys } from "@/src/features/purchase-orders/constants/query-keys";
 import { mapPurchaseOrderToLoadedPayload } from "../../mappers/purchase-order.mapper";
-import { formatDate } from "@/src/lib/utils";
+import { formatDate } from "@/src/lib/dates";
 import type { PoLookupSectionProps, PurchaseOrderOption } from "../../types";
 
 const PAGE_SIZE = 5;

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/src/components/ui/Button";
 import ChangePasswordModal from "./ChangePasswordModal";
-import { formatDistanceToNow } from "date-fns";
+import { formatRelative } from "@/src/lib/dates";
 import { SecuritySectionProps } from "../types";
 
 export default function SecuritySection({
@@ -12,7 +12,7 @@ export default function SecuritySection({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const passwordChangedText = passwordChangedAt
-    ? `Last changed ${formatDistanceToNow(new Date(passwordChangedAt), { addSuffix: true })}`
+    ? `Last changed ${formatRelative(passwordChangedAt)}`
     : "Never changed";
 
   return (

@@ -7,15 +7,21 @@ export function DataTableHeader<
 >({ config }: { config: DataTableConfig<T, P, TFilters> }) {
   return (
     <thead>
-      <tr className="bg-slate-50 border-b border-line">
+      {/* Sunken, sentence case. Right-align number columns with headerClassName="text-right". */}
+      <tr className="border-b border-line bg-background-light">
         {config.columns.map((col) => (
           <th
             key={col.key}
-            className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-muted ${
+            scope="col"
+            className={`px-4 py-2.5 text-left text-xs font-medium text-subtle ${
               col.headerClassName ?? ""
             }${col.header === "Actions" ? " text-right" : ""}`}
           >
-            {col.header}
+            {col.header === "Actions" ? (
+              <span className="sr-only">Actions</span>
+            ) : (
+              col.header
+            )}
           </th>
         ))}
       </tr>
