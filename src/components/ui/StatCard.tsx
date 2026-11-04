@@ -27,6 +27,7 @@ export function StatCard({
 }: StatCardProps) {
   return (
     <div
+      data-testid="stat-card"
       className={cn(
         "flex items-center gap-3 rounded-lg border border-line-soft bg-white px-4 py-3",
         className,
