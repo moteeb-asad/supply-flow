@@ -48,10 +48,10 @@ export function CreateSupplierDrawer({
 
   return (
     <FormDrawer
-      title="Add New Supplier"
-      description="Fill in the details to onboard a new vendor."
-      submitLabel="Save & Onboard Supplier"
-      submittingLabel="Onboarding..."
+      title="Add supplier"
+      description="They show up in purchase orders once saved as active."
+      submitLabel="Add supplier"
+      submittingLabel="Adding..."
       formId={SUPPLIER_FORM_ID}
       isSubmitting={isPending}
       onClose={onClose}

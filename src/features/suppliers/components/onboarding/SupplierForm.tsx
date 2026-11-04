@@ -6,7 +6,7 @@ import type {
 } from "@/src/features/suppliers/types/suppliers.types";
 import { supplierFormSchema } from "@/src/features/suppliers/validators/suppliers.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { SupplierContactSection } from "./form-sections/SupplierContactSection";
 import { SupplierIdentitySection } from "./form-sections/SupplierIdentitySection";
 import { SupplierTermsSection } from "./form-sections/SupplierTermsSection";
@@ -40,18 +40,11 @@ export function SupplierForm({
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = useForm<SupplierFormValues>({
     resolver: zodResolver(supplierFormSchema),
     defaultValues: getSupplierDefaultValues(initialValues),
   });
-
-  const leadTimeDays =
-    useWatch({
-      control,
-      name: "leadTimeDays",
-    }) ?? 7;
 
   const fieldErrorCount = Object.values(errors).reduce(
     (count, error) => count + (error?.message ? 1 : 0),
@@ -62,7 +55,7 @@ export function SupplierForm({
 
   return (
     <form
-      className="flex-1 overflow-y-auto p-5 space-y-6"
+      className="flex-1 space-y-7 overflow-y-auto px-6 py-6"
       id={formId}
       noValidate
       onSubmit={handleSubmit((values) => onSubmit?.(values))}
@@ -70,11 +63,7 @@ export function SupplierForm({
       <FormErrorBanner message={bannerMessage} />
       <SupplierIdentitySection register={register} errors={errors} />
       <SupplierContactSection register={register} errors={errors} />
-      <SupplierTermsSection
-        register={register}
-        errors={errors}
-        leadTimeDays={leadTimeDays}
-      />
+      <SupplierTermsSection register={register} errors={errors} />
     </form>
   );
 }
