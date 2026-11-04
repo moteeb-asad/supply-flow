@@ -22,19 +22,24 @@ export default function SupplierSearch({
   }, [debounceMs, onSearchChange, value]);
 
   return (
-    <>
-      <div className="flex-1 min-w-[300px] max-w-md relative">
-        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xl">
-          search
-        </span>
-        <Input
-          className="w-full pl-11 pr-4 py-2.5 bg-white border border-line rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
-          placeholder="Search suppliers by name..."
-          type="text"
-          value={value}
-          onChange={(event) => setValue(event.target.value)}
-        />
-      </div>
-    </>
+    <div className="relative w-full max-w-xs">
+      <label htmlFor="supplier-search" className="sr-only">
+        Search suppliers
+      </label>
+      <span
+        aria-hidden="true"
+        className="material-symbols-outlined pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 !text-[16px] text-subtle"
+      >
+        search
+      </span>
+      <Input
+        id="supplier-search"
+        className="h-9 pl-8 text-[13px]"
+        placeholder="Search suppliers by name"
+        type="search"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+      />
+    </div>
   );
 }

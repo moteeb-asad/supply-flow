@@ -1,26 +1,21 @@
+const bar = "animate-pulse rounded bg-background-light";
+
+// Same footprint as SupplierCard so nothing shifts when the grid loads.
 function SkeletonCard() {
   return (
-    <div className="flex flex-col bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 p-5 gap-4">
+    <div className="flex flex-col rounded-card border border-line p-5">
       <div className="flex items-start justify-between">
-        <div className="size-14 rounded-lg bg-slate-200 animate-pulse"></div>
-        <div className="h-6 w-16 rounded-full bg-slate-100 animate-pulse"></div>
+        <div className={`size-10 rounded-control ${bar}`} />
+        <div className={`h-[22px] w-16 rounded-full ${bar}`} />
       </div>
-      <div className="flex flex-col gap-2">
-        <div className="h-5 w-3/4 rounded bg-slate-200 animate-pulse"></div>
-        <div className="h-4 w-1/2 rounded bg-slate-100 animate-pulse"></div>
+      <div className={`mt-4 h-4 w-3/4 ${bar}`} />
+      <div className={`mt-1.5 h-3.5 w-1/3 ${bar}`} />
+      <div className="mt-5 grid grid-cols-2 gap-3">
+        <div className={`h-9 ${bar}`} />
+        <div className={`h-9 ${bar}`} />
       </div>
-      <div className="flex flex-col gap-3 pt-2 border-t border-slate-50">
-        <div className="flex justify-between items-end h-12 gap-1">
-          <div className="flex-1 bg-slate-100 rounded-t-sm h-[60%] animate-pulse"></div>
-          <div className="flex-1 bg-slate-100 rounded-t-sm h-[80%] animate-pulse"></div>
-          <div className="flex-1 bg-slate-200 rounded-t-sm h-[100%] animate-pulse"></div>
-          <div className="flex-1 bg-slate-100 rounded-t-sm h-[70%] animate-pulse"></div>
-          <div className="flex-1 bg-slate-100 rounded-t-sm h-[90%] animate-pulse"></div>
-        </div>
-        <div className="flex justify-between text-[10px] text-slate-400">
-          <div className="h-3 w-10 rounded bg-slate-50 animate-pulse"></div>
-          <div className="h-3 w-10 rounded bg-slate-50 animate-pulse"></div>
-        </div>
+      <div className="mt-5 border-t border-line-soft pt-3">
+        <div className={`h-3.5 w-1/2 ${bar}`} />
       </div>
     </div>
   );
@@ -32,7 +27,7 @@ export default function SupplierGridSkeleton({
   count?: number;
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {Array.from({ length: count }).map((_, i) => (
         <SkeletonCard key={i} />
       ))}

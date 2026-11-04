@@ -1,5 +1,8 @@
 import SupplierCard from "../supplier-grid/SupplierCard";
+import { Button } from "@/src/components/ui/Button";
 import type { SupplierGridProps } from "@/src/features/suppliers/types/suppliers.types";
+
+const gridClassName = "grid gap-4 sm:grid-cols-2 xl:grid-cols-4";
 
 export default function SupplierGrid({
   suppliers,
@@ -9,36 +12,38 @@ export default function SupplierGrid({
 }: SupplierGridProps) {
   if (isLoading && suppliers.length === 0) {
     return (
-      <div className="border border-dashed border-line rounded-xl p-8 text-center text-sm text-muted">
+      <p className="rounded-card border border-dashed border-line p-8 text-center text-[13px] text-muted">
         Loading suppliers...
-      </div>
+      </p>
     );
   }
 
   if (suppliers.length === 0) {
     return (
-      <div className="border border-dashed border-line rounded-xl p-8 text-center text-sm text-muted">
+      <p className="rounded-card border border-dashed border-line p-8 text-center text-[13px] text-muted">
         No suppliers found.
-      </div>
+      </p>
     );
   }
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <ul className={gridClassName}>
         {suppliers.map((supplier) => (
-          <SupplierCard key={supplier.id} supplier={supplier} />
+          <li key={supplier.id}>
+            <SupplierCard supplier={supplier} />
+          </li>
         ))}
-      </div>
+      </ul>
       {hasMore && (
-        <div className="pt-8 flex justify-center">
-          <button
-            className="px-8 py-3 bg-white border border-line rounded-xl text-sm font-bold text-muted hover:bg-slate-50 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
+        <div className="flex justify-center pt-2">
+          <Button
+            variant="secondary"
+            size="md"
             onClick={onLoadMore}
-            disabled={isLoading}
-          >
-            {isLoading ? "Loading..." : "Load More Suppliers"}
-          </button>
+            loading={isLoading}
+            text={isLoading ? "Loading..." : "Load more suppliers"}
+          />
         </div>
       )}
     </>

@@ -1,19 +1,13 @@
-export const formatCategory = (category: string | null) => {
-  if (!category) {
-    return "Uncategorized";
-  }
-  return category.charAt(0).toUpperCase() + category.slice(1);
+const CATEGORY_LABELS: Record<string, string> = {
+  dry: "Dry goods",
+  liquid: "Liquid",
+  mixed: "Mixed",
 };
 
-export const getCategoryIcon = (category: string | null) => {
-  switch (category) {
-    case "dry":
-      return "inventory";
-    case "liquid":
-      return "water_drop";
-    case "mixed":
-      return "layers";
-    default:
-      return "inventory_2";
-  }
+export const formatCategory = (category: string | null) => {
+  if (!category) return "Uncategorized";
+  return (
+    CATEGORY_LABELS[category] ??
+    category.charAt(0).toUpperCase() + category.slice(1)
+  );
 };

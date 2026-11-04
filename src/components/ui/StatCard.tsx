@@ -47,7 +47,7 @@ export function StatCard({
           </span>
         ) : null}
       </div>
-      <div className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+      <div className="mt-3 flex flex-wrap items-end gap-x-2.5 gap-y-1">
         <p
           className={cn(
             "text-[30px] font-medium leading-9 tracking-[-0.02em] tabular-nums text-ink",
