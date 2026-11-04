@@ -1,5 +1,15 @@
 import CategoryPicker from "@/src/features/shared/categories/components/CategoryPicker";
+import { cn } from "@/src/lib/utils";
 import type { GeneralInformationSectionProps } from "../../types/form.types";
+import {
+  errorClassName,
+  fieldClassName,
+  labelClassName,
+  sectionHeadingClassName,
+} from "./fields";
+
+const UNITS = ["kg", "g", "litre", "ml", "pcs"];
+
 export default function GeneralInformationSection({
   errors,
   register,
@@ -7,77 +17,81 @@ export default function GeneralInformationSection({
   clearErrors,
 }: GeneralInformationSectionProps) {
   return (
-    <section className="space-y-4">
-      <div className="mb-1 flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary text-lg">
-          info
-        </span>
-        <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
-          General Information
-        </h3>
+    <section aria-labelledby="inventory-item" className="space-y-4">
+      <h3 id="inventory-item" className={sectionHeadingClassName}>
+        Item
+      </h3>
+
+      <div>
+        <label htmlFor="inventory-item-name" className={labelClassName}>
+          Item name
+        </label>
+        <input
+          id="inventory-item-name"
+          type="text"
+          placeholder="e.g. Whole Wheat Flour 10 kg"
+          aria-invalid={errors.itemName ? true : undefined}
+          className={fieldClassName}
+          {...register("itemName")}
+          required
+        />
+        {errors.itemName && (
+          <p className={errorClassName}>{errors.itemName.message}</p>
+        )}
       </div>
-      <div className="grid gap-4">
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-ink">Item Name</label>
+
+      <div className="grid grid-cols-[1fr_120px] gap-4">
+        <div>
+          <label htmlFor="inventory-sku" className={labelClassName}>
+            SKU
+          </label>
           <input
-            className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-            placeholder="e.g. Ergonomic Office Chair"
+            id="inventory-sku"
             type="text"
-            {...register("itemName")}
+            placeholder="SKU-0000"
+            aria-invalid={errors.skuCode ? true : undefined}
+            className={cn(fieldClassName, "font-mono text-[13px] uppercase")}
+            {...register("skuCode")}
             required
           />
-          {errors.itemName && (
-            <p className="text-xs text-red-600">{errors.itemName.message}</p>
+          {errors.skuCode && (
+            <p className={errorClassName}>{errors.skuCode.message}</p>
           )}
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-ink">SKU</label>
-            <input
-              className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-ink uppercase outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-              placeholder="SKU-0000"
-              type="text"
-              {...register("skuCode")}
-              required
-            />
-            {errors.skuCode && (
-              <p className="text-xs text-red-600">{errors.skuCode.message}</p>
-            )}
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-ink">Unit</label>
-            <select
-              className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-              {...register("unit")}
-              required
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Select unit
+        <div>
+          <label htmlFor="inventory-unit" className={labelClassName}>
+            Unit
+          </label>
+          <select
+            id="inventory-unit"
+            aria-invalid={errors.unit ? true : undefined}
+            className={cn(fieldClassName, "cursor-pointer")}
+            {...register("unit")}
+            required
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Select
+            </option>
+            {UNITS.map((unit) => (
+              <option key={unit} value={unit}>
+                {unit}
               </option>
-              <option value="kg">kg</option>
-              <option value="litre">litre</option>
-              <option value="pcs">pcs</option>
-              <option value="g">g</option>
-              <option value="ml">ml</option>
-            </select>
-            {errors.unit && (
-              <p className="text-xs text-red-600">{errors.unit.message}</p>
-            )}
-          </div>
-        </div>
-        <div className="space-y-1.5">
-          <div className="relative">
-            <CategoryPicker
-              error={errors.category?.message}
-              onCategoryChange={(category) => {
-                setValue("category", category?.id ?? "");
-                if (category) clearErrors("category");
-              }}
-            />
-          </div>
+            ))}
+          </select>
+          {errors.unit && (
+            <p className={errorClassName}>{errors.unit.message}</p>
+          )}
         </div>
       </div>
+
+      <CategoryPicker
+        error={errors.category?.message}
+        onCategoryChange={(category) => {
+          setValue("category", category?.id ?? "");
+          if (category) clearErrors("category");
+        }}
+      />
     </section>
   );
 }

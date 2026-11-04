@@ -1,5 +1,22 @@
 import { useWatch } from "react-hook-form";
+import { cn } from "@/src/lib/utils";
 import type { StockDetailsSectionProps } from "../../types/form.types";
+import {
+  errorClassName,
+  fieldClassName,
+  labelClassName,
+  sectionHeadingClassName,
+} from "./fields";
+
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+});
+
+const affixClassName =
+  "pointer-events-none absolute top-1/2 -translate-y-1/2 text-[13px] text-subtle";
+
 export default function StockDetailsSection({
   errors,
   register,
@@ -7,58 +24,73 @@ export default function StockDetailsSection({
 }: StockDetailsSectionProps) {
   const initialStock = useWatch({ control, name: "initialStock" }) ?? 0;
   const unitPrice = useWatch({ control, name: "unitPrice" }) ?? 0;
+  const unit = useWatch({ control, name: "unit" });
   const estimatedValue = Number(initialStock) * Number(unitPrice);
+
   return (
-    <section className="space-y-4">
-      <div className="mb-1 flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary text-lg">
-          inventory
-        </span>
-        <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
-          Stock Details
-        </h3>
-      </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-ink">
-            Initial Stock
+    <section
+      aria-labelledby="inventory-stock"
+      className="space-y-4 border-t border-line-soft pt-6"
+    >
+      <h3 id="inventory-stock" className={sectionHeadingClassName}>
+        Opening stock
+      </h3>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="inventory-quantity" className={labelClassName}>
+            Quantity on hand
           </label>
-          <input
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none focus:ring-2 focus:ring-primary"
-            type="number"
-            min={0}
-            {...register("initialStock", { valueAsNumber: true })}
-          />
+          <div className="relative mt-1.5">
+            <input
+              id="inventory-quantity"
+              type="number"
+              min={0}
+              inputMode="decimal"
+              aria-invalid={errors.initialStock ? true : undefined}
+              className={cn(fieldClassName, "mt-0 pr-12 tabular-nums")}
+              {...register("initialStock", { valueAsNumber: true })}
+            />
+            {unit ? (
+              <span className={cn(affixClassName, "right-3")}>{unit}</span>
+            ) : null}
+          </div>
           {errors.initialStock && (
-            <p className="text-xs text-red-600">
-              {errors.initialStock.message}
-            </p>
+            <p className={errorClassName}>{errors.initialStock.message}</p>
           )}
         </div>
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-ink">
-            Unit Price ($)
+
+        <div>
+          <label htmlFor="inventory-unit-price" className={labelClassName}>
+            Unit price
           </label>
-          <input
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none focus:ring-2 focus:ring-primary"
-            placeholder="0.00"
-            type="number"
-            min={0}
-            step="0.01"
-            {...register("unitPrice", { valueAsNumber: true })}
-          />
+          <div className="relative mt-1.5">
+            <span className={cn(affixClassName, "left-3")}>$</span>
+            <input
+              id="inventory-unit-price"
+              type="number"
+              min={0}
+              step="0.01"
+              inputMode="decimal"
+              placeholder="0.00"
+              aria-invalid={errors.unitPrice ? true : undefined}
+              className={cn(fieldClassName, "mt-0 pl-6 tabular-nums")}
+              {...register("unitPrice", { valueAsNumber: true })}
+            />
+          </div>
           {errors.unitPrice && (
-            <p className="text-xs text-red-600">{errors.unitPrice.message}</p>
+            <p className={errorClassName}>{errors.unitPrice.message}</p>
           )}
         </div>
       </div>
-      <div className="mt-2 rounded-xl border border-gray-200 bg-gray-50 p-5">
-        <p className="text-xs font-bold text-muted">
-          Estimated Initial Inventory Value
-        </p>
-        <p className="mt-1 text-sm font-bold text-ink">
-          ${estimatedValue.toFixed(2)}
-        </p>
+
+      <div className="flex items-center justify-between rounded-card bg-background-light px-4 py-3 text-[13px]">
+        <span className="text-muted">Stock value</span>
+        <span className="font-medium tabular-nums">
+          {currencyFormatter.format(
+            Number.isFinite(estimatedValue) ? estimatedValue : 0,
+          )}
+        </span>
       </div>
     </section>
   );

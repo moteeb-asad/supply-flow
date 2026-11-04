@@ -32,7 +32,7 @@ export const inventoryTableColumns: DataTableColumn<InventoryItem>[] = [
     cell: (row) => (
       <>
         <p className="font-medium">{row.itemName}</p>
-        <p className="font-mono text-xs text-subtle">{row.skuCode}</p>
+        <p className="font-mono text-[12.5px] text-muted">{row.skuCode}</p>
       </>
     ),
   },
