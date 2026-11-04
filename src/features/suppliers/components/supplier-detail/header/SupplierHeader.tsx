@@ -1,9 +1,13 @@
 import type { SupplierHeaderProps } from "@/src/features/suppliers/types/suppliers.types";
 import Link from "next/link";
-import { formatStatus } from "@/src/features/suppliers/utils/status";
 import { Button } from "@/src/components/ui/Button";
+import { StatusPill } from "@/src/components/ui/StatusPill";
+import { getInitials } from "@/src/lib/utils";
 import { useUser } from "@/src/providers/UserProvider";
 import { hasPermission } from "@/src/features/auth/utils/rbac";
+
+const contactIconClassName =
+  "material-symbols-outlined !text-[16px] text-subtle";
 
 export default function SupplierHeader({
   supplier,
@@ -15,70 +19,83 @@ export default function SupplierHeader({
     "suppliers:manage",
   );
   const status = supplier.status ?? "active";
-  const statusStyles =
-    status === "active"
-      ? "bg-green-100 text-green-700"
-      : "bg-amber-100 text-amber-700";
 
   const email = supplier.primary_contact_email ?? "No email";
   const phone = supplier.primary_contact_phone ?? "No phone";
 
   return (
     <>
-      <div className="px-8 pt-6">
-        <div className="flex items-center gap-2 text-sm">
-          <Link
-            className="text-muted font-medium hover:text-primary transition-colors"
-            href="/suppliers"
+      <nav
+        aria-label="Breadcrumb"
+        className="flex items-center gap-1.5 text-[13px]"
+      >
+        <Link className="text-muted hover:text-ink" href="/suppliers">
+          Suppliers
+        </Link>
+        <span
+          aria-hidden="true"
+          className="material-symbols-outlined !text-[16px] text-subtle"
+        >
+          chevron_right
+        </span>
+        <span aria-current="page" className="text-ink">
+          {supplier.name}
+        </span>
+      </nav>
+
+      <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-4">
+          <span
+            aria-hidden="true"
+            className="inline-flex size-12 shrink-0 items-center justify-center rounded-card bg-neutral-soft text-base font-semibold"
           >
-            Suppliers
-          </Link>
-          <span className="text-muted">/</span>
-          <span className="text-ink font-medium">{supplier.name}</span>
-        </div>
-      </div>
-      <div className="px-8 py-6">
-        <div className="flex flex-wrap justify-between items-start gap-4">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-3">
-              <h2 className="text-ink text-4xl font-black leading-tight tracking-tight">
+            {getInitials(supplier.name)}
+          </span>
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-2xl font-semibold tracking-[-0.01em]">
                 {supplier.name}
-              </h2>
-              <span
-                className={`${statusStyles} text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider`}
-              >
-                {formatStatus(status)}
-              </span>
+              </h1>
+              <StatusPill status={status} />
             </div>
-            <p className="text-muted text-base font-normal flex items-center gap-4">
-              <span className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-sm">mail</span>
+            <p className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
+              <span className="inline-flex items-center gap-1.5">
+                <span aria-hidden="true" className={contactIconClassName}>
+                  mail
+                </span>
                 {email}
               </span>
-              <span className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-sm">call</span>
+              <span className="inline-flex items-center gap-1.5 tabular-nums">
+                <span aria-hidden="true" className={contactIconClassName}>
+                  call
+                </span>
                 {phone}
               </span>
             </p>
           </div>
-          <div className="flex gap-3">
-            <Button className="flex items-center justify-center gap-2 rounded-lg shadow-none h-10 px-4 bg-white border border-line text-ink text-sm font-bold hover:bg-slate-50 transition-colors cursor-pointer">
-              <span className="material-symbols-outlined text-lg">
-                download
-              </span>
-              <span className="text-nowrap">Export Report</span>
-            </Button>
-            {canManageSuppliers && (
-              <Button
-                className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer"
-                onClick={onEditClick}
-                type="button"
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button variant="secondary" size="md">
+            <span
+              aria-hidden="true"
+              className="material-symbols-outlined !text-[18px]"
+            >
+              download
+            </span>
+            Export report
+          </Button>
+          {canManageSuppliers && (
+            <Button size="md" onClick={onEditClick} type="button">
+              <span
+                aria-hidden="true"
+                className="material-symbols-outlined !text-[18px]"
               >
-                <span className="material-symbols-outlined text-lg">edit</span>
-                <span>Edit Supplier</span>
-              </Button>
-            )}
-          </div>
+                edit
+              </span>
+              Edit supplier
+            </Button>
+          )}
         </div>
       </div>
     </>
