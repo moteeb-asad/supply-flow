@@ -34,7 +34,10 @@ export function DataTableBody<
             onClick={onRowClick ? (event) => onRowClick(row, event) : undefined}
           >
             {config.columns.map((col) => (
-              <td key={col.key} className={`px-4 py-3 ${col.className ?? ""}`}>
+              <td
+                key={col.key}
+                className={`px-3 py-3 first:pl-5 last:pr-5 ${col.className ?? ""}`}
+              >
                 {col.cell(row)}
               </td>
             ))}

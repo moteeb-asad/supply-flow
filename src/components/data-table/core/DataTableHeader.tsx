@@ -6,14 +6,14 @@ export function DataTableHeader<
   TFilters extends object = Record<string, never>,
 >({ config }: { config: DataTableConfig<T, P, TFilters> }) {
   return (
-    <thead>
+    <thead className="bg-background-light text-xs text-subtle">
       {/* Sunken, sentence case. Right-align number columns with headerClassName="text-right". */}
-      <tr className="border-b border-line bg-background-light">
+      <tr className="border-y border-line">
         {config.columns.map((col) => (
           <th
             key={col.key}
             scope="col"
-            className={`px-4 py-2.5 text-left text-xs font-medium text-subtle ${
+            className={`px-3 py-2.5 text-left font-medium first:pl-5 last:pr-5 ${
               col.headerClassName ?? ""
             }${col.header === "Actions" ? " text-right" : ""}`}
           >

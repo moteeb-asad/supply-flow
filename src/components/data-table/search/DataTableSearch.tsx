@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useId, useState } from "react";
 import { DataTableSearchProps } from "../../data-table/types";
 
 export default function DataTableSearch({
@@ -8,6 +8,8 @@ export default function DataTableSearch({
 }: DataTableSearchProps) {
   const [inputValue, setInputValue] = useState(value);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inputId = useId();
+  const label = placeholder || "Search";
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -22,14 +24,21 @@ export default function DataTableSearch({
   }, [inputValue, applySearch]);
 
   return (
-    <div className="relative w-full max-w-md">
-      <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-muted !text-[18px]">
+    <div className="relative w-full max-w-xs">
+      <label htmlFor={inputId} className="sr-only">
+        {label}
+      </label>
+      <span
+        aria-hidden="true"
+        className="material-symbols-outlined pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 !text-[16px] text-subtle"
+      >
         search
       </span>
       <input
-        className="h-9 w-full pl-9 pr-3 bg-white border border-line rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all "
-        placeholder={placeholder || "Search..."}
-        type="text"
+        id={inputId}
+        className="h-9 w-full rounded-control border border-line bg-surface pl-8 pr-3 text-[13px] text-ink placeholder:text-subtle focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15"
+        placeholder={label}
+        type="search"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />

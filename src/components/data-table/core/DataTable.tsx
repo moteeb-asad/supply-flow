@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { cn } from "@/src/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
@@ -44,6 +45,8 @@ export default function DataTable<
   refreshKey,
   filters,
   resetPageKey,
+  tabs,
+  className,
 }: DataTableProps<T, P, TFilters>) {
   // Filters
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -181,57 +184,66 @@ export default function DataTable<
   /** ---------------- RENDER ---------------- */
 
   return (
-    <div className="relative space-y-4 p-6">
-      {/* Search + Filters */}
-
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <DataTableSearchBar
-          search={search}
-          applySearch={handleApplySearch}
-          placeholder={config.searchPlaceholder}
-        />
-
-        {config.filters && (
-          <div className="relative">
-            <button
-              className="flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-line bg-white px-3 text-sm font-bold text-muted transition-colors hover:bg-slate-50"
-              onClick={() => setFiltersOpen((prev) => !prev)}
-              type="button"
-            >
-              <span className="material-symbols-outlined !text-[18px]">
-                filter_alt
-              </span>
-              <span>Advanced Filters</span>
-              {activeFilterCount > 0 ? (
-                <span className="inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-primary text-white text-[11px] px-1.5">
-                  {activeFilterCount}
-                </span>
-              ) : null}
-            </button>
-
-            <DataTableFilters<TFilters>
-              filtersOpen={filtersOpen}
-              setFiltersOpen={setFiltersOpen}
-              config={config}
-              values={table.draftFilters}
-              onChange={table.setDraftFilters}
-              onApply={handleApplyFilters}
-              onClear={handleClearFilters}
-            />
+    <div className={cn("relative p-6", className)}>
+      {/* No overflow-hidden on the card: the Filters popover must not clip. */}
+      <section className="relative rounded-card border border-line">
+        {tabs ? (
+          <div className="relative overflow-x-auto border-b border-line px-5">
+            {tabs}
           </div>
-        )}
-      </div>
+        ) : null}
 
-      {/* Table */}
+        {/* Search + Filters */}
+        <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
+          <DataTableSearchBar
+            search={search}
+            applySearch={handleApplySearch}
+            placeholder={config.searchPlaceholder}
+          />
 
-      <div className="bg-white rounded-xl border border-line overflow-hidden">
+          {config.filters && (
+            <div className="relative">
+              <button
+                aria-expanded={filtersOpen}
+                className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-control border border-line bg-surface px-3 text-[13px] font-medium text-ink hover:bg-background-light"
+                onClick={() => setFiltersOpen((prev) => !prev)}
+                type="button"
+              >
+                <span
+                  aria-hidden="true"
+                  className="material-symbols-outlined !text-[18px] text-subtle"
+                >
+                  tune
+                </span>
+                Filters
+                {activeFilterCount > 0 ? (
+                  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-ink px-1.5 text-[11px] text-white tabular-nums">
+                    {activeFilterCount}
+                  </span>
+                ) : null}
+              </button>
+
+              <DataTableFilters<TFilters>
+                filtersOpen={filtersOpen}
+                setFiltersOpen={setFiltersOpen}
+                config={config}
+                values={table.draftFilters}
+                onChange={table.setDraftFilters}
+                onApply={handleApplyFilters}
+                onClear={handleClearFilters}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Table */}
         {loading && search ? (
           <DataTableSkeleton type="search" />
         ) : loading ? (
           <DataTableSkeleton type="loading" />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="scrollbar-thin relative overflow-x-auto">
+            <table className="w-full min-w-[720px] border-collapse text-left text-[13px]">
               <DataTableHeader config={config} />
               <DataTableBody<T, P, TFilters>
                 config={config}
@@ -243,13 +255,13 @@ export default function DataTable<
         )}
 
         {/* Pagination */}
-
         <DataTablePaginationBar
           pagination={pagination}
           total={total}
           onPageChange={setPage}
+          itemLabel={config.itemLabel}
         />
-      </div>
+      </section>
     </div>
   );
 }
