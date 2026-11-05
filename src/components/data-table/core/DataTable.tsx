@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { cn } from "@/src/lib/utils";
+import AppIcon from "@/src/components/ui/AppIcon";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
@@ -209,12 +210,7 @@ export default function DataTable<
                 onClick={() => setFiltersOpen((prev) => !prev)}
                 type="button"
               >
-                <span
-                  aria-hidden="true"
-                  className="material-symbols-outlined !text-[18px] text-subtle"
-                >
-                  tune
-                </span>
+                <AppIcon name="filter" className="size-4 text-subtle" />
                 Filters
                 {activeFilterCount > 0 ? (
                   <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-ink px-1.5 text-[11px] text-white tabular-nums">

@@ -2,6 +2,7 @@
 
 import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
 import { Button } from "@/src/components/ui/Button";
+import AppIcon from "@/src/components/ui/AppIcon";
 import { useOpenFromQueryParam } from "@/src/hooks/useOpenFromQueryParam";
 import SkuReceivingMetrics from "../list/SkuReceivingMetrics";
 import SkuReceivingTable from "../list/SkuReceivingTable";
@@ -28,24 +29,14 @@ export default function SkuReceivingScreen() {
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" size="md" disabled>
-            <span
-              aria-hidden="true"
-              className="material-symbols-outlined !text-[18px]"
-            >
-              upload_file
-            </span>
+            <AppIcon name="upload" className="size-4" />
             Bulk upload
             <span className="rounded-full border border-line px-1.5 text-[11px] font-normal leading-4">
               Soon
             </span>
           </Button>
           <Button size="md" onClick={() => setIsCreateDrawerOpen(true)}>
-            <span
-              aria-hidden="true"
-              className="material-symbols-outlined !text-[18px]"
-            >
-              barcode_scanner
-            </span>
+            <AppIcon name="scan" className="size-4" />
             Start receiving
           </Button>
         </div>

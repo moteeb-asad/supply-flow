@@ -5,6 +5,12 @@ import InventoryIcon from "@/src/assets/icons/inventory.svg";
 import SuppliersIcon from "@/src/assets/icons/suppliers.svg";
 import ReportsIcon from "@/src/assets/icons/reports.svg";
 import SettingsIcon from "@/src/assets/icons/settings.svg";
+import UploadIcon from "@/src/assets/icons/upload.svg";
+import ScanIcon from "@/src/assets/icons/scan.svg";
+import SearchIcon from "@/src/assets/icons/search.svg";
+import FilterIcon from "@/src/assets/icons/filter.svg";
+import ChevronLeftIcon from "@/src/assets/icons/chevron-left.svg";
+import ChevronRightIcon from "@/src/assets/icons/chevron-right.svg";
 
 const iconMap = {
   dashboard: DashboardIcon,
@@ -14,6 +20,12 @@ const iconMap = {
   suppliers: SuppliersIcon,
   reports: ReportsIcon,
   settings: SettingsIcon,
+  upload: UploadIcon,
+  scan: ScanIcon,
+  search: SearchIcon,
+  filter: FilterIcon,
+  chevronLeft: ChevronLeftIcon,
+  chevronRight: ChevronRightIcon,
 };
 
 export type AppIconName = keyof typeof iconMap;

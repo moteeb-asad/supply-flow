@@ -1,5 +1,6 @@
 import { useRef, useEffect, useId, useState } from "react";
 import { DataTableSearchProps } from "../../data-table/types";
+import AppIcon from "@/src/components/ui/AppIcon";
 
 export default function DataTableSearch({
   value,
@@ -28,12 +29,10 @@ export default function DataTableSearch({
       <label htmlFor={inputId} className="sr-only">
         {label}
       </label>
-      <span
-        aria-hidden="true"
-        className="material-symbols-outlined pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 !text-[16px] text-subtle"
-      >
-        search
-      </span>
+      <AppIcon
+        name="search"
+        className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-subtle"
+      />
       <input
         id={inputId}
         className="h-9 w-full rounded-control border border-line bg-surface pl-8 pr-3 text-[13px] text-ink placeholder:text-subtle focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15"

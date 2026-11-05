@@ -1,3 +1,5 @@
+import AppIcon from "@/src/components/ui/AppIcon";
+
 type DataTablePaginationProps = {
   page: number;
   pageSize: number;
@@ -38,12 +40,7 @@ export default function DataTablePagination({
           onClick={() => onPageChange(page - 1)}
           type="button"
         >
-          <span
-            aria-hidden="true"
-            className="material-symbols-outlined !text-[18px]"
-          >
-            chevron_left
-          </span>
+          <AppIcon name="chevronLeft" className="size-4" />
         </button>
         <button
           aria-label="Next page"
@@ -52,12 +49,7 @@ export default function DataTablePagination({
           onClick={() => onPageChange(page + 1)}
           type="button"
         >
-          <span
-            aria-hidden="true"
-            className="material-symbols-outlined !text-[18px]"
-          >
-            chevron_right
-          </span>
+          <AppIcon name="chevronRight" className="size-4" />
         </button>
       </div>
     </div>
