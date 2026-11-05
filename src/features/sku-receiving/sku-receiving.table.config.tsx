@@ -31,7 +31,8 @@ export const skuReceivingTableConfig: DataTableConfig<
   refetchInterval: RECEIVING_REFETCH_INTERVAL_MS,
   filters: SkuReceivingFilters,
   columns: skuReceivingTableColumns,
-  searchPlaceholder: "Search by PO# or supplier name...",
+  searchPlaceholder: "Search by PO number or supplier",
+  itemLabel: "receipts",
 
   parseFiltersFromUrl: (searchParams) => {
     const status = searchParams.get("status");
