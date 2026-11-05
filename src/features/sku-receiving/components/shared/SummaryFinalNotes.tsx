@@ -33,59 +33,57 @@ export default function SummaryFinalNotes({
   const lineItems = useWatch({ control, name: "line_items" });
   const summary = summarize(lineItems ?? []);
 
+  const totals = [
+    { label: "Total lines", value: summary.totalLines },
+    { label: "Total qty receiving", value: summary.totalQtyReceiving },
+    {
+      label: "Total rejected",
+      value: summary.totalRejected,
+      warn: summary.totalRejected > 0,
+    },
+    {
+      label: "Variance count",
+      value: summary.varianceCount,
+      warn: summary.varianceCount > 0,
+    },
+  ];
+
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 border-t border-slate-200 pt-2">
-        <section className="space-y-4">
-          <div className="mb-1 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-lg">
-              summarize
-            </span>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
-              SUMMARY
-            </h3>
-          </div>
-          <div className="space-y-2 rounded-xl border border-gray-200 bg-gray-50 p-5">
-            <div className="flex justify-between text-xs">
-              <span className="text-muted">Total Lines</span>
-              <span className="font-bold text-ink">{summary.totalLines}</span>
+      <section
+        aria-labelledby="receiving-notes"
+        className="space-y-3 border-t border-line-soft pt-6"
+      >
+        <label
+          id="receiving-notes"
+          htmlFor="receiving-notes-input"
+          className="text-[13px] font-semibold"
+        >
+          Notes <span className="font-normal text-subtle">optional</span>
+        </label>
+        <textarea
+          id="receiving-notes-input"
+          rows={3}
+          className="block w-full resize-none rounded-control border border-line bg-surface px-3 py-2 text-sm text-ink placeholder:text-subtle focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15"
+          placeholder="Condition on arrival, seal numbers, anything to follow up"
+          {...register("notes")}
+        />
+      </section>
+
+      <section aria-label="Summary">
+        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line text-[13px] sm:grid-cols-4">
+          {totals.map((total) => (
+            <div key={total.label} className="bg-surface px-3 py-2">
+              <dt className="text-xs text-muted">{total.label}</dt>
+              <dd
+                className={`mt-0.5 text-[15px] font-medium tabular-nums ${total.warn ? "text-warning" : ""}`}
+              >
+                {total.value}
+              </dd>
             </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-muted">Total Qty Receiving</span>
-              <span className="font-bold text-ink">
-                {summary.totalQtyReceiving}
-              </span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-muted">Total Rejected</span>
-              <span className="font-bold text-red-600">
-                {summary.totalRejected}
-              </span>
-            </div>
-            <div className="flex justify-between border-t border-gray-200 pt-2 text-xs">
-              <span className="font-bold text-ink">Variance Count</span>
-              <span className="rounded bg-red-100 px-1.5 py-0.5 font-bold text-red-600">
-                {summary.varianceCount}
-              </span>
-            </div>
-          </div>
-        </section>
-        <section className="space-y-4">
-          <div className="mb-1 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-lg">
-              notes
-            </span>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
-              FINAL NOTES
-            </h3>
-          </div>
-          <textarea
-            className="min-h-[96px] w-full resize-none rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-            placeholder="Add optional receipt comments..."
-            {...register("notes")}
-          ></textarea>
-        </section>
-      </div>
+          ))}
+        </dl>
+      </section>
     </>
   );
 }

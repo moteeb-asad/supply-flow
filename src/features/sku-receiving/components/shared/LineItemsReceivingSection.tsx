@@ -3,10 +3,12 @@ import { VARIANCE_REASONS } from "../../constants/form-options";
 import type { LineItemsReceivingSectionProps } from "../../types";
 
 const inputClassName =
-  "w-full rounded-lg border bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary";
+  "h-8 w-full rounded-control border bg-surface px-2 text-[13px] text-ink tabular-nums focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15";
 
 const borderClass = (hasError: boolean) =>
-  hasError ? "border-red-500" : "border-gray-200";
+  hasError ? "border-danger ring-3 ring-danger/12" : "border-line";
+
+const errorTextClassName = "mt-1 text-xs text-danger";
 
 export default function LineItemsReceivingSection({
   register,
@@ -19,57 +21,53 @@ export default function LineItemsReceivingSection({
 
   return (
     <>
-      <section className="space-y-4 border-t border-slate-200 pt-2">
-        <div className="flex items-center justify-between">
-          <div className="mb-1 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-lg">
-              list_alt
-            </span>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
-              LINE ITEMS RECEIVING GRID
-            </h3>
-          </div>
-          <span className="text-[10px] font-medium italic text-muted">
-            Showing {lineItems.length} active lines
-          </span>
-        </div>
-        {listError ? <p className="text-xs text-red-600">{listError}</p> : null}
-        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-gray-50/50">
-          <table className="w-full min-w-[440px] border-collapse text-left text-sm">
-            <thead>
-              <tr className="border-b border-gray-200 bg-gray-100 font-medium text-muted">
-                <th className="w-1/4 px-3 py-2 font-semibold">SKU / Item</th>
-                <th className="px-3 py-2 text-center font-semibold">Ordered</th>
-                <th className="px-3 py-2 text-center font-semibold">
-                  Remaining
+      <section
+        aria-labelledby="receiving-items"
+        className="space-y-3 border-t border-line-soft pt-6"
+      >
+        <h3 id="receiving-items" className="text-[13px] font-semibold">
+          Items{" "}
+          <span className="font-normal text-subtle">{lineItems.length}</span>
+        </h3>
+        {listError ? <p className="text-xs text-danger">{listError}</p> : null}
+        <div className="scrollbar-thin overflow-x-auto rounded-card border border-line">
+          <table className="w-full min-w-[560px] border-collapse text-left text-[13px]">
+            <thead className="bg-background-light text-xs text-subtle">
+              <tr className="border-b border-line">
+                <th className="px-3 py-2 font-medium">SKU / Item</th>
+                <th className="px-2 py-2 text-right font-medium">Ordered</th>
+                <th className="px-2 py-2 text-right font-medium">Remaining</th>
+                <th className="w-[84px] px-2 py-2 text-right font-medium">
+                  Recv Now
                 </th>
-                <th className="w-20 px-3 py-2 font-semibold">Recv Now</th>
-                <th className="w-20 px-3 py-2 font-semibold">Reject</th>
-                <th className="px-3 py-2 font-semibold">Variance Reason</th>
+                <th className="w-[84px] px-2 py-2 text-right font-medium">
+                  Reject
+                </th>
+                <th className="px-3 py-2 font-medium">Variance Reason</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-line-soft">
               {lineItems.map((item, index) => {
                 const itemErrors = lineErrors?.[index];
+                const hasRejected = Number(item.qty_rejected) > 0;
 
                 return (
-                  <tr
-                    className="transition-colors hover:bg-gray-50"
-                    key={item.purchase_order_item_id}
-                  >
+                  <tr key={item.purchase_order_item_id}>
                     <td className="px-3 py-3">
-                      <p className="font-bold text-ink">{item.sku_code}</p>
-                      <p className="text-[10px] text-muted">{item.item_name}</p>
+                      <p className="font-medium">{item.item_name}</p>
+                      <p className="font-mono text-xs text-subtle">
+                        {item.sku_code}
+                      </p>
                     </td>
-                    <td className="px-3 py-3 text-center font-medium text-ink">
+                    <td className="px-2 py-3 text-right tabular-nums text-muted">
                       {item.ordered_qty}
                     </td>
-                    <td className="px-3 py-3 text-center font-medium text-ink">
+                    <td className="px-2 py-3 text-right tabular-nums">
                       {item.remaining_qty}
                     </td>
                     <td className="px-2 py-3 align-top">
                       <input
-                        className={`${inputClassName} text-center ${borderClass(!!itemErrors?.qty_received)}`}
+                        className={`${inputClassName} text-right ${borderClass(!!itemErrors?.qty_received)}`}
                         type="number"
                         min={0}
                         aria-invalid={!!itemErrors?.qty_received}
@@ -78,14 +76,14 @@ export default function LineItemsReceivingSection({
                         })}
                       />
                       {itemErrors?.qty_received ? (
-                        <p className="mt-1 text-[10px] text-red-600">
+                        <p className={errorTextClassName}>
                           {itemErrors.qty_received.message}
                         </p>
                       ) : null}
                     </td>
                     <td className="px-2 py-3 align-top">
                       <input
-                        className={`${inputClassName} text-center ${borderClass(!!itemErrors?.qty_rejected)}`}
+                        className={`${inputClassName} text-right ${borderClass(!!itemErrors?.qty_rejected)} ${hasRejected && !itemErrors?.qty_rejected ? "border-warning/50 bg-warning-soft/40" : ""}`}
                         type="number"
                         min={0}
                         aria-invalid={!!itemErrors?.qty_rejected}
@@ -94,14 +92,14 @@ export default function LineItemsReceivingSection({
                         })}
                       />
                       {itemErrors?.qty_rejected ? (
-                        <p className="mt-1 text-[10px] text-red-600">
+                        <p className={errorTextClassName}>
                           {itemErrors.qty_rejected.message}
                         </p>
                       ) : null}
                     </td>
                     <td className="px-3 py-3 align-top">
                       <select
-                        className={`${inputClassName} ${borderClass(!!itemErrors?.variance_reason)}`}
+                        className={`${inputClassName} cursor-pointer px-2.5 ${borderClass(!!itemErrors?.variance_reason)}`}
                         aria-invalid={!!itemErrors?.variance_reason}
                         {...register(`line_items.${index}.variance_reason`)}
                       >
@@ -112,7 +110,7 @@ export default function LineItemsReceivingSection({
                         ))}
                       </select>
                       {itemErrors?.variance_reason ? (
-                        <p className="mt-1 text-[10px] text-red-600">
+                        <p className={errorTextClassName}>
                           {itemErrors.variance_reason.message}
                         </p>
                       ) : null}
