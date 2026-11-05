@@ -5,7 +5,7 @@ import { purchaseOrdersFetcher } from "@/src/features/purchase-orders/fetchers/p
 import type { PurchaseOrder } from "@/src/features/purchase-orders/types";
 
 export default function PurchaseOrdersMetrics() {
-  const { data, isPending } = useQuery({
+  const { data, isPending, isError } = useQuery({
     queryKey: purchaseOrderKeys.metrics,
     queryFn: async () => {
       // Fetch all orders (up to 1000 for metrics)
@@ -18,6 +18,10 @@ export default function PurchaseOrdersMetrics() {
   let openCommitment = 0;
   let overdueCount = 0;
   let completedCount = 0;
+
+  // Loading shows "...", a failed load shows "—" (never zeros that look real).
+  const display = (value: string) =>
+    isPending ? "..." : isError || !data ? "—" : value;
 
   if (data && !isPending) {
     openCommitment = data
@@ -36,11 +40,9 @@ export default function PurchaseOrdersMetrics() {
         iconClassName="bg-blue-100 text-blue-700"
         labelClassName="text-blue-700"
         valueClassName="text-blue-900"
-        value={
-          isPending
-            ? "..."
-            : `$${openCommitment.toLocaleString("en-US", { minimumFractionDigits: 2 })}`
-        }
+        value={display(
+          `$${openCommitment.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+        )}
       />
       <StatCard
         label="Overdue Orders"
@@ -49,7 +51,7 @@ export default function PurchaseOrdersMetrics() {
         iconClassName="bg-red-100 text-red-700"
         labelClassName="text-red-700"
         valueClassName="text-red-900"
-        value={isPending ? "..." : `${overdueCount} Orders`}
+        value={display(`${overdueCount} Orders`)}
       />
       <StatCard
         label="Completed (MTD)"
@@ -58,7 +60,7 @@ export default function PurchaseOrdersMetrics() {
         iconClassName="bg-green-100 text-green-700"
         labelClassName="text-green-700"
         valueClassName="text-green-900"
-        value={isPending ? "..." : `${completedCount} Orders`}
+        value={display(`${completedCount} Orders`)}
       />
     </div>
   );
