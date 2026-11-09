@@ -1,23 +1,53 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 import QueryProvider from "@/src/providers/QueryProvider";
 
+// Fonts are self-hosted (src/assets/fonts, latin subset, SIL OFL) so builds
+// never depend on fetching from Google Fonts.
+
 // UI and headings. Only these three weights are used.
-const plexSans = IBM_Plex_Sans({
+const plexSans = localFont({
   variable: "--font-plex-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  src: [
+    {
+      path: "../src/assets/fonts/ibm-plex-sans-latin-400-normal.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../src/assets/fonts/ibm-plex-sans-latin-500-normal.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../src/assets/fonts/ibm-plex-sans-latin-600-normal.woff2",
+      weight: "600",
+      style: "normal",
+    },
+  ],
   display: "swap",
+  fallback: ["system-ui", "Arial", "sans-serif"],
 });
 
 // PO, SKU and delivery note codes only (font-mono).
-const plexMono = IBM_Plex_Mono({
+const plexMono = localFont({
   variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  src: [
+    {
+      path: "../src/assets/fonts/ibm-plex-mono-latin-400-normal.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../src/assets/fonts/ibm-plex-mono-latin-500-normal.woff2",
+      weight: "500",
+      style: "normal",
+    },
+  ],
   display: "swap",
+  fallback: ["ui-monospace", "Menlo", "monospace"],
 });
 
 export const metadata: Metadata = {
