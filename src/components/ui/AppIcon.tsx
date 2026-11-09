@@ -16,6 +16,9 @@ import EditIcon from "@/src/assets/icons/edit.svg";
 import PersonIcon from "@/src/assets/icons/person.svg";
 import MailIcon from "@/src/assets/icons/mail.svg";
 import PhoneIcon from "@/src/assets/icons/phone.svg";
+import UsersIcon from "@/src/assets/icons/users.svg";
+import BellIcon from "@/src/assets/icons/bell.svg";
+import DatabaseIcon from "@/src/assets/icons/database.svg";
 
 const iconMap = {
   dashboard: DashboardIcon,
@@ -36,6 +39,9 @@ const iconMap = {
   person: PersonIcon,
   mail: MailIcon,
   phone: PhoneIcon,
+  users: UsersIcon,
+  bell: BellIcon,
+  database: DatabaseIcon,
 };
 
 export type AppIconName = keyof typeof iconMap;
