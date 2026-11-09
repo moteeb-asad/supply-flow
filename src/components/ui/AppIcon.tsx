@@ -23,6 +23,7 @@ import LockIcon from "@/src/assets/icons/lock.svg";
 import CheckIcon from "@/src/assets/icons/check.svg";
 import ClockIcon from "@/src/assets/icons/clock.svg";
 import CloseIcon from "@/src/assets/icons/close.svg";
+import UserPlusIcon from "@/src/assets/icons/user-plus.svg";
 
 const iconMap = {
   dashboard: DashboardIcon,
@@ -50,6 +51,7 @@ const iconMap = {
   check: CheckIcon,
   clock: ClockIcon,
   close: CloseIcon,
+  userPlus: UserPlusIcon,
 };
 
 export type AppIconName = keyof typeof iconMap;

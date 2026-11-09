@@ -4,6 +4,9 @@ import { formatRole, getInitials } from "@/src/lib/utils";
 import { formatRelative } from "@/src/lib/dates";
 import { getRoleBadgeClassName } from "../../shared/constants/role-badge";
 
+const actionButtonClassName =
+  "inline-flex size-8 cursor-pointer items-center justify-center rounded-control text-subtle";
+
 export const usersColumns: DataTableColumn<User>[] = [
   {
     key: "name",
@@ -12,26 +15,29 @@ export const usersColumns: DataTableColumn<User>[] = [
       <div className="flex items-center gap-3">
         {user.avatar_url ? (
           <div
-            className="size-9 rounded-full bg-cover bg-center border border-gray-200"
+            aria-hidden="true"
+            className="size-8 shrink-0 rounded-full border border-line bg-cover bg-center"
             style={{
               backgroundImage: `url("${user.avatar_url}")`,
             }}
           ></div>
         ) : (
-          <div className="size-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">
+          <span
+            aria-hidden="true"
+            className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-neutral-soft text-xs font-semibold"
+          >
             {getInitials(user?.full_name)}
-          </div>
+          </span>
         )}
-        <span className="text-sm font-semibold text-ink">
-          {user?.full_name}
-        </span>
+        <span className="font-medium">{user?.full_name}</span>
       </div>
     ),
   },
   {
     key: "email",
     header: "Email",
-    cell: (user) => <span className="text-sm text-muted">{user.email}</span>,
+    className: "text-muted",
+    cell: (user) => user.email,
   },
   {
     key: "role",
@@ -45,8 +51,9 @@ export const usersColumns: DataTableColumn<User>[] = [
   {
     key: "last_login",
     header: "Last Login",
+    className: "whitespace-nowrap",
     cell: (user) => (
-      <span className="text-sm text-muted">
+      <span className={user.last_login_at ? "text-muted" : "text-subtle"}>
         {formatRelative(user.last_login_at, "Never")}
       </span>
     ),
@@ -54,21 +61,35 @@ export const usersColumns: DataTableColumn<User>[] = [
   {
     key: "actions",
     header: "Actions",
-    cell: () => (
-      <div className="flex justify-end gap-2">
+    headerClassName: "text-right",
+    className: "text-right",
+    cell: (user) => (
+      <div className="flex justify-end gap-1">
         <button
-          className="p-1.5 hover:bg-gray-100 rounded-lg text-muted hover:text-primary transition-colors"
+          type="button"
+          className={`${actionButtonClassName} hover:bg-background-light hover:text-ink`}
           title="Edit Role"
+          aria-label={`Edit role for ${user.full_name}`}
         >
-          <span className="material-symbols-outlined text-xl">
+          <span
+            aria-hidden="true"
+            className="material-symbols-outlined !text-[18px]"
+          >
             manage_accounts
           </span>
         </button>
         <button
-          className="p-1.5 hover:bg-red-50 rounded-lg text-muted hover:text-danger transition-colors"
+          type="button"
+          className={`${actionButtonClassName} hover:bg-danger-soft hover:text-danger`}
           title="Disable User"
+          aria-label={`Disable ${user.full_name}`}
         >
-          <span className="material-symbols-outlined text-xl">block</span>
+          <span
+            aria-hidden="true"
+            className="material-symbols-outlined !text-[18px]"
+          >
+            block
+          </span>
         </button>
       </div>
     ),
