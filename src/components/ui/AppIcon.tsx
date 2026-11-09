@@ -21,6 +21,8 @@ import BellIcon from "@/src/assets/icons/bell.svg";
 import DatabaseIcon from "@/src/assets/icons/database.svg";
 import LockIcon from "@/src/assets/icons/lock.svg";
 import CheckIcon from "@/src/assets/icons/check.svg";
+import ClockIcon from "@/src/assets/icons/clock.svg";
+import CloseIcon from "@/src/assets/icons/close.svg";
 
 const iconMap = {
   dashboard: DashboardIcon,
@@ -46,6 +48,8 @@ const iconMap = {
   database: DatabaseIcon,
   lock: LockIcon,
   check: CheckIcon,
+  clock: ClockIcon,
+  close: CloseIcon,
 };
 
 export type AppIconName = keyof typeof iconMap;
