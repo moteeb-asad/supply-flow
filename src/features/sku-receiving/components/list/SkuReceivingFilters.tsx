@@ -2,10 +2,8 @@
 
 import { DATE_RANGE_OPTIONS } from "@/src/constants/dateRangeOptions";
 import type { FilterPeriod } from "@/src/lib/date-range-utils";
-import {
-  SKU_RECEIVING_STATUSES,
-  SKU_RECEIVING_STATUS_STYLES,
-} from "../../constants/statuses";
+import { SKU_RECEIVING_STATUSES } from "../../constants/statuses";
+import { getStatus } from "@/src/components/ui/StatusPill";
 import type { SKUReceivingStatus, SkuReceivingFiltersProps } from "../../types";
 import {
   filterHeadingClassName,
@@ -33,7 +31,7 @@ export default function SkuReceivingFilters({
           <option value="">All statuses</option>
           {SKU_RECEIVING_STATUSES.map((status) => (
             <option key={status} value={status}>
-              {SKU_RECEIVING_STATUS_STYLES[status].label}
+              {getStatus(status).label}
             </option>
           ))}
         </select>
