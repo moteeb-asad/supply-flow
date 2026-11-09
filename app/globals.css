@@ -7,43 +7,86 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-  --background-light: #f6f6f8;
+  --foreground: #191d1b;
+  --background-light: #f4f5f2;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary: #195de6;
   --color-background-light: var(--background-light);
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
+
+  /* Surfaces: bg-frame (behind sidebar and sheet), bg-surface (sheet, cards),
+     bg-background-light (sunken: table headers, footers, hover) */
+  --color-frame: #eceee9;
+  --color-surface: #ffffff;
 
   /* Text: text-ink (headings, strong), text-muted (secondary), text-subtle */
-  --color-ink: #0e121b;
-  --color-muted: #4e6797;
-  --color-subtle: #94a3b8;
+  --color-ink: #191d1b;
+  --color-muted: #4f5752;
+  --color-subtle: #656d68;
 
   /* Borders and dividers: border-line (default), border-line-soft (dividers) */
-  --color-line: #d0d7e7;
-  --color-line-soft: #e7ebf3;
+  --color-line: #dce0da;
+  --color-line-soft: #e8ebe6;
+
+  /* Accent: links, focus rings, "in progress" status. Primary buttons use ink. */
+  --color-primary: #2d4bd1;
+  --color-primary-soft: #eceffb;
+
+  /* Status: text-{tone} on bg-{tone}-soft. Every pair passes WCAG AA. */
+  --color-success: #1b6e47;
+  --color-success-soft: #e5f1ea;
+  --color-warning: #8a5300;
+  --color-warning-soft: #faefd9;
+  --color-danger: #a8261d;
+  --color-danger-soft: #fbeae8;
+  --color-neutral: #555d58;
+  --color-neutral-soft: #edefec;
+
+  /* Charts, used in this order */
+  --color-chart-1: #2d4bd1;
+  --color-chart-2: #0e7c70;
+  --color-chart-3: #b8740b;
+  --color-chart-4: #7a4fb3;
 
   --spacing: 0.25rem;
 
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-inter);
+  --font-sans:
+    var(--font-plex-sans), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono:
+    var(--font-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
+    monospace;
 
   --radius: 0.25rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
   --radius-full: 9999px;
+  /* rounded-control (buttons, inputs), rounded-card, rounded-sheet */
+  --radius-control: 6px;
+  --radius-card: 10px;
+  --radius-sheet: 14px;
+
+  --shadow-raised:
+    0 1px 2px rgb(25 29 27 / 0.06), 0 0 0 1px rgb(25 29 27 / 0.04);
+  --shadow-overlay:
+    0 24px 48px -12px rgb(25 29 27 / 0.22), 0 2px 6px rgb(25 29 27 / 0.06);
 }
 
 body {
-  background: var(--background);
+  background: var(--color-frame);
   color: var(--foreground);
-  font-family: var(--font-inter), Inter, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Lighter icons so Material Symbols sit next to IBM Plex text */
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 300,
+    "GRAD" 0,
+    "opsz" 20;
 }
 
 [type="checkbox"]:checked,
@@ -56,10 +99,10 @@ body {
 }
 
 .toggle-checkbox:checked {
-  @apply right-0 border-primary bg-primary;
+  @apply right-0 border-ink bg-ink;
 }
 .toggle-checkbox:checked + .toggle-label {
-  @apply bg-primary/20;
+  @apply bg-ink/20;
 }
 
 .watermark-pattern {
@@ -72,18 +115,15 @@ body {
 }
 
 .bg-background-dark {
-  --tw-bg-opacity: 1;
-  background-color: rgb(17 22 33 / var(--tw-bg-opacity, 1));
+  background-color: var(--color-ink);
 }
 
 .modal-overlay {
-  background-color: rgba(14, 18, 27, 0.4);
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
+  background-color: rgb(25 29 27 / 0.3);
 }
 
 .skeleton-bar {
-  @apply h-4 bg-gray-200 rounded animate-pulse;
+  @apply h-4 animate-pulse rounded bg-line-soft;
 }
 
 .space-y-2 > :not([hidden]) ~ :not([hidden]) {
@@ -103,34 +143,18 @@ body {
 }
 
 .active-tab {
-  --tw-border-opacity: 1;
-  border-color: rgb(25 93 230 / var(--tw-border-opacity, 1));
-  --tw-text-opacity: 1;
-  color: rgb(25 93 230 / var(--tw-text-opacity, 1));
+  border-color: var(--color-ink);
+  color: var(--color-ink);
 }
 .inactive-tab {
   border-color: transparent;
-  --tw-text-opacity: 1;
-  color: rgb(78 103 151 / var(--tw-text-opacity, 1));
-  transition-property:
-    color,
-    background-color,
-    border-color,
-    fill,
-    stroke,
-    -webkit-text-decoration-color;
-  transition-property:
-    color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-property:
-    color,
-    background-color,
-    border-color,
-    text-decoration-color,
-    fill,
-    stroke,
-    -webkit-text-decoration-color;
+  color: var(--color-muted);
+  transition-property: color, border-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+.inactive-tab:hover {
+  color: var(--color-ink);
 }
 
 /* Thin scrollbar for scroll containers (e.g. wide tables in cards).

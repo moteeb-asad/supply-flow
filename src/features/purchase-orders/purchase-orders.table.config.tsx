@@ -49,7 +49,8 @@ export const PurchaseOrdersTableConfig: DataTableConfig<
   rowHref: (row) => `/purchase-orders/${row.id}`,
   filters: PurchaseOrdersFilters,
   columns: purchaseOrdersTableColumns,
-  searchPlaceholder: "Search by PO# or Supplier name...",
+  searchPlaceholder: "Search by PO number or supplier",
+  itemLabel: "orders",
 
   parseFiltersFromUrl: parsePurchaseOrdersFiltersFromUrl,
   writeFiltersToUrl: (filters, params) => {

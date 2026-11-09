@@ -37,9 +37,6 @@ export type TotalAmountSectionProps = {
   taxAmount: number;
   taxLabel: string;
   totalAmount: number;
-  submitLabel: string;
-  onCancel?: () => void;
-  isSubmitting?: boolean;
 };
 
 export type PurchaseOrderDetailScreenProps = {

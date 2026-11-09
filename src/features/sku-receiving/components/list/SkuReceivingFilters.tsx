@@ -2,14 +2,13 @@
 
 import { DATE_RANGE_OPTIONS } from "@/src/constants/dateRangeOptions";
 import type { FilterPeriod } from "@/src/lib/date-range-utils";
-import {
-  SKU_RECEIVING_STATUSES,
-  SKU_RECEIVING_STATUS_STYLES,
-} from "../../constants/statuses";
+import { SKU_RECEIVING_STATUSES } from "../../constants/statuses";
+import { getStatus } from "@/src/components/ui/StatusPill";
 import type { SKUReceivingStatus, SkuReceivingFiltersProps } from "../../types";
-
-const selectClassName =
-  "w-full bg-white border border-line rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none";
+import {
+  filterHeadingClassName,
+  filterSelectClassName,
+} from "@/src/components/data-table/filters/filter-styles";
 
 export default function SkuReceivingFilters({
   onChange,
@@ -18,11 +17,9 @@ export default function SkuReceivingFilters({
   return (
     <>
       <div>
-        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
-          Status
-        </h3>
+        <h3 className={filterHeadingClassName}>Status</h3>
         <select
-          className={selectClassName}
+          className={filterSelectClassName}
           value={values?.status ?? ""}
           onChange={(e) =>
             onChange({
@@ -34,17 +31,15 @@ export default function SkuReceivingFilters({
           <option value="">All statuses</option>
           {SKU_RECEIVING_STATUSES.map((status) => (
             <option key={status} value={status}>
-              {SKU_RECEIVING_STATUS_STYLES[status].label}
+              {getStatus(status).label}
             </option>
           ))}
         </select>
       </div>
       <div>
-        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
-          Received Date
-        </h3>
+        <h3 className={filterHeadingClassName}>Received date</h3>
         <select
-          className={selectClassName}
+          className={filterSelectClassName}
           value={values?.dateRange ?? ""}
           onChange={(e) =>
             onChange({

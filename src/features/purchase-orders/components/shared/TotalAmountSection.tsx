@@ -1,6 +1,7 @@
 import type { TotalAmountSectionProps } from "@/src/features/purchase-orders/types";
 import { formatAmount } from "@/src/features/purchase-orders/utils/formatters";
 
+// Order totals, shown in the drawer footer above the buttons.
 export default function TotalAmountSection({
   subtotal,
   taxAmount,
@@ -8,23 +9,19 @@ export default function TotalAmountSection({
   totalAmount,
 }: TotalAmountSectionProps) {
   return (
-    <div className="border-t border-line-soft bg-white pt-6">
-      <div className="space-y-2 text-sm">
-        <div className="flex justify-between text-muted">
-          <span>Subtotal</span>
-          <span className="font-medium text-ink">{formatAmount(subtotal)}</span>
-        </div>
-        <div className="flex justify-between text-muted">
-          <span>{taxLabel}</span>
-          <span className="font-medium text-ink">
-            {formatAmount(taxAmount)}
-          </span>
-        </div>
-        <div className="mt-2 flex justify-between border-t border-line-soft pt-2 text-lg font-bold text-ink">
-          <span>Total Amount</span>
-          <span className="text-primary">{formatAmount(totalAmount)}</span>
-        </div>
+    <dl className="space-y-1 text-[13px]">
+      <div className="flex justify-between">
+        <dt className="text-muted">Subtotal</dt>
+        <dd className="tabular-nums">{formatAmount(subtotal)}</dd>
       </div>
-    </div>
+      <div className="flex justify-between">
+        <dt className="text-muted">{taxLabel}</dt>
+        <dd className="tabular-nums">{formatAmount(taxAmount)}</dd>
+      </div>
+      <div className="flex justify-between pt-1 text-[15px] font-semibold">
+        <dt>Total</dt>
+        <dd className="tabular-nums">{formatAmount(totalAmount)}</dd>
+      </div>
+    </dl>
   );
 }

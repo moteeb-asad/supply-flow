@@ -21,6 +21,7 @@ export default function SkuReceivingTable({
       config={skuReceivingTableConfig}
       refreshKey={JSON.stringify(filters)}
       filters={filters}
+      className="p-0"
       onFiltersChange={onFiltersChange}
       resetPageKey={resetPageKey}
     />

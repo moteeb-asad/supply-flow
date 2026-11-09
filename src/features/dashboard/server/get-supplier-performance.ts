@@ -3,16 +3,11 @@ import type {
   SupplierPerformanceRow,
   SupplierPerformanceTrends,
 } from "../types";
+import { formatDayMonth } from "@/src/lib/dates";
 import { getRequestTimezone } from "./request-timezone";
 
 const WEEKS = 8;
 const TOP_SUPPLIERS = 3;
-
-const weekLabelFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-  timeZone: "UTC",
-});
 
 // Server-only loader: the SQL function does all aggregation and returns at most
 // TOP_SUPPLIERS x WEEKS rows; this only reshapes them for the chart.
@@ -42,9 +37,7 @@ export async function getSupplierPerformance(): Promise<SupplierPerformanceTrend
 
   return {
     // week_start is a plain date; format it as UTC so it never shifts a day.
-    labels: weeks.map((week) =>
-      weekLabelFormatter.format(new Date(`${week}T00:00:00Z`)),
-    ),
+    labels: weeks.map((week) => formatDayMonth(week)),
     series: [...bySupplier.values()].map((supplierRows) => ({
       name: supplierRows[0].supplier_name ?? "Unknown Supplier",
       values: supplierRows.map((row) =>

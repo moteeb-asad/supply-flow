@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
-// Card frame shared by the chart widget, its skeleton, and its empty/error states.
+// Card frame shared by the chart widget, its skeleton, and its empty/error
+// states. `legend` is the per-supplier latest rate row above the chart.
 export default function SupplierPerformanceCard({
   legend,
   children,
@@ -9,17 +10,20 @@ export default function SupplierPerformanceCard({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-line-soft bg-white">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line-soft px-4 py-3">
-        <div>
-          <h4 className="text-sm font-bold">Supplier Performance Trends</h4>
-          <p className="text-[11px] text-muted">
-            On-time delivery rate, last 8 weeks
-          </p>
-        </div>
-        {legend}
+    <section
+      aria-labelledby="supplier-on-time-title"
+      className="h-full min-w-0 rounded-card border border-line"
+    >
+      <div className="px-5 pt-4">
+        <h2 id="supplier-on-time-title" className="text-[15px] font-semibold">
+          Supplier on-time delivery
+        </h2>
+        <p className="mt-0.5 text-[13px] text-subtle">
+          Share of deliveries that arrived by the expected date, last 8 weeks
+        </p>
       </div>
-      <div className="p-4">{children}</div>
-    </div>
+      {legend}
+      {children}
+    </section>
   );
 }

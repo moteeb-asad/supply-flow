@@ -6,6 +6,8 @@ import PurchaseOrdersMetrics from "@/src/features/purchase-orders/components/lis
 import PurchaseOrdersStatusTabs from "@/src/features/purchase-orders/components/list/PurchaseOrdersStatusTabs";
 import PurchaseOrdersTable from "@/src/features/purchase-orders/components/list/PurchaseOrdersTable";
 import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
+import { Button } from "@/src/components/ui/Button";
+import AppIcon from "@/src/components/ui/AppIcon";
 import { useOpenFromQueryParam } from "@/src/hooks/useOpenFromQueryParam";
 import { PurchaseOrdersFiltersValue } from "../../types";
 
@@ -17,60 +19,57 @@ export default function PurchaseOrdersScreen() {
 
   return (
     <>
-      <div className="px-6 py-6">
-        <div className="flex flex-wrap justify-between items-center gap-4">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-ink text-3xl font-black leading-tight tracking-tight">
-              Purchase Orders
-            </h2>
-            <p className="text-muted text-sm">
-              Manage and track your warehouse supply orders
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <button
-              disabled
-              className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-white border border-line text-ink text-sm font-bold cursor-not-allowed opacity-50 transition-colors"
-            >
-              <span className="material-symbols-outlined text-lg">
-                upload_file
-              </span>
-              <span>Bulk Upload</span>
-            </button>
-            <button
-              className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer"
-              onClick={() => setIsCreateDrawerOpen(true)}
-            >
-              <span className="material-symbols-outlined text-lg">add</span>
-              <span role="button">Create New PO</span>
-            </button>
-          </div>
+      <header className="flex flex-wrap items-end justify-between gap-4 px-8 pb-6 pt-8">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-semibold tracking-[-0.01em]">
+            Purchase orders
+          </h1>
+          <p className="mt-1 text-sm text-muted">
+            Track every order from draft to delivery.
+          </p>
         </div>
-      </div>
-      <div className="px-6">
-        <PurchaseOrdersStatusTabs
-          status={filters.status}
-          onStatusChange={(status) => {
-            if (filters.status !== status) {
-              setFilters((prev) => ({
-                ...prev,
-                status,
-              }));
-            }
-          }}
-        />
-      </div>
-      <div className="space-y-6">
+        <div className="flex flex-wrap gap-2">
+          <Button variant="secondary" size="md" disabled>
+            <AppIcon name="upload" className="size-4" />
+            Bulk upload
+            <span className="rounded-full border border-line px-1.5 text-[11px] font-normal leading-4">
+              Soon
+            </span>
+          </Button>
+          <Button size="md" onClick={() => setIsCreateDrawerOpen(true)}>
+            <span
+              aria-hidden="true"
+              className="material-symbols-outlined !text-[18px]"
+            >
+              add
+            </span>
+            Create purchase order
+          </Button>
+        </div>
+      </header>
+      <div className="space-y-6 px-8 pb-8">
+        <PurchaseOrdersMetrics />
+
         <ErrorBoundary>
           <PurchaseOrdersTable
             filters={filters}
             onFiltersChange={setFilters}
             resetPageKey={createdCount}
+            tabs={
+              <PurchaseOrdersStatusTabs
+                status={filters.status}
+                onStatusChange={(status) => {
+                  if (filters.status !== status) {
+                    setFilters((prev) => ({
+                      ...prev,
+                      status,
+                    }));
+                  }
+                }}
+              />
+            }
           />
         </ErrorBoundary>
-      </div>
-      <div className="px-6 pb-6">
-        <PurchaseOrdersMetrics />
       </div>
       {isCreateDrawerOpen && (
         <CreatePurchaseOrderDrawer

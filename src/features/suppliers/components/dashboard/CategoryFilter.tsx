@@ -1,3 +1,4 @@
+import { cn } from "@/src/lib/utils";
 import type { CategoryFilterProps } from "@/src/features/suppliers/types/suppliers.types";
 
 const categories = [
@@ -8,34 +9,36 @@ const categories = [
   { value: "mixed", label: "Mixed" },
 ] as const;
 
+// Segmented control: one pressed button at a time.
 export default function CategoryFilter({
   value,
   onChange,
 }: CategoryFilterProps) {
   return (
-    <>
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-bold text-muted mr-2">
-          Filter by Category:
-        </span>
-        <div className="flex bg-white border border-line p-1 rounded-lg">
-          {categories.map((category) => (
-            <button
-              key={category.value}
-              className={`
-                ${
-                  category.value === value
-                    ? "px-4 py-1.5 text-xs font-bold rounded-md bg-primary text-white"
-                    : "px-4 py-1.5 text-xs font-bold rounded-md text-muted hover:bg-slate-100"
-                } cursor-pointer`}
-              onClick={() => onChange(category.value)}
-              type="button"
-            >
-              {category.label}
-            </button>
-          ))}
-        </div>
-      </div>
-    </>
+    <div
+      role="group"
+      aria-label="Category"
+      className="inline-flex rounded-control border border-line bg-background-light p-0.5"
+    >
+      {categories.map((category) => {
+        const pressed = category.value === value;
+        return (
+          <button
+            key={category.value}
+            type="button"
+            aria-pressed={pressed}
+            onClick={() => onChange(category.value)}
+            className={cn(
+              "h-8 cursor-pointer rounded-[5px] px-3 text-[13px] font-medium",
+              pressed
+                ? "bg-surface text-ink shadow-raised"
+                : "text-muted hover:text-ink",
+            )}
+          >
+            {category.label}
+          </button>
+        );
+      })}
+    </div>
   );
 }

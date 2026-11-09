@@ -1,92 +1,73 @@
 "use client";
 
 import Link from "next/link";
-import type {
-  PurchaseOrderStatus,
-  PurchaseOrderHeaderProps,
-} from "../../../types";
-
-const statusConfig: Record<
-  PurchaseOrderStatus,
-  { label: string; className: string }
-> = {
-  closed: { label: "Closed", className: "bg-green-100 text-green-700" },
-  overdue: { label: "Overdue", className: "bg-red-100 text-red-700" },
-  pending: { label: "Pending", className: "bg-amber-100 text-amber-700" },
-  partially_received: {
-    label: "Partially Received",
-    className: "bg-blue-100 text-blue-700",
-  },
-  draft: { label: "Draft", className: "bg-slate-100 text-slate-700" },
-  cancelled: {
-    label: "Cancelled",
-    className: "bg-slate-100 text-slate-700",
-  },
-};
-
-const actionButtonClassName =
-  "flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50";
+import { Button } from "@/src/components/ui/Button";
+import AppIcon from "@/src/components/ui/AppIcon";
+import { StatusPill } from "@/src/components/ui/StatusPill";
+import type { PurchaseOrderHeaderProps } from "../../../types";
+import { getReceiptProgress } from "../../../utils/calculations";
+import { formatQuantity } from "../../../utils/formatters";
 
 export default function PurchaseOrderHeader({
   purchaseOrder,
   onEditClick,
 }: PurchaseOrderHeaderProps) {
-  const status = statusConfig[purchaseOrder.status] ?? statusConfig.draft;
-  const poLabel = `#${purchaseOrder.po_number}`;
+  const { received, ordered } = getReceiptProgress(purchaseOrder.lineItems);
+  const receiptSummary =
+    ordered === 0
+      ? ""
+      : received >= ordered
+        ? ` All ${formatQuantity(ordered)} units received.`
+        : ` ${formatQuantity(received)} of ${formatQuantity(ordered)} units received.`;
 
   return (
-    <div className="px-6 pb-4 pt-5">
-      <div className="mx-auto max-w-7xl">
-        <nav className="flex items-center gap-2 text-sm">
-          <Link
-            className="font-medium text-muted transition-colors hover:text-primary"
-            href="/purchase-orders"
+    <header className="px-8 pb-6 pt-6">
+      <nav
+        aria-label="Breadcrumb"
+        className="flex items-center gap-1.5 text-[13px]"
+      >
+        <Link className="text-muted hover:text-ink" href="/purchase-orders">
+          Purchase orders
+        </Link>
+        <AppIcon name="chevronRight" className="size-3.5 text-subtle" />
+        <span
+          aria-current="page"
+          className="truncate font-mono text-[12.5px] text-ink"
+        >
+          {purchaseOrder.po_number}
+        </span>
+      </nav>
+
+      <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="truncate font-mono text-[22px] font-medium tracking-[-0.01em]">
+              {purchaseOrder.po_number}
+            </h1>
+            <StatusPill status={purchaseOrder.status} />
+          </div>
+          <p className="mt-1 text-sm text-muted">
+            {purchaseOrder.supplier_name}.{receiptSummary}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button variant="secondary" size="md" disabled>
+            <AppIcon name="download" className="size-4 text-subtle" />
+            Download PDF
+          </Button>
+          <Button
+            size="md"
+            onClick={(event) => {
+              event.preventDefault();
+              onEditClick?.();
+            }}
           >
-            Purchase Orders
-          </Link>
-          <span className="text-muted">/</span>
-          <span className="truncate font-medium text-ink">{poLabel}</span>
-        </nav>
-
-        <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex min-w-0 flex-wrap items-center gap-3">
-            <h2 className="truncate text-2xl font-bold tracking-tight text-ink">
-              {poLabel}
-            </h2>
-            <span
-              className={`${status.className} rounded-full px-2.5 py-1 text-xs font-bold uppercase tracking-wider`}
-            >
-              {status.label}
-            </span>
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              className={`${actionButtonClassName} border border-line bg-white text-ink hover:bg-slate-50`}
-              disabled
-              type="button"
-            >
-              <span className="material-symbols-outlined !text-[18px]">
-                download
-              </span>
-              <span className="text-nowrap">Download PDF</span>
-            </button>
-            <button
-              className={`${actionButtonClassName} border border-transparent bg-primary text-white shadow-md hover:bg-blue-700`}
-              onClick={(event) => {
-                event.preventDefault();
-                onEditClick?.();
-              }}
-              type="button"
-            >
-              <span className="material-symbols-outlined !text-[18px]">
-                edit
-              </span>
-              <span>Edit PO</span>
-            </button>
-          </div>
+            <AppIcon name="edit" className="size-4" />
+            Edit order
+          </Button>
         </div>
       </div>
-    </div>
+    </header>
   );
 }

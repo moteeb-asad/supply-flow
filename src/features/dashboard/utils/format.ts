@@ -1,5 +1,3 @@
-import { formatDistanceToNow } from "date-fns";
-
 const countFormatter = new Intl.NumberFormat("en-US");
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -19,7 +17,3 @@ export function getPercentChange(current: number, previous: number) {
   if (previous <= 0) return null;
   return ((current - previous) / previous) * 100;
 }
-
-// "2 hours ago"; rendered on the server at request time.
-export const formatRelativeTime = (value: string) =>
-  formatDistanceToNow(new Date(value), { addSuffix: true });

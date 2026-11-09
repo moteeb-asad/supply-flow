@@ -1,105 +1,87 @@
-import { Input } from "@/src/components/ui/Input";
 import type { SupplierIdentitySectionProps } from "@/src/features/suppliers/types/suppliers.types";
+import { cn } from "@/src/lib/utils";
+import {
+  FieldError,
+  SectionHeading,
+  fieldClassName,
+  labelClassName,
+} from "./fields";
+
+const CATEGORIES = [
+  { value: "dry", label: "Dry" },
+  { value: "liquid", label: "Liquid" },
+  { value: "mixed", label: "Mixed" },
+] as const;
 
 export function SupplierIdentitySection({
   register,
   errors,
 }: SupplierIdentitySectionProps) {
   return (
-    <section className="space-y-4">
-      <div className="flex items-center gap-2 mb-1">
-        <span className="material-symbols-outlined text-primary text-lg">
-          business
-        </span>
-        <h4 className="text-xs font-bold text-muted uppercase tracking-widest">
-          Supplier Identity
-        </h4>
+    <section aria-labelledby="supplier-identity" className="space-y-4">
+      <SectionHeading id="supplier-identity">Identity</SectionHeading>
+
+      <div>
+        <label htmlFor="supplier-name" className={labelClassName}>
+          Supplier name
+        </label>
+        <input
+          id="supplier-name"
+          type="text"
+          placeholder="e.g. North Star Distributing"
+          aria-invalid={errors.name ? true : undefined}
+          aria-describedby={errors.name ? "supplier-name-error" : undefined}
+          className={fieldClassName}
+          {...register("name")}
+        />
+        <FieldError id="supplier-name-error" message={errors.name?.message} />
       </div>
-      <div className="space-y-4">
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold flex items-center gap-1">
-            Supplier Name <span className="text-danger">*</span>
+
+      <div className="grid grid-cols-[1fr_auto] items-end gap-4">
+        <fieldset>
+          <legend className={labelClassName}>Category</legend>
+          {/* Segmented control built from radio buttons. */}
+          <div className="mt-1.5 inline-flex w-full rounded-control bg-background-light p-0.5 ring-1 ring-line ring-inset">
+            {CATEGORIES.map((category) => (
+              <label key={category.value} className="flex-1">
+                <input
+                  type="radio"
+                  value={category.value}
+                  className="peer sr-only"
+                  {...register("category")}
+                />
+                <span
+                  className={cn(
+                    "flex h-8 cursor-pointer items-center justify-center rounded-[5px] text-[13px] font-medium text-muted",
+                    "peer-checked:bg-surface peer-checked:text-ink peer-checked:shadow-raised",
+                    "peer-focus-visible:ring-2 peer-focus-visible:ring-primary/40",
+                  )}
+                >
+                  {category.label}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div>
+          <label htmlFor="supplier-status" className={labelClassName}>
+            Status
           </label>
-          <Input
-            className="w-full bg-white border-gray-200 rounded-lg py-2 px-4 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-            placeholder="e.g., North Star Distributing"
-            type="text"
-            {...register("name")}
-          />
-          {errors.name && (
-            <p className="text-xs text-danger">{errors.name.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold">Status</label>
           <select
-            className="w-full bg-white border-gray-200 rounded-lg py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+            id="supplier-status"
+            className={cn(fieldClassName, "w-36 cursor-pointer")}
             {...register("status")}
           >
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
-          {errors.status && (
-            <p className="text-xs text-danger">{errors.status.message}</p>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold">Category Selection</label>
-          <div className="grid grid-cols-3 gap-0 p-1 bg-gray-100 rounded-xl border border-gray-200">
-            <label className="relative flex items-center justify-center py-2 rounded-lg cursor-pointer transition-all group has-[:checked]:bg-white has-[:checked]:shadow-sm">
-              <Input
-                className="hidden"
-                type="radio"
-                value="dry"
-                {...register("category")}
-              />
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-lg text-muted group-has-[:checked]:text-primary transition-colors">
-                  inventory
-                </span>
-                <span className="text-xs font-bold group-has-[:checked]:text-primary">
-                  Dry
-                </span>
-              </div>
-            </label>
-            <label className="relative flex items-center justify-center py-2 rounded-lg cursor-pointer transition-all group has-[:checked]:bg-white has-[:checked]:shadow-sm">
-              <Input
-                className="hidden"
-                type="radio"
-                value="liquid"
-                {...register("category")}
-              />
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-lg text-muted group-has-[:checked]:text-primary transition-colors">
-                  water_drop
-                </span>
-                <span className="text-xs font-bold group-has-[:checked]:text-primary">
-                  Liquid
-                </span>
-              </div>
-            </label>
-            <label className="relative flex items-center justify-center py-2 rounded-lg cursor-pointer transition-all group has-[:checked]:bg-white has-[:checked]:shadow-sm">
-              <Input
-                className="hidden"
-                type="radio"
-                value="mixed"
-                {...register("category")}
-              />
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-lg text-muted group-has-[:checked]:text-primary transition-colors">
-                  layers
-                </span>
-                <span className="text-xs font-bold group-has-[:checked]:text-primary">
-                  Mixed
-                </span>
-              </div>
-            </label>
-          </div>
-          {errors.category && (
-            <p className="text-xs text-danger">{errors.category.message}</p>
-          )}
         </div>
       </div>
+      <FieldError
+        id="supplier-category-error"
+        message={errors.category?.message ?? errors.status?.message}
+      />
     </section>
   );
 }

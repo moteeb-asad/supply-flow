@@ -6,11 +6,11 @@ import {
   logoutAction,
 } from "@/src/features/auth/actions/auth.actions";
 import { getMenuForRole } from "@/src/lib/navigation";
-import { formatRole } from "@/src/lib/utils";
+import { formatRole, getInitials } from "@/src/lib/utils";
 import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
 
 const sidebarIconButtonClassName =
-  "relative flex size-8 cursor-pointer items-center justify-center rounded-md text-muted transition-colors hover:bg-gray-100";
+  "relative flex size-7 cursor-pointer items-center justify-center rounded-control text-subtle transition-colors hover:bg-background-light hover:text-ink";
 
 export default async function Sidebar() {
   const user = await getCurrentUser();
@@ -19,33 +19,37 @@ export default async function Sidebar() {
   // Extract name from user metadata
   const userName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
-  // Get first letter of name for avatar
-  const initial = userName.charAt(0).toUpperCase();
   return (
-    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-line-soft bg-white">
-      <div className="flex h-14 items-center gap-2.5 px-4">
-        <div className="flex size-8 items-center justify-center rounded-md bg-primary text-white">
-          <span className="material-symbols-outlined !text-[20px]">
-            inventory_2
+    // Sits on the grey frame (see app/(main)/layout.tsx), no border or fill.
+    <aside className="sticky top-2 flex h-[calc(100vh-16px)] w-60 shrink-0 flex-col px-2 py-2">
+      <div className="flex items-center gap-2.5 px-1.5">
+        <div className="flex size-8 items-center justify-center rounded-control bg-ink text-white">
+          <span
+            aria-hidden="true"
+            className="material-symbols-outlined !text-[18px]"
+          >
+            deployed_code
           </span>
         </div>
-        <div className="flex flex-col gap-0.5">
-          <h1 className="text-sm font-bold leading-none">SupplyFlow</h1>
-          <p className="text-xs leading-none text-muted">Warehouse Admin</p>
+        <div className="min-w-0">
+          <p className="text-sm font-semibold leading-5 text-ink">SupplyFlow</p>
+          <p className="text-xs leading-4 text-subtle">Warehouse operations</p>
         </div>
       </div>
       <SidebarNav items={filteredMenuItems} />
-      <div className="space-y-1 border-t border-line-soft p-3">
+      <div className="space-y-2 pt-2">
         <SidebarNavLink href="/settings" icon="settings" label="Settings" />
-        <div className="flex items-center gap-2.5 py-1.5 pl-2.5">
-          <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
-            <span className="text-xs font-bold text-primary">{initial}</span>
+        <div className="flex items-center gap-2.5 rounded-card border border-line bg-surface/60 p-2">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-neutral-soft">
+            <span className="text-xs font-semibold text-neutral">
+              {getInitials(userName)}
+            </span>
           </div>
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <p className="truncate text-sm font-medium leading-none">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[13px] font-medium leading-5 text-ink">
               {userName}
             </p>
-            <p className="truncate text-xs leading-none text-muted">
+            <p className="truncate text-xs leading-4 text-subtle">
               {formatRole(role)}
             </p>
           </div>
@@ -56,10 +60,10 @@ export default async function Sidebar() {
               title="Notifications"
               type="button"
             >
-              <span className="material-symbols-outlined !text-[20px]">
+              <span className="material-symbols-outlined !text-[18px]">
                 notifications
               </span>
-              <span className="absolute right-1.5 top-1.5 size-2 rounded-full border-2 border-white bg-danger" />
+              <span className="absolute right-1 top-1 size-1.5 rounded-full bg-danger" />
             </button>
             <form action={logoutAction}>
               <button
@@ -68,7 +72,7 @@ export default async function Sidebar() {
                 title="Log out"
                 type="submit"
               >
-                <span className="material-symbols-outlined !text-[20px]">
+                <span className="material-symbols-outlined !text-[18px]">
                   logout
                 </span>
               </button>

@@ -13,16 +13,16 @@ Core outcomes:
 - Better execution speed for warehouse and outlet teams.
 - Better control through role-based access.
 
-## Problem It Solves
+## The problem I'm solving
 
-Operations teams often manage suppliers, stock movement, and outlet requests across disconnected tools, which causes delays, errors, and poor visibility.
+In most warehouses, what was ordered, what actually arrived, and what is on the shelf live in different places: purchase orders in one spreadsheet, delivery notes on paper, stock counts in another file. Nobody can say with confidence whether a supplier delivered in full and on time, or why stock does not match. Shortfalls are found late, and supplier decisions rest on memory rather than records.
 
-SupplyFlow solves this by providing:
+SupplyFlow closes that gap by tying every step to the purchase order:
 
-- A single place to track suppliers, inventory, and orders.
-- Clear role-based workflows for warehouse and operations users.
-- Faster decision-making through structured data and operational insights.
-- Better accountability with traceable actions and centralized records.
+- **Receiving happens against the order.** Store keepers record accepted and rejected quantities per PO line, so any shortfall or variance is visible the moment goods arrive.
+- **Stock follows the receipts.** Inventory levels come from what was actually received, and low or critical items are flagged automatically.
+- **Supplier performance comes from real deliveries.** On-time delivery is measured from recorded receipts, not opinion.
+- **Each role sees only its part.** Super admins, operations managers and store keepers each get the screens and actions their job needs, and records keep track of who created them.
 
 ## Features
 

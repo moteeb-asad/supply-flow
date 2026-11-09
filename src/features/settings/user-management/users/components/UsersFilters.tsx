@@ -2,6 +2,12 @@ import { DATE_RANGE_OPTIONS } from "@/src/constants/dateRangeOptions";
 import { ROLES } from "@/src/constants/roles";
 import { UsersFiltersValue } from "../types/filters";
 import { FilterPeriod } from "@/src/lib/date-range-utils";
+import {
+  filterCheckboxClassName,
+  filterHeadingClassName,
+  filterOptionClassName,
+  filterSelectClassName,
+} from "@/src/components/data-table/filters/filter-styles";
 
 export function UsersFilters({
   onChange,
@@ -34,29 +40,25 @@ export function UsersFilters({
   return (
     <>
       <div>
-        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
-          Role
-        </h3>
+        <h3 className={filterHeadingClassName}>Role</h3>
         <div className="space-y-2">
           {ROLES.map((role) => (
-            <label key={role.id} className="flex items-center gap-3">
+            <label key={role.id} className={filterOptionClassName}>
               <input
                 type="checkbox"
                 checked={(values?.roleIds || []).includes(String(role.id))}
                 onChange={() => handleRoleChange(String(role.id))}
-                className="rounded border-gray-300 text-primary focus:ring-primary bg-transparent"
+                className={filterCheckboxClassName}
               />
-              <span className="text-sm">{role.label}</span>
+              <span>{role.label}</span>
             </label>
           ))}
         </div>
       </div>
       <div>
-        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
-          Last Login
-        </h3>
+        <h3 className={filterHeadingClassName}>Last login</h3>
         <select
-          className="w-full bg-background-light border-none rounded-lg focus:ring-2 focus:ring-primary text-sm py-2 px-3"
+          className={filterSelectClassName}
           value={values?.lastLogin || ""}
           onChange={handleLastLoginChange}
         >

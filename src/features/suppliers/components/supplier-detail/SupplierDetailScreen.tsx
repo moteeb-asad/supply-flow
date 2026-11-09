@@ -5,6 +5,94 @@ import { useSupplier } from "@/src/features/suppliers/hooks/useSupplier";
 import SupplierHeader from "./header/SupplierHeader";
 import { EditSupplierDrawer } from "../onboarding/EditSupplierDrawer";
 import type { SupplierDetailScreenProps } from "@/src/features/suppliers/types/suppliers.types";
+import { Button } from "@/src/components/ui/Button";
+import { StatCard, StatStrip } from "@/src/components/ui/StatCard";
+import {
+  StatusPill,
+  getStatus,
+  type StatusTone,
+} from "@/src/components/ui/StatusPill";
+import { formatCategory } from "@/src/features/suppliers/utils/category";
+import { cn } from "@/src/lib/utils";
+
+// Placeholder content below (KPIs, chart bars, deliveries) is not real data
+// yet; see the card "Supplier metrics and supplier detail page from real data".
+
+const TABS = ["Performance", "Delivery history", "Price history", "Compliance"];
+
+const KPIS: { label: string; value: string; change: string; good: boolean }[] =
+  [
+    { label: "Avg lead time", value: "3.2 days", change: "-0.5%", good: false },
+    { label: "On-time rate", value: "94.2%", change: "-1.2%", good: false },
+    {
+      label: "Fulfillment accuracy",
+      value: "98.5%",
+      change: "+0.4%",
+      good: true,
+    },
+    { label: "Active POs", value: "12", change: "+2", good: true },
+  ];
+
+const TREND_BARS = [
+  { month: "Jan", height: "60%" },
+  { month: "Feb", height: "75%" },
+  { month: "Mar", height: "90%" },
+  { month: "Apr", height: "65%" },
+  { month: "May", height: "95%" },
+  { month: "Jun", height: "70%" },
+  { month: "Jul", height: "98%" },
+];
+
+const DELIVERIES: {
+  date: string;
+  poNumber: string;
+  items: string;
+  status: string;
+  tone: StatusTone;
+  accuracy: string;
+}[] = [
+  {
+    date: "Oct 24, 2023",
+    poNumber: "PO-88421",
+    items: "48 SKUs",
+    status: "Received",
+    tone: "success",
+    accuracy: "100%",
+  },
+  {
+    date: "Oct 21, 2023",
+    poNumber: "PO-88390",
+    items: "12 SKUs",
+    status: "Late (2d)",
+    tone: "danger",
+    accuracy: "100%",
+  },
+  {
+    date: "Oct 18, 2023",
+    poNumber: "PO-88312",
+    items: "34 SKUs",
+    status: "Received",
+    tone: "success",
+    accuracy: "92%",
+  },
+  {
+    date: "Oct 15, 2023",
+    poNumber: "PO-88255",
+    items: "62 SKUs",
+    status: "Partial",
+    tone: "warning",
+    accuracy: "85%",
+  },
+];
+
+const DELIVERY_HEADERS: { label: string; className: string }[] = [
+  { label: "Delivery date", className: "px-5" },
+  { label: "PO number", className: "px-3" },
+  { label: "Items", className: "px-3 text-right" },
+  { label: "Status", className: "px-3" },
+  { label: "Qty accuracy", className: "px-3 text-right" },
+  { label: "Actions", className: "px-5 text-right" },
+];
 
 export default function SupplierDetailScreen({
   supplier,
@@ -16,333 +104,289 @@ export default function SupplierDetailScreen({
 
   if (!supplierData) return null;
 
+  // Already loaded with the supplier; no extra queries.
+  const details = [
+    {
+      label: "Contact person",
+      value: supplierData.primary_contact_name ?? "—",
+    },
+    { label: "Category", value: formatCategory(supplierData.category) },
+    {
+      label: "Lead time",
+      value:
+        supplierData.lead_time_days != null
+          ? `${supplierData.lead_time_days} days`
+          : "—",
+      numeric: true,
+    },
+    {
+      label: "Minimum order",
+      value:
+        supplierData.min_order_qty != null
+          ? `${supplierData.min_order_qty} units`
+          : "—",
+      numeric: true,
+    },
+    {
+      label: "Status",
+      value: getStatus(supplierData.status ?? "active").label,
+    },
+  ];
+
   return (
     <>
-      <SupplierHeader supplier={supplierData} onEditClick={openEditDrawer} />
+      <header className="px-8 pt-6">
+        <SupplierHeader supplier={supplierData} onEditClick={openEditDrawer} />
 
-      <div className="px-8">
-        <div className="flex border-b border-line gap-8">
-          <a
-            className="flex flex-col items-center justify-center border-b-[3px] border-primary text-primary pb-[13px] pt-4"
-            href="#"
+        <div className="relative mt-6 overflow-x-auto border-b border-line">
+          <div
+            role="tablist"
+            aria-label="Supplier sections"
+            className="flex min-w-max gap-6"
           >
-            <p className="text-sm font-bold leading-normal tracking-wide">
-              Performance Summary
-            </p>
-          </a>
-          <a
-            className="flex flex-col items-center justify-center border-b-[3px] border-transparent text-muted pb-[13px] pt-4 hover:text-primary transition-colors"
-            href="#"
-          >
-            <p className="text-sm font-bold leading-normal tracking-wide">
-              Delivery History
-            </p>
-          </a>
-          <a
-            className="flex flex-col items-center justify-center border-b-[3px] border-transparent text-muted pb-[13px] pt-4 hover:text-primary transition-colors"
-            href="#"
-          >
-            <p className="text-sm font-bold leading-normal tracking-wide">
-              Price History
-            </p>
-          </a>
-          <a
-            className="flex flex-col items-center justify-center border-b-[3px] border-transparent text-muted pb-[13px] pt-4 hover:text-primary transition-colors"
-            href="#"
-          >
-            <p className="text-sm font-bold leading-normal tracking-wide">
-              Compliance
-            </p>
-          </a>
-        </div>
-      </div>
-      <div className="p-8 space-y-8">
-        {/* KPI Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white flex flex-col gap-2 rounded-xl p-6 border border-line shadow-sm">
-            <p className="text-muted text-sm font-medium">Avg Lead Time</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-ink text-3xl font-black">3.2 Days</p>
-              <span className="text-red-500 text-sm font-bold flex items-center">
-                -0.5%
-              </span>
-            </div>
-            <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2">
-              <div
-                className="bg-primary h-full rounded-full"
-                style={{ width: "75%" }}
-              ></div>
-            </div>
-          </div>
-          <div className="bg-white flex flex-col gap-2 rounded-xl p-6 border border-line shadow-sm">
-            <p className="text-muted text-sm font-medium">On-Time Rate</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-ink text-3xl font-black">94.2%</p>
-              <span className="text-red-500 text-sm font-bold flex items-center">
-                -1.2%
-              </span>
-            </div>
-            <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2">
-              <div
-                className="bg-primary h-full rounded-full"
-                style={{ width: "94%" }}
-              ></div>
-            </div>
-          </div>
-          <div className="bg-white flex flex-col gap-2 rounded-xl p-6 border border-line shadow-sm">
-            <p className="text-muted text-sm font-medium">
-              Fulfillment Accuracy
-            </p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-ink text-3xl font-black">98.5%</p>
-              <span className="text-green-500 text-sm font-bold flex items-center">
-                +0.4%
-              </span>
-            </div>
-            <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2">
-              <div
-                className="bg-green-500 h-full rounded-full"
-                style={{ width: "98%" }}
-              ></div>
-            </div>
-          </div>
-          <div className="bg-white flex flex-col gap-2 rounded-xl p-6 border border-line shadow-sm">
-            <p className="text-muted text-sm font-medium">Active POs</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-ink text-3xl font-black">12</p>
-              <span className="text-green-500 text-sm font-bold flex items-center">
-                +2
-              </span>
-            </div>
-            <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2">
-              <div
-                className="bg-primary h-full rounded-full"
-                style={{ width: "60%" }}
-              ></div>
-            </div>
+            {TABS.map((tab, index) => (
+              <button
+                key={tab}
+                type="button"
+                role="tab"
+                aria-selected={index === 0}
+                className={cn(
+                  "-mb-px h-11 cursor-pointer border-b-2 text-[13px] font-medium",
+                  index === 0
+                    ? "border-ink text-ink"
+                    : "border-transparent text-muted hover:text-ink",
+                )}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
         </div>
-        {/* Charts Section Mockup */}
-        <div className="bg-white rounded-xl border border-line p-6 shadow-sm">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-bold">Delivery Performance Trend</h3>
-            <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 text-xs text-muted">
-                <span className="w-3 h-3 rounded-full bg-primary"></span>
-                On-time
-              </span>
-              <span className="flex items-center gap-1.5 text-xs text-muted">
-                <span className="w-3 h-3 rounded-full bg-red-400"></span>
-                Late
-              </span>
+      </header>
+
+      <div className="space-y-6 px-8 pb-8 pt-6">
+        <StatStrip aria-label="Performance">
+          {KPIS.map((kpi) => (
+            <StatCard
+              key={kpi.label}
+              label={kpi.label}
+              value={kpi.value}
+              hint={
+                <span
+                  className={cn(
+                    "text-[13px]",
+                    kpi.good ? "text-success" : "text-danger",
+                  )}
+                >
+                  {kpi.change}
+                </span>
+              }
+            />
+          ))}
+        </StatStrip>
+
+        <div className="grid gap-6 xl:grid-cols-3">
+          <section
+            aria-labelledby="delivery-trend-title"
+            className="min-w-0 rounded-card border border-line p-5 xl:col-span-2"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <h2
+                id="delivery-trend-title"
+                className="text-[15px] font-semibold"
+              >
+                Delivery performance trend
+              </h2>
+              <ul className="flex gap-4 text-[13px] text-muted">
+                <li className="flex items-center gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="size-2.5 rounded-sm bg-chart-1"
+                  />
+                  On time
+                </li>
+                <li className="flex items-center gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="size-2.5 rounded-sm bg-chart-3"
+                  />
+                  Late
+                </li>
+              </ul>
             </div>
-          </div>
-          <div className="h-64 relative bg-slate-50 rounded flex items-end justify-between px-8 pb-4 border border-dashed border-slate-200">
-            <div className="w-12 bg-primary/20 rounded-t h-[60%] relative group">
-              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                84%
+            <div className="mt-4">
+              <div className="flex h-56 items-end justify-between gap-3 border-b border-line px-2">
+                {TREND_BARS.map((bar) => (
+                  <div
+                    key={bar.month}
+                    className="w-full max-w-12 rounded-t-[3px] bg-chart-1"
+                    style={{ height: bar.height }}
+                  />
+                ))}
+              </div>
+              <div className="mt-2 flex justify-between gap-3 px-2 text-xs text-subtle">
+                {TREND_BARS.map((bar) => (
+                  <span key={bar.month} className="w-full max-w-12 text-center">
+                    {bar.month}
+                  </span>
+                ))}
               </div>
             </div>
-            <div className="w-12 bg-primary/40 rounded-t h-[75%]"></div>
-            <div className="w-12 bg-primary/60 rounded-t h-[90%]"></div>
-            <div className="w-12 bg-primary/40 rounded-t h-[65%]"></div>
-            <div className="w-12 bg-primary/80 rounded-t h-[95%]"></div>
-            <div className="w-12 bg-primary/40 rounded-t h-[70%]"></div>
-            <div className="w-12 bg-primary rounded-t h-[98%]"></div>
-          </div>
-          <div className="flex justify-between px-8 mt-4 text-xs font-medium text-muted">
-            <span>Jan</span>
-            <span>Feb</span>
-            <span>Mar</span>
-            <span>Apr</span>
-            <span>May</span>
-            <span>Jun</span>
-            <span>Jul</span>
-          </div>
+          </section>
+
+          <section
+            aria-labelledby="supplier-details-title"
+            className="rounded-card border border-line p-5"
+          >
+            <h2
+              id="supplier-details-title"
+              className="text-[15px] font-semibold"
+            >
+              Supplier details
+            </h2>
+            <dl className="mt-3 divide-y divide-line-soft text-[13px]">
+              {details.map((detail) => (
+                <div
+                  key={detail.label}
+                  className="flex justify-between gap-4 py-2.5"
+                >
+                  <dt className="text-muted">{detail.label}</dt>
+                  <dd
+                    className={cn(
+                      "text-right",
+                      detail.numeric && "tabular-nums",
+                    )}
+                  >
+                    {detail.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
         </div>
-        {/* Delivery History Table */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold">Recent Deliveries</h3>
+
+        <section
+          aria-labelledby="deliveries-title"
+          className="overflow-hidden rounded-card border border-line"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
+            <h2 id="deliveries-title" className="text-[15px] font-semibold">
+              Recent deliveries
+            </h2>
             <div className="flex gap-2">
-              <div className="relative">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted text-lg">
+              <div className="relative w-full max-w-60">
+                <label htmlFor="delivery-search" className="sr-only">
+                  Search deliveries by PO number
+                </label>
+                <span
+                  aria-hidden="true"
+                  className="material-symbols-outlined pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 !text-[16px] text-subtle"
+                >
                   search
                 </span>
                 <input
-                  className="pl-10 pr-4 py-2 bg-white border border-line rounded-lg text-sm w-64 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
-                  placeholder="Search PO#"
-                  type="text"
+                  id="delivery-search"
+                  type="search"
+                  placeholder="Search PO number"
+                  className="h-9 w-full rounded-control border border-line bg-surface pl-8 pr-3 text-[13px] text-ink placeholder:text-subtle focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15"
                 />
               </div>
-              <button className="px-4 py-2 bg-white border border-line rounded-lg text-sm font-bold flex items-center gap-2">
-                <span className="material-symbols-outlined text-lg">
-                  filter_list
+              <Button variant="secondary" size="md">
+                <span
+                  aria-hidden="true"
+                  className="material-symbols-outlined !text-[18px]"
+                >
+                  tune
                 </span>
-                <span>Filters</span>
-              </button>
+                Filters
+              </Button>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-line shadow-sm overflow-hidden">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50 border-b border-line">
-                  <th className="px-6 py-4 text-xs font-bold text-muted uppercase tracking-wider">
-                    Delivery Date
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted uppercase tracking-wider">
-                    PO Number
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted uppercase tracking-wider">
-                    Items
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted uppercase tracking-wider">
-                    Qty Accuracy
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted uppercase tracking-wider text-right">
-                    Actions
-                  </th>
+
+          <div className="scrollbar-thin relative overflow-x-auto">
+            <table className="w-full min-w-[720px] border-collapse text-left text-[13px]">
+              <thead className="bg-background-light text-xs text-subtle">
+                <tr className="border-y border-line">
+                  {DELIVERY_HEADERS.map(({ label, className }) => (
+                    <th
+                      key={label}
+                      scope="col"
+                      className={`${className} py-2.5 font-medium`}
+                    >
+                      {label === "Actions" ? (
+                        <span className="sr-only">{label}</span>
+                      ) : (
+                        label
+                      )}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-line">
-                <tr className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-medium">
-                    Oct 24, 2023
-                  </td>
-                  <td className="px-6 py-4 text-sm font-bold text-primary">
-                    #PO-88421
-                  </td>
-                  <td className="px-6 py-4 text-sm">48 SKUs</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>
-                      Received
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-green-600">
-                    100%
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="text-muted hover:text-primary transition-colors">
-                      <span className="material-symbols-outlined">
-                        more_horiz
-                      </span>
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-medium">
-                    Oct 21, 2023
-                  </td>
-                  <td className="px-6 py-4 text-sm font-bold text-primary">
-                    #PO-88390
-                  </td>
-                  <td className="px-6 py-4 text-sm">12 SKUs</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-600"></span>
-                      Late (2d)
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-green-600">
-                    100%
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="text-muted hover:text-primary transition-colors">
-                      <span className="material-symbols-outlined">
-                        more_horiz
-                      </span>
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-medium">
-                    Oct 18, 2023
-                  </td>
-                  <td className="px-6 py-4 text-sm font-bold text-primary">
-                    #PO-88312
-                  </td>
-                  <td className="px-6 py-4 text-sm">34 SKUs</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>
-                      Received
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-red-600">
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-sm">
-                        warning
-                      </span>
-                      <span>92%</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="text-muted hover:text-primary transition-colors">
-                      <span className="material-symbols-outlined">
-                        more_horiz
-                      </span>
-                    </button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-medium">
-                    Oct 15, 2023
-                  </td>
-                  <td className="px-6 py-4 text-sm font-bold text-primary">
-                    #PO-88255
-                  </td>
-                  <td className="px-6 py-4 text-sm">62 SKUs</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
-                      Partial
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-red-600">
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-sm">
-                        warning
-                      </span>
-                      <span>85%</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="text-muted hover:text-primary transition-colors">
-                      <span className="material-symbols-outlined">
-                        more_horiz
-                      </span>
-                    </button>
-                  </td>
-                </tr>
+              <tbody className="divide-y divide-line-soft">
+                {DELIVERIES.map((delivery) => (
+                  <tr
+                    key={delivery.poNumber}
+                    className="hover:bg-background-light/60"
+                  >
+                    <td className="px-5 py-3 text-muted">{delivery.date}</td>
+                    <td className="px-3 py-3 font-mono text-[12.5px] font-medium">
+                      {delivery.poNumber}
+                    </td>
+                    <td className="px-3 py-3 text-right tabular-nums">
+                      {delivery.items}
+                    </td>
+                    <td className="px-3 py-3">
+                      <StatusPill tone={delivery.tone}>
+                        {delivery.status}
+                      </StatusPill>
+                    </td>
+                    <td
+                      className={cn(
+                        "px-3 py-3 text-right tabular-nums",
+                        delivery.accuracy !== "100%" && "text-warning",
+                      )}
+                    >
+                      {delivery.accuracy}
+                    </td>
+                    <td className="px-5 py-3 text-right">
+                      <button
+                        type="button"
+                        aria-label={`More actions for ${delivery.poNumber}`}
+                        className="inline-flex size-8 cursor-pointer items-center justify-center rounded-control text-subtle hover:bg-background-light hover:text-ink"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="material-symbols-outlined !text-[18px]"
+                        >
+                          more_horiz
+                        </span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
-            <div className="px-6 py-4 flex items-center justify-between bg-slate-50">
-              <p className="text-xs text-muted font-medium tracking-wide">
-                Showing 4 of 128 deliveries
-              </p>
-              <div className="flex gap-2">
-                <button
-                  className="px-3 py-1 bg-white border border-line rounded text-xs font-bold disabled:opacity-50"
-                  disabled={"disabled" as unknown as boolean}
-                >
-                  Previous
-                </button>
-                <button className="px-3 py-1 bg-white border border-line rounded text-xs font-bold hover:bg-slate-50">
-                  Next
-                </button>
-              </div>
+          </div>
+
+          <div className="flex items-center justify-between border-t border-line px-5 py-3">
+            <p className="text-[13px] text-muted">
+              Showing 4 of 128 deliveries
+            </p>
+            <div className="flex gap-2">
+              <Button variant="secondary" size="sm" disabled>
+                Previous
+              </Button>
+              <Button variant="secondary" size="sm">
+                Next
+              </Button>
             </div>
           </div>
-        </div>
+        </section>
       </div>
 
       {drawerOpen && (
         <EditSupplierDrawer
-          supplier={supplierData!}
+          supplier={supplierData}
           onClose={() => setDrawerOpen(false)}
         />
       )}

@@ -9,8 +9,11 @@ export default function Header() {
   const pageTitle = getPageTitle(pathname);
 
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between border-b border-line-soft bg-white px-6">
-      <h2 className="text-lg font-semibold tracking-tight">{pageTitle}</h2>
+    // Transparent: it sits inside the white sheet, so its corners stay round.
+    <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-line px-8">
+      <h1 className="text-lg font-semibold tracking-[-0.01em] text-ink">
+        {pageTitle}
+      </h1>
 
       {/* Dynamic header content (search, action buttons) per route */}
       <DynamicHeader />

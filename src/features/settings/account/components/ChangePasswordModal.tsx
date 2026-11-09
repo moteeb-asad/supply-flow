@@ -3,6 +3,7 @@
 import { Modal } from "@/src/components/ui/Modal";
 import { Button } from "@/src/components/ui/Button";
 import { Input } from "@/src/components/ui/Input";
+import FormErrorBanner from "@/src/components/ui/FormErrorBanner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -11,6 +12,9 @@ import {
 } from "../validators/password.schema";
 import { changePassword } from "../actions/change-password";
 import { useState } from "react";
+
+const labelClassName = "text-[13px] font-medium text-muted";
+const errorClassName = "mt-1.5 text-xs text-danger";
 
 export default function ChangePasswordModal({
   isModalOpen,
@@ -63,91 +67,84 @@ export default function ChangePasswordModal({
     <Modal
       isOpen={isModalOpen}
       onClose={handleClose}
-      title="Change Password"
+      title="Change password"
       description="Enter your current password and a new secure password."
       footer={
         <>
           <Button
-            type="submit"
-            variant="primary"
-            size="md"
-            shadow="none"
-            className="flex-1"
-            form="change-password-form"
-            loading={isSubmitting}
-          >
-            Update Password
-          </Button>
-          <Button
             type="button"
-            variant="secondary"
+            variant="ghost"
             size="md"
-            shadow="none"
+            className="hover:bg-surface"
             onClick={handleClose}
-            className="flex-1"
             disabled={isSubmitting}
           >
             Cancel
+          </Button>
+          <Button
+            type="submit"
+            size="md"
+            className="px-4"
+            form="change-password-form"
+            loading={isSubmitting}
+          >
+            Update password
           </Button>
         </>
       }
     >
       <form id="change-password-form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="space-y-5">
-          {serverError && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
-              {serverError}
-            </div>
-          )}
+        <div className="space-y-4">
+          <FormErrorBanner message={serverError} />
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-muted">
-              Current Password
+          <div>
+            <label htmlFor="current-password" className={labelClassName}>
+              Current password
             </label>
             <Input
+              id="current-password"
               {...register("currentPassword")}
-              className="w-full rounded-lg border-none bg-background-light px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/50"
+              aria-invalid={errors.currentPassword ? true : undefined}
+              className="mt-1.5 h-9"
               placeholder="••••••••"
               type="password"
             />
             {errors.currentPassword && (
-              <p className="text-xs text-red-600">
-                {errors.currentPassword.message}
-              </p>
+              <p className={errorClassName}>{errors.currentPassword.message}</p>
             )}
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-muted">
-              New Password
+          <div>
+            <label htmlFor="new-password" className={labelClassName}>
+              New password
             </label>
             <Input
+              id="new-password"
               {...register("newPassword")}
-              className="w-full rounded-lg border-none bg-background-light px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/50"
+              aria-invalid={errors.newPassword ? true : undefined}
+              className="mt-1.5 h-9"
               placeholder="••••••••"
               type="password"
             />
             {errors.newPassword && (
-              <p className="text-xs text-red-600">
-                {errors.newPassword.message}
-              </p>
+              <p className={errorClassName}>{errors.newPassword.message}</p>
             )}
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-muted">
-              Confirm New Password
+          <div>
+            <label htmlFor="confirm-password" className={labelClassName}>
+              Confirm new password
             </label>
             <Input
+              id="confirm-password"
               {...register("confirmPassword")}
-              className="w-full rounded-lg border-none bg-background-light px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/50"
+              aria-invalid={errors.confirmPassword ? true : undefined}
+              className="mt-1.5 h-9"
               placeholder="••••••••"
               type="password"
             />
             {errors.confirmPassword && (
-              <p className="text-xs text-red-600">
-                {errors.confirmPassword.message}
-              </p>
+              <p className={errorClassName}>{errors.confirmPassword.message}</p>
             )}
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { StatCard } from "@/src/components/ui/StatCard";
+import { StatCard, StatStrip } from "@/src/components/ui/StatCard";
 import { getSkuReceivingMetricsAction } from "../../actions/get-sku-receiving-metrics.action";
 import { getMetricsWindow } from "../../utils/metrics-window";
 import {
@@ -34,7 +34,7 @@ export default function SkuReceivingMetrics() {
     refetchInterval: RECEIVING_REFETCH_INTERVAL_MS,
   });
 
-  const display = (value: (n: number) => string, raw?: number) => {
+  const display = (value: (n: number) => React.ReactNode, raw?: number) => {
     if (isPending) return "…";
     if (isError || raw === undefined) return "—";
     return value(Number(raw));
@@ -42,39 +42,38 @@ export default function SkuReceivingMetrics() {
 
   const cards = [
     {
-      label: "Awaiting Receipt",
-      icon: "receipt_long",
-      iconClassName: "bg-blue-50 text-primary",
+      label: "Awaiting receipt",
       value: display(
-        (n) => `${unitsFormatter.format(n)} ${n === 1 ? "PO" : "POs"}`,
+        (n) => (
+          <>
+            {unitsFormatter.format(n)}{" "}
+            <span className="text-base font-normal text-subtle">
+              {n === 1 ? "PO" : "POs"}
+            </span>
+          </>
+        ),
         data?.awaiting_receipt_count,
       ),
     },
     {
-      label: "Received Today",
-      icon: "inventory_2",
-      iconClassName: "bg-green-50 text-green-600",
+      label: "Received today",
       value: display(unitsFormatter.format, data?.received_today_qty),
     },
     {
-      label: "Variance Cases (MTD)",
-      icon: "warning",
-      iconClassName: "bg-red-50 text-red-600",
+      label: "Variance cases this month",
       value: display(unitsFormatter.format, data?.variance_cases_mtd),
     },
     {
-      label: "Value (MTD)",
-      icon: "payments",
-      iconClassName: "bg-purple-50 text-purple-600",
+      label: "Value received this month",
       value: display(valueFormatter.format, data?.received_value_mtd),
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <StatStrip aria-label="Receiving totals">
       {cards.map((card) => (
         <StatCard key={card.label} {...card} />
       ))}
-    </div>
+    </StatStrip>
   );
 }

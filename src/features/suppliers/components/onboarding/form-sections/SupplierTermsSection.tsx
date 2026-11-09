@@ -1,99 +1,129 @@
 import type { SupplierTermsSectionProps } from "@/src/features/suppliers/types/suppliers.types";
+import { cn } from "@/src/lib/utils";
+import {
+  FieldError,
+  SectionHeading,
+  WithSuffix,
+  fieldClassName,
+  labelClassName,
+} from "./fields";
+
+// value is what gets saved, so it stays the same for existing suppliers;
+// label is what the user sees.
+const PAYMENT_TERMS = [
+  { value: "Net 30", label: "Net 30" },
+  { value: "Net 60", label: "Net 60" },
+  { value: "Net 90", label: "Net 90" },
+  { value: "Due on Receipt", label: "Due on receipt" },
+  { value: "Advance Payment", label: "Advance payment" },
+];
+
+// Room on the right for the unit suffix.
+const numberFieldClassName = cn(fieldClassName, "mt-0 pr-12 tabular-nums");
 
 export function SupplierTermsSection({
   register,
   errors,
-  leadTimeDays,
 }: SupplierTermsSectionProps) {
   return (
-    <section className="space-y-4">
-      <div className="flex items-center gap-2 mb-1">
-        <span className="material-symbols-outlined text-primary text-lg">
-          handshake
-        </span>
-        <h4 className="text-xs font-bold text-muted uppercase tracking-widest">
-          Initial Negotiated Terms
-        </h4>
-      </div>
-      <div className="bg-gray-50 p-5 rounded-xl border border-gray-200 space-y-6">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-muted">
-              Payment Terms
-            </label>
-            <select
-              className="w-full bg-white border-gray-200 rounded-lg py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-primary cursor-pointer"
-              {...register("paymentTerms")}
-            >
-              <option>Net 30</option>
-              <option>Net 60</option>
-              <option>Net 90</option>
-              <option>Due on Receipt</option>
-              <option>Advance Payment</option>
-            </select>
-            {errors.paymentTerms && (
-              <p className="text-xs text-danger">
-                {errors.paymentTerms.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-muted">
-              Min. Order Qty (Units)
-            </label>
-            <input
-              className="w-full bg-white border border-gray-200 rounded-lg py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-primary"
-              type="number"
-              {...register("minOrderQty", { valueAsNumber: true })}
-            />
-            {errors.minOrderQty && (
-              <p className="text-xs text-danger">
-                {errors.minOrderQty.message}
-              </p>
-            )}
-          </div>
+    <section
+      aria-labelledby="supplier-terms"
+      className="space-y-4 border-t border-line-soft pt-6"
+    >
+      <SectionHeading id="supplier-terms">Terms</SectionHeading>
+
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <label htmlFor="supplier-payment-terms" className={labelClassName}>
+            Payment terms
+          </label>
+          <select
+            id="supplier-payment-terms"
+            className={cn(fieldClassName, "cursor-pointer")}
+            {...register("paymentTerms")}
+          >
+            {PAYMENT_TERMS.map((term) => (
+              <option key={term.value} value={term.value}>
+                {term.label}
+              </option>
+            ))}
+          </select>
+          <FieldError
+            id="supplier-payment-terms-error"
+            message={errors.paymentTerms?.message}
+          />
         </div>
-        <div className="space-y-3">
-          <div className="flex justify-between items-center">
-            <label className="text-xs font-bold text-muted">
-              Standard Lead Time
-            </label>
-            <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-[10px] font-bold">
-              {leadTimeDays} Days
-            </span>
-          </div>
-          <div className="relative pt-1">
+
+        <div>
+          <label htmlFor="supplier-lead-time" className={labelClassName}>
+            Lead time
+          </label>
+          <WithSuffix suffix="days">
             <input
-              className="w-full accent-primary h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              max="30"
-              min="1"
-              type="range"
+              id="supplier-lead-time"
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={30}
+              aria-invalid={errors.leadTimeDays ? true : undefined}
+              aria-describedby={
+                errors.leadTimeDays
+                  ? "supplier-lead-time-error"
+                  : "supplier-lead-time-hint"
+              }
+              className={numberFieldClassName}
               {...register("leadTimeDays", { valueAsNumber: true })}
             />
-            {errors.leadTimeDays && (
-              <p className="text-xs text-danger mt-2">
-                {errors.leadTimeDays.message}
-              </p>
-            )}
-            <div className="flex justify-between mt-2 text-[10px] text-muted font-medium">
-              <span className="flex flex-col items-center">
-                1<span>Day</span>
-              </span>
-              <span className="flex flex-col items-center">
-                15<span>Days</span>
-              </span>
-              <span className="flex flex-col items-center">
-                30<span>Days</span>
-              </span>
-            </div>
-          </div>
+          </WithSuffix>
+          {errors.leadTimeDays ? (
+            <FieldError
+              id="supplier-lead-time-error"
+              message={errors.leadTimeDays.message}
+            />
+          ) : (
+            <p
+              id="supplier-lead-time-hint"
+              className="mt-1 text-xs text-subtle"
+            >
+              1 to 30
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="supplier-min-order" className={labelClassName}>
+            Minimum order
+          </label>
+          <WithSuffix suffix="units">
+            <input
+              id="supplier-min-order"
+              type="number"
+              inputMode="numeric"
+              min={1}
+              aria-invalid={errors.minOrderQty ? true : undefined}
+              aria-describedby={
+                errors.minOrderQty ? "supplier-min-order-error" : undefined
+              }
+              className={numberFieldClassName}
+              {...register("minOrderQty", { valueAsNumber: true })}
+            />
+          </WithSuffix>
+          <FieldError
+            id="supplier-min-order-error"
+            message={errors.minOrderQty?.message}
+          />
         </div>
       </div>
-      <div className="space-y-2">
-        <label className="text-xs font-bold text-muted">Notes</label>
+
+      <div>
+        <label htmlFor="supplier-notes" className={labelClassName}>
+          Notes <span className="text-subtle">optional</span>
+        </label>
         <textarea
-          className="w-full min-h-[96px] bg-white border border-gray-200 rounded-lg py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-primary resize-none"
-          placeholder="Add any supplier notes or internal context"
+          id="supplier-notes"
+          rows={3}
+          placeholder="Delivery days, who to call for urgent orders, anything internal"
+          className={cn(fieldClassName, "h-auto resize-none py-2")}
           {...register("notes")}
         />
       </div>

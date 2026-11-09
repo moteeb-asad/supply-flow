@@ -5,10 +5,12 @@ export function DataTablePaginationBar({
   pagination,
   total,
   onPageChange,
+  itemLabel,
 }: {
   pagination: PaginationState;
   total: number;
   onPageChange: (page: number) => void;
+  itemLabel?: string;
 }) {
   return (
     <DataTablePagination
@@ -16,6 +18,7 @@ export function DataTablePaginationBar({
       pageSize={pagination.pageSize}
       total={total}
       onPageChange={onPageChange}
+      itemLabel={itemLabel}
     />
   );
 }

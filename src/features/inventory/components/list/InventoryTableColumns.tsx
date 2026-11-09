@@ -6,96 +6,99 @@ import { hasPermission } from "@/src/features/auth/utils/rbac";
 
 const stockStatusStyles: Record<
   StockStatus,
-  { label: string; className: string; barClass: string }
+  { label: string; textClass: string; barClass: string }
 > = {
-  good: {
-    label: "Good",
-    className: "text-green-600 font-semibold",
-    barClass: "bg-green-500",
-  },
-  low: {
-    label: "Low",
-    className: "text-orange-500 font-semibold",
-    barClass: "bg-orange-400",
-  },
+  good: { label: "Good", textClass: "text-success", barClass: "bg-success" },
+  low: { label: "Low", textClass: "text-warning", barClass: "bg-warning" },
   critical: {
     label: "Critical",
-    className: "text-red-600 font-semibold",
-    barClass: "bg-red-500",
+    textClass: "text-danger",
+    barClass: "bg-danger",
   },
 };
 
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+});
+
+const formatMoney = (value: number) => currencyFormatter.format(value);
+
 export const inventoryTableColumns: DataTableColumn<InventoryItem>[] = [
   {
-    key: "sku",
-    header: "SKU",
-    className: "text-sm font-bold text-primary text-wrap max-w-[100px]",
-    cell: (row) => row.skuCode,
-  },
-  {
-    key: "item_name",
-    header: "Item Name",
-    className: "text-sm ",
-    cell: (row) => row.itemName,
+    key: "item",
+    header: "Item",
+    cell: (row) => (
+      <>
+        <p className="font-medium">{row.itemName}</p>
+        <p className="font-mono text-[12.5px] text-muted">{row.skuCode}</p>
+      </>
+    ),
   },
   {
     key: "category",
     header: "Category",
-    className: "text-sm text-muted",
+    className: "text-muted",
     cell: (row) => row.category,
   },
   {
     key: "supplier",
     header: "Supplier",
-    className: "text-sm text-muted",
+    className: "text-muted",
     cell: (row) => row.primarySupplier,
   },
   {
     key: "stock_level",
-    header: "Stock Level",
-    className: "text-sm text-muted",
+    header: "Stock level",
     cell: (row) => {
       const stock = typeof row.initialStock === "number" ? row.initialStock : 0;
-      const status: StockStatus = row.stockStatus;
-
-      const percent = Math.min(100, Math.round((stock / 300) * 100)); // 300 is arbitrary max for bar
-      const styles = stockStatusStyles[status];
+      const styles = stockStatusStyles[row.stockStatus];
+      // 300 is an arbitrary full bar, as before.
+      const percent = Math.min(100, Math.round((stock / 300) * 100));
 
       return (
-        <div className="flex flex-col gap-1.5 w-32">
-          <div className="flex justify-between text-[10px] font-bold">
-            <span>{stock} Units</span>
-            <span className={styles.className}>{styles.label}</span>
-          </div>
-          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-            <div
-              className={styles.barClass + " h-full"}
+        <div className="flex items-center gap-3">
+          <span
+            aria-hidden="true"
+            className="h-1.5 w-20 overflow-hidden rounded-full bg-line-soft"
+          >
+            <span
+              className={`block h-full rounded-full ${styles.barClass}`}
               style={{ width: `${percent}%` }}
-            ></div>
-          </div>
+            />
+          </span>
+          <span className="tabular-nums">{stock}</span>
+          <span className={`text-xs font-medium ${styles.textClass}`}>
+            {styles.label}
+          </span>
         </div>
       );
     },
   },
   {
     key: "unit_price",
-    header: "Unit Price",
-    className: "text-sm text-muted",
-    cell: (row) => `$${row.unitPrice}`,
+    header: "Unit price",
+    headerClassName: "text-right",
+    className: "text-right tabular-nums text-muted",
+    cell: (row) => formatMoney(row.unitPrice),
   },
   {
     key: "total_value",
-    header: "Total Value",
-    className: "text-sm text-muted",
-    cell: (row) => `$${(row.unitPrice * row.initialStock).toFixed(2)}`,
+    header: "Total value",
+    headerClassName: "text-right",
+    className: "text-right font-medium tabular-nums",
+    cell: (row) => formatMoney(row.unitPrice * row.initialStock),
   },
   {
     key: "actions",
     header: "Actions",
-    className: "text-sm text-muted",
     cell: () => <InventoryRowActions />,
   },
 ];
+
+const actionClassName =
+  "h-8 cursor-pointer rounded-control px-2.5 text-[13px] font-medium text-muted hover:bg-background-light hover:text-ink";
 
 // A component (not inline in cell) so it can read the user's permissions.
 function InventoryRowActions() {
@@ -106,19 +109,13 @@ function InventoryRowActions() {
   );
 
   return (
-    <div className="flex justify-end gap-2">
+    <div className="flex justify-end gap-1">
       {canManageInventory && (
-        <button
-          type="button"
-          className="rounded border border-slate-300 px-3 py-1 text-xs font-medium hover:bg-slate-50 transition-colors"
-        >
+        <button type="button" className={actionClassName}>
           Adjust
         </button>
       )}
-      <button
-        type="button"
-        className="rounded border border-slate-300 px-3 py-1 text-xs font-medium hover:bg-slate-50 transition-colors"
-      >
+      <button type="button" className={actionClassName}>
         History
       </button>
     </div>

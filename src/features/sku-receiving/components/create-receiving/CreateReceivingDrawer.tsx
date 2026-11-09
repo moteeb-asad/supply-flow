@@ -54,11 +54,12 @@ export default function CreateReceivingDrawer({
 
   return (
     <FormDrawer
-      title="Create Receiving"
-      description="Inbound Goods Processing"
+      size="lg"
+      title="New receiving"
+      description="Record what arrived against an open purchase order."
       onClose={onClose}
-      submitLabel="Create Receiving"
-      submittingLabel="Creating..."
+      submitLabel="Save receiving"
+      submittingLabel="Saving..."
       isSubmitting={isPending}
       formId={CREATE_RECEIVING_FORM_ID}
     >

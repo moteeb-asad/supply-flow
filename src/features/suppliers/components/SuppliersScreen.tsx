@@ -34,37 +34,35 @@ export default function SuppliersScreen({}: SuppliersScreenProps) {
 
   return (
     <>
-      {/* Header */}
-      <div className="px-6 py-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-ink text-3xl font-black leading-tight tracking-tight">
-              Suppliers
-            </h2>
-            <p className="text-muted text-sm">
-              Manage and monitor vendor performance
-            </p>
-          </div>
-
-          <div className="flex gap-3">
-            <Button
-              className="flex h-10 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-bold text-white shadow-md transition-colors hover:bg-blue-700"
-              onClick={() => setDrawerOpen(true)}
-            >
-              <span className="material-symbols-outlined text-lg">add</span>
-              <span>Add Supplier</span>
-            </Button>
-          </div>
+      <header className="flex flex-wrap items-end justify-between gap-4 px-8 pb-6 pt-8">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-semibold tracking-[-0.01em]">
+            Suppliers
+          </h1>
+          <p className="mt-1 text-sm text-muted">
+            Who you buy from, how fast they deliver and what they need per
+            order.
+          </p>
         </div>
-      </div>
+        <Button size="md" onClick={() => setDrawerOpen(true)}>
+          <span
+            aria-hidden="true"
+            className="material-symbols-outlined !text-[18px]"
+          >
+            add
+          </span>
+          Add supplier
+        </Button>
+      </header>
 
-      <SupplierMetrics />
+      <div className="space-y-6 px-8 pb-8">
+        <SupplierMetrics />
 
-      <div className="px-6 space-y-6 pb-12">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <SupplierSearch onSearchChange={setSearchTerm} />
           <CategoryFilter value={category} onChange={setCategory} />
         </div>
+
         {isLoading && suppliers.length === 0 ? (
           <SupplierGridSkeleton />
         ) : (

@@ -24,6 +24,7 @@ export default function InventoryTable({
       config={InventoryTableConfig}
       filters={filters}
       onFiltersChange={onFiltersChange}
+      className="p-0"
       resetPageKey={resetPageKey}
     />
   );

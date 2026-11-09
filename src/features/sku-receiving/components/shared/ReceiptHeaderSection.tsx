@@ -7,6 +7,11 @@ import {
 } from "../../constants/form-options";
 import type { ReceiptHeaderSectionProps } from "../../types";
 
+const labelClassName = "text-[13px] font-medium text-muted";
+const errorClassName = "mt-1.5 text-xs text-danger";
+const fieldClassName =
+  "h-9 w-full rounded-control border border-line bg-surface px-3 text-sm text-ink placeholder:text-subtle focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15 aria-[invalid=true]:border-danger aria-[invalid=true]:ring-3 aria-[invalid=true]:ring-danger/12";
+
 export default function ReceiptHeaderSection({
   control,
   register,
@@ -15,112 +20,111 @@ export default function ReceiptHeaderSection({
   const role = useWatch({ control, name: "received_by_role" });
 
   return (
-    <>
-      <section className="space-y-4 border-t border-slate-200 pt-2">
-        <div className="mb-1 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-lg">
-            assignment
-          </span>
-          <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
-            RECEIPT HEADER
-          </h3>
+    <section
+      aria-labelledby="receiving-receipt"
+      className="space-y-3 border-t border-line-soft pt-6"
+    >
+      <h3 id="receiving-receipt" className="text-[13px] font-semibold">
+        Receipt
+      </h3>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor="receipt-datetime" className={labelClassName}>
+            Received on
+          </label>
+          <input
+            id="receipt-datetime"
+            className={`mt-1.5 ${fieldClassName}`}
+            aria-invalid={errors.receipt_datetime ? true : undefined}
+            defaultValue=""
+            type="datetime-local"
+            {...register("receipt_datetime")}
+          />
+          {errors.receipt_datetime && (
+            <p className={errorClassName}>{errors.receipt_datetime.message}</p>
+          )}
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-ink">
-              Receipt DateTime <span className="text-red-600">*</span>
-            </label>
-            <input
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-              defaultValue=""
-              type="datetime-local"
-              {...register("receipt_datetime")}
-            />
-            {errors.receipt_datetime && (
-              <p className="text-xs text-red-600">
-                {errors.receipt_datetime.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-ink">
-              Delivery Note Number
-            </label>
-            <input
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-              defaultValue=""
-              placeholder="DN-XXXXX"
-              type="text"
-              {...register("delivery_note_number")}
-            />
-            {errors.delivery_note_number && (
-              <p className="text-xs text-red-600">
-                {errors.delivery_note_number.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-ink">
-              Received By
-            </label>
-            <input
-              className="w-full cursor-not-allowed rounded-lg border border-gray-200 bg-slate-100 px-3 py-2 text-sm text-muted"
-              defaultValue=""
-              placeholder="Current user"
-              readOnly
-              type="text"
-              {...register("received_by_name")}
-            />
-            <input type="hidden" {...register("received_by_role")} />
-            <p className="text-xs text-muted">
-              {role ? `Role: ${role}` : "Role is auto-filled from your account"}
+        <div>
+          <label htmlFor="receipt-delivery-note" className={labelClassName}>
+            Delivery note
+          </label>
+          <input
+            id="receipt-delivery-note"
+            className={`mt-1.5 ${fieldClassName} font-mono text-[13px] placeholder:font-sans`}
+            aria-invalid={errors.delivery_note_number ? true : undefined}
+            defaultValue=""
+            placeholder="DN number from the driver"
+            type="text"
+            {...register("delivery_note_number")}
+          />
+          {errors.delivery_note_number && (
+            <p className={errorClassName}>
+              {errors.delivery_note_number.message}
             </p>
-            {errors.received_by_name && (
-              <p className="text-xs text-red-600">
-                {errors.received_by_name.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-ink">
-              Receiving Location/Gate
-            </label>
-            <select
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-              defaultValue={DEFAULT_RECEIVING_GATE}
-              {...register("receiving_location")}
-            >
-              {RECEIVING_GATES.map((gate) => (
-                <option key={gate.value} value={gate.value}>
-                  {gate.label}
-                </option>
-              ))}
-            </select>
-            {errors.receiving_location && (
-              <p className="text-xs text-red-600">
-                {errors.receiving_location.message}
-              </p>
-            )}
-          </div>
-          <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-sm font-semibold text-ink">
-              Vehicle/Driver Ref
-            </label>
-            <input
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
-              defaultValue=""
-              placeholder="Plate # / Driver Name"
-              type="text"
-              {...register("vehicle_ref")}
-            />
-            {errors.vehicle_ref && (
-              <p className="text-xs text-red-600">
-                {errors.vehicle_ref.message}
-              </p>
-            )}
-          </div>
+          )}
         </div>
-      </section>
-    </>
+        <div>
+          <label htmlFor="receipt-location" className={labelClassName}>
+            Location
+          </label>
+          <select
+            id="receipt-location"
+            className={`mt-1.5 ${fieldClassName} cursor-pointer`}
+            aria-invalid={errors.receiving_location ? true : undefined}
+            defaultValue={DEFAULT_RECEIVING_GATE}
+            {...register("receiving_location")}
+          >
+            {RECEIVING_GATES.map((gate) => (
+              <option key={gate.value} value={gate.value}>
+                {gate.label}
+              </option>
+            ))}
+          </select>
+          {errors.receiving_location && (
+            <p className={errorClassName}>
+              {errors.receiving_location.message}
+            </p>
+          )}
+        </div>
+        <div>
+          <label htmlFor="receipt-received-by" className={labelClassName}>
+            Received by
+          </label>
+          <input
+            id="receipt-received-by"
+            className="mt-1.5 h-9 w-full cursor-not-allowed rounded-control border-0 bg-background-light px-3 text-sm text-ink"
+            defaultValue=""
+            placeholder="Current user"
+            readOnly
+            type="text"
+            {...register("received_by_name")}
+          />
+          <input type="hidden" {...register("received_by_role")} />
+          <p className="mt-1 text-xs text-subtle">
+            {role ? `Role: ${role}` : "Role is auto-filled from your account"}
+          </p>
+          {errors.received_by_name && (
+            <p className={errorClassName}>{errors.received_by_name.message}</p>
+          )}
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="receipt-vehicle" className={labelClassName}>
+            Vehicle / driver ref
+          </label>
+          <input
+            id="receipt-vehicle"
+            className={`mt-1.5 ${fieldClassName}`}
+            aria-invalid={errors.vehicle_ref ? true : undefined}
+            defaultValue=""
+            placeholder="Plate number or driver name"
+            type="text"
+            {...register("vehicle_ref")}
+          />
+          {errors.vehicle_ref && (
+            <p className={errorClassName}>{errors.vehicle_ref.message}</p>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }

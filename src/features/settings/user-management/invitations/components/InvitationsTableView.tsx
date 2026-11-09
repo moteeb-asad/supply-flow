@@ -8,6 +8,7 @@ import {
   InvitationsTableQueryParams,
 } from "@/src/features/settings/user-management/invitations/types";
 import { useState } from "react";
+import UserManagementTabs from "../../shared/components/UserManagementTabs";
 
 export default function InvitationsTableView() {
   const [filters, setFilters] = useState<InvitationsFiltersValue>({});
@@ -18,6 +19,8 @@ export default function InvitationsTableView() {
       config={invitationsTableConfig}
       filters={filters}
       onFiltersChange={handleFiltersChange}
+      tabs={<UserManagementTabs />}
+      className="p-0"
     />
   );
 }
