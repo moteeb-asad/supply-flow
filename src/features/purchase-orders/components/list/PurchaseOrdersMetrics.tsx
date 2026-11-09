@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { purchaseOrderKeys } from "@/src/features/purchase-orders/constants/query-keys";
-import { StatCard } from "@/src/components/ui/StatCard";
+import { StatCard, StatStrip } from "@/src/components/ui/StatCard";
 import { purchaseOrdersFetcher } from "@/src/features/purchase-orders/fetchers/purchaseorders.fetcher";
 import type { PurchaseOrder } from "@/src/features/purchase-orders/types";
 
@@ -28,38 +28,25 @@ export default function PurchaseOrdersMetrics() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <StatStrip aria-label="Order totals">
       <StatCard
-        label="Open Commitment"
-        icon="payments"
-        className="border-blue-100 bg-blue-50"
-        iconClassName="bg-blue-100 text-blue-700"
-        labelClassName="text-blue-700"
-        valueClassName="text-blue-900"
+        label="Open commitment"
         value={
           isPending
             ? "..."
             : `$${openCommitment.toLocaleString("en-US", { minimumFractionDigits: 2 })}`
         }
+        caption="Value of orders not yet closed"
       />
       <StatCard
-        label="Overdue Orders"
-        icon="running_with_errors"
-        className="border-red-100 bg-red-50"
-        iconClassName="bg-red-100 text-red-700"
-        labelClassName="text-red-700"
-        valueClassName="text-red-900"
-        value={isPending ? "..." : `${overdueCount} Orders`}
+        label="Overdue orders"
+        value={isPending ? "..." : overdueCount}
+        caption="Past their expected delivery date"
       />
       <StatCard
-        label="Completed (MTD)"
-        icon="task_alt"
-        className="border-green-100 bg-green-50"
-        iconClassName="bg-green-100 text-green-700"
-        labelClassName="text-green-700"
-        valueClassName="text-green-900"
-        value={isPending ? "..." : `${completedCount} Orders`}
+        label="Completed this month"
+        value={isPending ? "..." : completedCount}
       />
-    </div>
+    </StatStrip>
   );
 }
