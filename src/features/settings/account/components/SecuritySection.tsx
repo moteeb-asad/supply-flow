@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/src/components/ui/Button";
+import AppIcon from "@/src/components/ui/AppIcon";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { formatRelative } from "@/src/lib/dates";
 import { SecuritySectionProps } from "../types";
@@ -16,29 +17,40 @@ export default function SecuritySection({
     : "Never changed";
 
   return (
-    <div className="bg-white border border-line-soft rounded-xl overflow-hidden shadow-sm">
-      <div className="px-6 py-4 border-b border-line-soft">
-        <h3 className="text-base font-bold">Account Security</h3>
-      </div>
-      <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="size-10 rounded-lg bg-gray-100 flex items-center justify-center text-muted">
-              <span className="material-symbols-outlined">lock</span>
-            </div>
+    <section
+      aria-labelledby="account-security-title"
+      className="rounded-card border border-line"
+    >
+      <div className="grid gap-6 p-6 md:grid-cols-[14rem_minmax(0,1fr)]">
+        <div>
+          <h2 id="account-security-title" className="text-[15px] font-semibold">
+            Sign-in and security
+          </h2>
+          <p className="mt-1 text-[13px] text-muted">
+            Use a password you don&apos;t use anywhere else.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-4 self-start rounded-card border border-line-soft p-4">
+          <div className="flex items-center gap-3">
+            <span
+              aria-hidden="true"
+              className="inline-flex size-9 items-center justify-center rounded-control bg-background-light text-subtle"
+            >
+              <AppIcon name="lock" />
+            </span>
             <div>
-              <p className="text-sm font-bold">Password</p>
-              <p className="text-xs text-muted">{passwordChangedText}</p>
+              <p className="text-sm font-medium">Password</p>
+              <p className="text-[13px] text-subtle">{passwordChangedText}</p>
             </div>
           </div>
           <Button
             type="button"
             variant="secondary"
-            size="sm"
-            shadow="none"
+            size="md"
             onClick={() => setIsModalOpen(true)}
           >
-            Change Password
+            Change password
           </Button>
         </div>
       </div>
@@ -47,6 +59,6 @@ export default function SecuritySection({
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
       />
-    </div>
+    </section>
   );
 }

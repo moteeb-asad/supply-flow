@@ -19,6 +19,8 @@ import PhoneIcon from "@/src/assets/icons/phone.svg";
 import UsersIcon from "@/src/assets/icons/users.svg";
 import BellIcon from "@/src/assets/icons/bell.svg";
 import DatabaseIcon from "@/src/assets/icons/database.svg";
+import LockIcon from "@/src/assets/icons/lock.svg";
+import CheckIcon from "@/src/assets/icons/check.svg";
 
 const iconMap = {
   dashboard: DashboardIcon,
@@ -42,6 +44,8 @@ const iconMap = {
   users: UsersIcon,
   bell: BellIcon,
   database: DatabaseIcon,
+  lock: LockIcon,
+  check: CheckIcon,
 };
 
 export type AppIconName = keyof typeof iconMap;

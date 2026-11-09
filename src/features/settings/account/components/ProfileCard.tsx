@@ -1,7 +1,11 @@
-import { Input } from "@/src/components/ui/Input";
 import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
-import { formatRole } from "@/src/lib/utils";
+import { formatRole, getInitials } from "@/src/lib/utils";
 import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
+import AppIcon from "@/src/components/ui/AppIcon";
+
+const labelClassName = "text-[13px] font-medium";
+const readOnlyFieldClassName =
+  "h-10 w-full cursor-default rounded-control border border-line-soft bg-background-light px-3 text-sm text-muted focus:outline-none";
 
 export default async function ProfileCard() {
   const user = await getCurrentUser();
@@ -9,69 +13,84 @@ export default async function ProfileCard() {
   // Extract name from user metadata
   const userName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
-  // Get first letter of name for avatar
-  const initial = userName.charAt(0).toUpperCase();
   const readableRole = formatRole(getRoleFromAppMetadata(user?.app_metadata));
+
   return (
-    <div className="bg-white border border-line-soft rounded-xl overflow-hidden shadow-sm">
-      <div className="px-6 py-4 border-b border-line-soft flex items-center justify-between">
-        <h3 className="text-base font-bold">Profile Details</h3>
-        <button className="text-primary text-sm font-bold hover:underline hidden">
-          Edit Profile
-        </button>
-      </div>
-      <div className="p-6">
-        <div className="flex items-start gap-8">
-          <div className="size-24 rounded-full bg-primary/10 flex items-center justify-center">
-            <span className="text-2xl font-bold text-primary">{initial}</span>
+    <section
+      aria-labelledby="account-profile-title"
+      className="rounded-card border border-line"
+    >
+      <div className="grid gap-6 p-6 md:grid-cols-[14rem_minmax(0,1fr)]">
+        <div>
+          <h2 id="account-profile-title" className="text-[15px] font-semibold">
+            Profile
+          </h2>
+          <p className="mt-1 text-[13px] text-muted">
+            Your name and role are set by a super admin.
+          </p>
+        </div>
+
+        <div className="space-y-5">
+          <div className="flex items-center gap-4">
+            <span
+              aria-hidden="true"
+              className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-neutral-soft text-lg font-semibold"
+            >
+              {getInitials(userName)}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium">{userName}</p>
+              <p className="text-[13px] text-subtle">{readableRole}</p>
+            </div>
           </div>
-          <div className="flex-1 grid grid-cols-2 gap-6">
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-muted uppercase tracking-wider">
-                Full Name
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="account-full-name" className={labelClassName}>
+                Full name
               </label>
-              <Input
-                className="w-full bg-gray-50 border-none rounded-lg text-sm px-4 py-2.5 focus:ring-2 focus:ring-primary/50 cursor-default"
+              <input
+                id="account-full-name"
+                className={`mt-1.5 ${readOnlyFieldClassName}`}
                 defaultValue={userName}
                 readOnly
                 type="text"
               />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-muted uppercase tracking-wider">
-                Job Role
+            <div>
+              <label htmlFor="account-role" className={labelClassName}>
+                Job role
               </label>
-              <Input
-                className="w-full bg-gray-50 border-none rounded-lg text-sm px-4 py-2.5 focus:ring-2 focus:ring-primary/50 cursor-default"
+              <input
+                id="account-role"
+                className={`mt-1.5 ${readOnlyFieldClassName}`}
                 defaultValue={readableRole}
                 readOnly
                 type="text"
               />
             </div>
-            <div className="space-y-1.5 col-span-2">
-              <label className="text-xs font-bold text-muted uppercase tracking-wider">
-                Email Address
-              </label>
-              <div className="relative">
-                <Input
-                  className="w-full bg-gray-50 border-none rounded-lg text-sm px-4 py-2.5 focus:ring-2 focus:ring-primary/50 cursor-default"
-                  readOnly
-                  type="email"
-                  defaultValue={user?.email || ""}
-                />
-                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-success text-lg">
-                  verified
-                </span>
-              </div>
+          </div>
+
+          <div>
+            <label htmlFor="account-email" className={labelClassName}>
+              Email address
+            </label>
+            <div className="relative mt-1.5">
+              <input
+                id="account-email"
+                className={`${readOnlyFieldClassName} pr-28`}
+                defaultValue={user?.email || ""}
+                readOnly
+                type="email"
+              />
+              <span className="absolute right-2 top-1/2 inline-flex h-[22px] -translate-y-1/2 items-center gap-1 rounded-full bg-success-soft px-2 text-xs font-medium text-success">
+                <AppIcon name="check" className="size-3" />
+                Verified
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <div className="px-6 py-4 bg-gray-50/50 border-t border-line-soft flex justify-end hidden">
-        <button className="bg-primary text-white px-6 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-primary/90 transition-colors">
-          Save Changes
-        </button>
-      </div>
-    </div>
+    </section>
   );
 }
