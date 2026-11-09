@@ -29,6 +29,7 @@ export type PurchaseOrderRow = {
   payment_method: PaymentMethod;
   order_date: string | null;
   expected_delivery_date: string | null;
+  closed_at: string | null;
   total_amount: number | string | null;
   status: PurchaseOrderStatus;
   suppliers: PurchaseOrderSupplierRelation;

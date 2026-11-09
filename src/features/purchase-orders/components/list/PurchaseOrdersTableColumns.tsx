@@ -53,6 +53,13 @@ export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
     ),
   },
   {
+    key: "closed_at",
+    header: "Closed On",
+    className: "whitespace-nowrap text-muted",
+    // "—" until the PO is closed.
+    cell: (row) => formatDate(row.closed_at ?? null),
+  },
+  {
     key: "total_amount",
     header: "Total Amount",
     headerClassName: "text-right",
