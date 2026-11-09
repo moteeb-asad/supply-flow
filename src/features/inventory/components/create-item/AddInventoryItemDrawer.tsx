@@ -44,10 +44,10 @@ export default function AddInventoryItemDrawer({
 
   return (
     <FormDrawer
-      title="Add New Inventory Item"
-      description="Register a new product in the central warehouse system"
+      title="Add inventory item"
+      description="Opening stock is recorded as the first stock movement."
       onClose={onClose}
-      submitLabel="Add Item"
+      submitLabel="Add item"
       submittingLabel="Adding..."
       isSubmitting={isPending}
       formId={INVENTORY_FORM_ID}

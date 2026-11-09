@@ -43,7 +43,8 @@ export const InventoryTableConfig: DataTableConfig<
   queryKey: (params) => inventoryKeys.table(params),
   filters: InventoryTableFilters,
   columns: inventoryTableColumns,
-  searchPlaceholder: "Search by SKU or item name...",
+  searchPlaceholder: "Search by SKU or item name",
+  itemLabel: "items",
 
   parseFiltersFromUrl: parseInventoryFiltersFromUrl,
   writeFiltersToUrl: (filters, params) => {

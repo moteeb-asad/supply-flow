@@ -8,17 +8,22 @@ export default function PurchaseOrderNotesCard({
   const hasNotes = Boolean(notes && notes.trim().length > 0);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-      <h3 className="mb-3 text-sm font-bold">Internal Notes</h3>
+    <section
+      aria-labelledby="po-notes-title"
+      className="rounded-card border border-line p-5"
+    >
+      <h2 id="po-notes-title" className="text-[15px] font-semibold">
+        Internal notes
+      </h2>
       {hasNotes ? (
-        <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">
+        <p className="mt-2 whitespace-pre-wrap text-[13px] leading-5 text-muted">
           {notes}
         </p>
       ) : (
-        <p className="text-sm text-slate-500">
+        <p className="mt-2 text-[13px] text-subtle">
           No internal notes were added for this purchase order.
         </p>
       )}
-    </div>
+    </section>
   );
 }

@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/src/components/ui/Input";
 import { Button } from "@/src/components/ui/Button";
+import AppIcon from "@/src/components/ui/AppIcon";
+import FormErrorBanner from "@/src/components/ui/FormErrorBanner";
+import { cn } from "@/src/lib/utils";
 import {
   inviteUserSchema,
   type InviteUserInput,
@@ -12,6 +15,9 @@ import {
 import { ROLE_OPTIONS } from "../../users/constants/roles";
 import { inviteUserAction } from "../actions/invite-user.actions";
 import { InviteUserModalProps } from "../types";
+
+const labelClassName = "text-[13px] font-medium text-muted";
+const errorClassName = "mt-1.5 text-xs text-danger";
 
 export default function InviteUserModal({
   isOpen,
@@ -24,6 +30,7 @@ export default function InviteUserModal({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<InviteUserInput>({
     resolver: zodResolver(inviteUserSchema),
@@ -33,6 +40,7 @@ export default function InviteUserModal({
       role: "",
     },
   });
+  const selectedRole = useWatch({ control, name: "role" });
 
   // Reset form when modal closes
   useEffect(() => {
@@ -82,178 +90,170 @@ export default function InviteUserModal({
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40"></div>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-black/40" onClick={closeModal} />
-        <div className="bg-white w-full max-w-lg rounded-xl shadow-2xl border border-line-soft overflow-hidden relative z-10">
-          <div className="px-6 py-4 border-b border-line-soft flex justify-between items-center">
-            <h3 className="text-lg font-bold">Invite New User</h3>
-            <button
-              type="button"
-              className="text-muted hover:text-ink transition-colors cursor-pointer"
-              onClick={closeModal}
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/30 px-4 py-6"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) closeModal();
+      }}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="invite-title"
+        aria-describedby="invite-description"
+        className="w-full max-w-[480px] overflow-hidden rounded-sheet bg-surface shadow-overlay"
+      >
+        <header className="flex items-start justify-between gap-4 px-6 pb-2 pt-5">
+          <div>
+            <h2
+              id="invite-title"
+              className="text-lg font-semibold tracking-[-0.01em]"
             >
-              <span className="material-symbols-outlined">close</span>
-            </button>
+              Invite a teammate
+            </h2>
+            <p
+              id="invite-description"
+              className="mt-0.5 text-[13px] text-muted"
+            >
+              They get a one-time sign-up link by email.
+            </p>
           </div>
+          <button
+            type="button"
+            aria-label="Close"
+            className="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-control text-subtle hover:bg-background-light hover:text-ink"
+            onClick={closeModal}
+          >
+            <AppIcon name="close" />
+          </button>
+        </header>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="p-6 space-y-5">
-              {/* Error Message */}
-              {error && (
-                <div className="flex items-start gap-3 p-4 bg-red-50 rounded-lg border border-red-200">
-                  <span className="material-symbols-outlined text-red-600 text-xl">
-                    error
-                  </span>
-                  <p className="text-sm text-red-700">{error}</p>
-                </div>
-              )}
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <div className="space-y-5 px-6 pb-6 pt-4">
+            <FormErrorBanner message={error} />
 
-              {/* Success Message */}
-              {success && (
-                <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
-                  <span className="material-symbols-outlined text-green-600 text-xl">
-                    check_circle
-                  </span>
-                  <p className="text-sm text-green-700">
-                    Invitation sent successfully!
-                  </p>
-                </div>
-              )}
+            {success && (
+              <div
+                role="status"
+                className="flex items-center gap-2.5 rounded-card bg-success-soft px-4 py-3 text-[13px] font-medium text-success"
+              >
+                <AppIcon name="check" className="size-4 shrink-0" />
+                Invitation sent successfully!
+              </div>
+            )}
 
-              <div className="space-y-1.5">
-                <label
-                  className="text-sm font-semibold text-muted"
-                  htmlFor="fullName"
-                >
-                  Full Name
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className={labelClassName} htmlFor="fullName">
+                  Full name
                 </label>
                 <Input
                   id="fullName"
                   type="text"
                   placeholder="e.g. Jason Smith"
-                  className="text-sm py-2 rounded-lg mt-[6px] text-ink"
+                  className="mt-1.5 h-9"
+                  aria-invalid={errors.fullName ? true : undefined}
                   {...register("fullName")}
                   disabled={isSubmitting}
                 />
                 {errors.fullName && (
-                  <p className="text-xs text-red-600 mt-1">
-                    {errors.fullName.message}
-                  </p>
+                  <p className={errorClassName}>{errors.fullName.message}</p>
                 )}
               </div>
 
-              <div className="space-y-1.5">
-                <label
-                  className="text-sm font-semibold text-muted"
-                  htmlFor="email"
-                >
-                  Email Address
+              <div>
+                <label className={labelClassName} htmlFor="email">
+                  Email address
                 </label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="e.g. jason@warehouse.com"
-                  className="text-sm py-2 rounded-lg mt-[6px] text-ink"
+                  className="mt-1.5 h-9"
+                  aria-invalid={errors.email ? true : undefined}
                   {...register("email")}
                   disabled={isSubmitting}
                 />
                 {errors.email && (
-                  <p className="text-xs text-red-600 mt-1">
-                    {errors.email.message}
-                  </p>
+                  <p className={errorClassName}>{errors.email.message}</p>
                 )}
               </div>
-
-              <div className="space-y-1.5">
-                <label
-                  className="text-sm font-semibold text-muted"
-                  htmlFor="role"
-                >
-                  Role
-                </label>
-                <select
-                  id="role"
-                  className="mt-[6px] block w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-ink outline-none focus:ring-2 focus:ring-primary"
-                  {...register("role")}
-                  disabled={isSubmitting}
-                >
-                  <option value="" disabled>
-                    Select a role
-                  </option>
-                  {ROLE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                {errors.role && (
-                  <p className="text-xs text-red-600 mt-1">
-                    {errors.role.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex items-start gap-3 p-4 bg-primary/5 rounded-lg border border-primary/10">
-                <span className="material-symbols-outlined text-primary text-xl">
-                  info
-                </span>
-                <p className="text-xs text-muted leading-relaxed">
-                  The user will receive a one-time invitation link via email,
-                  valid for{" "}
-                  <span className="font-bold text-primary">24 hours.</span>
-                </p>
-              </div>
-
-              {/* Rate Limit Warning - Only show when rate limit error occurs */}
-              {error && error.toLowerCase().includes("rate limit") && (
-                <div className="flex items-start gap-3 p-4 bg-amber-50 rounded-lg border border-amber-200">
-                  <span className="material-symbols-outlined text-amber-600 text-xl">
-                    schedule
-                  </span>
-                  <p className="text-xs text-amber-700 leading-relaxed">
-                    <span className="font-semibold">Rate Limit:</span> You can
-                    only send 2 invitations per hour on the free tier. Please
-                    try again later or upgrade your plan.
-                  </p>
-                </div>
-              )}
             </div>
 
-            <div className="px-6 py-4 bg-gray-50 border-t border-line-soft flex justify-end gap-3">
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                shadow="none"
-                onClick={closeModal}
-                disabled={isSubmitting}
+            <fieldset disabled={isSubmitting}>
+              <legend className={labelClassName}>Role</legend>
+              <div
+                className={cn(
+                  "mt-1.5 divide-y divide-line-soft overflow-hidden rounded-card border",
+                  errors.role ? "border-danger" : "border-line",
+                )}
               >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                variant="primary"
-                size="sm"
-                shadow="sm"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  "Sending..."
-                ) : (
-                  <>
-                    <span className="material-symbols-outlined !text-lg">
-                      send
+                {ROLE_OPTIONS.map((option) => (
+                  <label
+                    key={option.value}
+                    className={cn(
+                      "flex cursor-pointer items-start gap-3 px-4 py-3 hover:bg-background-light/60",
+                      selectedRole === option.value && "bg-background-light/60",
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      value={option.value}
+                      className="mt-0.5 size-4 shrink-0 cursor-pointer accent-ink"
+                      {...register("role")}
+                    />
+                    <span>
+                      <span className="block text-[13px] font-medium">
+                        {option.label}
+                      </span>
+                      <span className="block text-xs text-muted">
+                        {option.description}
+                      </span>
                     </span>
-                    Send Invite
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-        </div>
+                  </label>
+                ))}
+              </div>
+              {errors.role && (
+                <p className={errorClassName}>{errors.role.message}</p>
+              )}
+            </fieldset>
+
+            <p className="flex items-center gap-2 text-xs text-muted">
+              <AppIcon name="clock" className="size-4 shrink-0 text-subtle" />
+              The link works for 24 hours. You can resend it from Invitations.
+            </p>
+
+            {/* Rate Limit Warning - Only show when rate limit error occurs */}
+            {error && error.toLowerCase().includes("rate limit") && (
+              <div className="rounded-card bg-warning-soft px-4 py-3 text-xs leading-relaxed text-warning">
+                <span className="font-semibold">Rate limit:</span> You can only
+                send 2 invitations per hour on the free tier. Please try again
+                later or upgrade your plan.
+              </div>
+            )}
+          </div>
+
+          <footer className="flex justify-end gap-2 border-t border-line bg-background-light px-6 py-4">
+            <Button
+              type="button"
+              variant="secondary"
+              size="md"
+              onClick={closeModal}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              size="md"
+              className="px-4"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Sending..." : "Send invite"}
+            </Button>
+          </footer>
+        </form>
       </div>
-    </>
+    </div>
   );
 }

@@ -55,6 +55,8 @@ export type DataTableConfig<
   writeFiltersToUrl?: (filters: TFilters, params: URLSearchParams) => void;
   // Poll for changes by other users (ms). Paused while the tab is hidden.
   refetchInterval?: number;
+  // Plural noun in the footer count, e.g. "items" -> "1–6 of 9 items".
+  itemLabel?: string;
 };
 
 export type DataTableColumn<T> = {
@@ -83,6 +85,10 @@ export type DataTableProps<
   // so the new row, sorted first, is visible).
   resetPageKey?: number;
   onRowClick?: (row: T, event: React.MouseEvent) => void;
+  // Optional row of tabs at the top of the table card (e.g. status tabs).
+  tabs?: React.ReactNode;
+  // Outer spacing around the card; defaults to p-6.
+  className?: string;
 
   filters: TFilters;
   onFiltersChange: (filters: TFilters) => void;

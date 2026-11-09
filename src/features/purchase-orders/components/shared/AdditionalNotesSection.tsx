@@ -1,28 +1,32 @@
 import type { AdditionalNotesSectionProps } from "@/src/features/purchase-orders/types/form.types";
+import { cn } from "@/src/lib/utils";
+import { inputClassName } from "@/src/components/ui/Input";
+import { errorClassName, sectionHeadingClassName } from "./fields";
 
 export default function AdditionalNotesSection({
   register,
   errors,
 }: AdditionalNotesSectionProps) {
   return (
-    <section className="space-y-4">
-      <div className="mb-1 flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary text-lg">
-          sticky_note_2
-        </span>
-        <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
-          Additional Notes
-        </h3>
-      </div>
+    <section className="space-y-3 border-t border-line-soft pt-6">
+      <label
+        htmlFor="po-notes"
+        className={cn("block", sectionHeadingClassName)}
+      >
+        Notes <span className="font-normal text-subtle">optional</span>
+      </label>
       <textarea
-        className="min-h-[96px] w-full resize-none rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+        id="po-notes"
+        rows={3}
+        className={cn(inputClassName, "h-auto resize-none py-2")}
+        aria-invalid={errors.notes ? true : undefined}
         // defaultValue={notes ?? ""}
         {...register("notes")}
         name="notes"
         placeholder="Add supplier notes or internal context"
       />
       {errors.notes ? (
-        <p className="text-xs text-red-600">{errors.notes.message}</p>
+        <p className={errorClassName}>{errors.notes.message}</p>
       ) : null}
     </section>
   );

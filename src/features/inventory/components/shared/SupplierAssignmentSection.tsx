@@ -1,5 +1,6 @@
 import SupplierPicker from "@/src/features/shared/suppliers/components/SupplierPicker";
 import type { SupplierAssignmentSectionProps } from "../../types/form.types";
+import { sectionHeadingClassName } from "./fields";
 
 export default function SupplierAssignmentSection({
   errors,
@@ -7,22 +8,24 @@ export default function SupplierAssignmentSection({
   clearErrors,
 }: SupplierAssignmentSectionProps) {
   return (
-    <section className="space-y-4">
-      <div className="mb-1 flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary text-lg">
-          local_shipping
-        </span>
-        <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
-          Supplier Assignment
-        </h3>
-      </div>
+    <section
+      aria-labelledby="inventory-supplier"
+      className="space-y-3 border-t border-line-soft pt-6"
+    >
+      <h3 id="inventory-supplier" className={sectionHeadingClassName}>
+        Primary supplier
+      </h3>
       <SupplierPicker
+        label=""
         error={errors.primarySupplier?.message}
         onSupplierChange={(supplier) => {
           setValue("primarySupplier", supplier?.id ?? "");
           if (supplier) clearErrors("primarySupplier");
         }}
       />
+      <p className="text-xs text-muted">
+        Used as the default supplier when this item goes low.
+      </p>
     </section>
   );
 }

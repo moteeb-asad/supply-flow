@@ -10,9 +10,10 @@ export default function MainLayout({
     // Mounted here (not in the root layout) so it loads the user after login:
     // login is a server action, so the browser client gets no SIGNED_IN event.
     <UserProvider>
-      <div className="flex min-h-screen">
+      {/* Grey frame: the sidebar sits on it, each page is a white sheet. */}
+      <div className="flex min-h-screen gap-2 bg-frame p-2">
         <Sidebar />
-        <div className="flex flex-1 flex-col">{children}</div>
+        <div className="flex min-w-0 flex-1 flex-col">{children}</div>
       </div>
     </UserProvider>
   );

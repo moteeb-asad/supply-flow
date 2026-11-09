@@ -4,7 +4,7 @@ const optionalText = z.string().trim().optional();
 const optionalEmail = z
   .string()
   .trim()
-  .email("Invalid email address")
+  .email("Enter a full email, like name@company.com")
   .or(z.literal(""));
 
 export const supplierFormSchema = z.object({

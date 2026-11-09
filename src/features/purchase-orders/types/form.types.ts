@@ -3,6 +3,7 @@ import type {
   PurchaseOrderLineItemFormValue,
 } from "./domain.types";
 import type { CreatePurchaseOrderFormInput } from "../validators/purchase-order.schema";
+import type { PurchaseOrderTotals } from "../utils/calculations";
 import {
   FieldErrors,
   UseFormClearErrors,
@@ -27,6 +28,8 @@ export type PurchaseOrderFormProps = {
   onFieldArrayReady?: (methods: {
     append: UseFieldArrayAppend<PurchaseOrderFormValues, "lineItems">;
   }) => void;
+  // Called whenever the order totals change, so the drawer footer can show them.
+  onTotalsChange?: (totals: PurchaseOrderTotals) => void;
   isSubmitting?: boolean;
   serverError?: string;
 };

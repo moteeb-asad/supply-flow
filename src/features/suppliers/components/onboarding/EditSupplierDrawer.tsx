@@ -59,9 +59,9 @@ export function EditSupplierDrawer({
 
   return (
     <FormDrawer
-      title="Edit Supplier"
+      title="Edit supplier"
       description="Update supplier details and save changes."
-      submitLabel="Save Changes"
+      submitLabel="Save changes"
       submittingLabel="Saving..."
       formId={SUPPLIER_FORM_ID}
       isSubmitting={isPending}

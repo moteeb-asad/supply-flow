@@ -7,6 +7,15 @@ import type {
   AddItemFormValues,
   PurchaseOrderSkuOption,
 } from "../../../types";
+import { cn } from "@/src/lib/utils";
+import { inputClassName } from "@/src/components/ui/Input";
+import { Button } from "@/src/components/ui/Button";
+import AppIcon from "@/src/components/ui/AppIcon";
+import FormErrorBanner from "@/src/components/ui/FormErrorBanner";
+import { formatAmount } from "../../../utils/formatters";
+
+const labelClassName = "text-[13px] font-medium text-muted";
+const fieldClassName = cn(inputClassName, "mt-1.5 h-9");
 
 const defaultFormValues: AddItemFormValues = {
   skuName: "",
@@ -77,30 +86,30 @@ export default function AddItemForm({
 
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>
-      <div className="p-8 space-y-6">
-        {submitError ? (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {submitError}
-          </div>
-        ) : null}
+      <div className="space-y-5 px-6 pb-6 pt-4">
+        <FormErrorBanner message={submitError} />
 
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-slate-700">
-            SKU / Item Name
-          </label>
-          {showSearchResultMeta ? (
-            <p className="text-xs text-slate-500">
-              {skuOptions.length === 0
-                ? "No matching items found"
-                : `${skuOptions.length} item${skuOptions.length === 1 ? "" : "s"} found`}
-            </p>
-          ) : null}
-          <div className="relative group">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-              search
-            </span>
+        <div>
+          <div className="flex items-baseline justify-between gap-3">
+            <label htmlFor="add-item-sku" className={labelClassName}>
+              SKU / item name
+            </label>
+            {showSearchResultMeta ? (
+              <p className="text-xs text-subtle">
+                {skuOptions.length === 0
+                  ? "No matching items found"
+                  : `${skuOptions.length} item${skuOptions.length === 1 ? "" : "s"} found`}
+              </p>
+            ) : null}
+          </div>
+          <div className="relative mt-1.5">
+            <AppIcon
+              name="search"
+              className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-subtle"
+            />
             <input
-              className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-slate-400"
+              id="add-item-sku"
+              className={cn(inputClassName, "h-9 pl-8")}
               onBlur={() => {
                 setTimeout(() => setIsResultsOpen(false), 120);
               }}
@@ -112,34 +121,37 @@ export default function AddItemForm({
                 setIsResultsOpen(true);
               }}
               onFocus={() => setIsResultsOpen(true)}
-              placeholder="Search SKU by sku code or item name..."
+              placeholder="Search by SKU code or item name"
               required
               type="text"
               value={query}
             />
 
             {isResultsOpen ? (
-              <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-y-auto rounded-card border border-line bg-surface p-1 shadow-overlay">
                 {isLoadingSkus ? (
-                  <p className="px-4 py-3 text-sm text-slate-500">
+                  <p className="px-2.5 py-2 text-[13px] text-muted">
                     Loading items...
                   </p>
                 ) : skuOptions.length === 0 ? (
-                  <p className="px-4 py-3 text-sm text-slate-500">
+                  <p className="px-2.5 py-2 text-[13px] text-muted">
                     No matching SKU found.
                   </p>
                 ) : (
                   skuOptions.map((sku) => (
                     <button
-                      className="w-full text-left px-4 py-3 hover:bg-slate-50 border-b last:border-b-0 border-slate-100"
+                      className="w-full cursor-pointer rounded-[6px] px-2.5 py-2 text-left hover:bg-background-light"
                       key={sku.id}
                       onClick={() => handleSelectSku(sku)}
                       type="button"
                     >
-                      <p className="text-sm font-semibold text-slate-900">
-                        {sku.sku_code} - {sku.name}
+                      <p className="text-[13px] font-medium text-ink">
+                        <span className="font-mono text-[12.5px]">
+                          {sku.sku_code}
+                        </span>{" "}
+                        {sku.name}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-subtle">
                         Unit: {sku.unit ?? "n/a"}
                       </p>
                     </button>
@@ -150,13 +162,14 @@ export default function AddItemForm({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-slate-700">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="add-item-quantity" className={labelClassName}>
               Quantity
             </label>
             <input
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+              id="add-item-quantity"
+              className={cn(fieldClassName, "tabular-nums")}
               min={1}
               onChange={(event) =>
                 setValues((prev) => ({
@@ -171,16 +184,20 @@ export default function AddItemForm({
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-slate-700">
-              Unit Price
+          <div>
+            <label htmlFor="add-item-unit-price" className={labelClassName}>
+              Unit price
             </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+            <div className="relative mt-1.5">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-subtle"
+              >
                 $
               </span>
               <input
-                className="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                id="add-item-unit-price"
+                className={cn(inputClassName, "h-9 pl-6 tabular-nums")}
                 min={0}
                 onChange={(event) =>
                   setValues((prev) => ({
@@ -197,43 +214,44 @@ export default function AddItemForm({
           </div>
         </div>
 
-        <div className="bg-primary/5 rounded-xl p-6 border border-primary/10">
-          <div className="flex justify-between items-center">
-            <div className="space-y-1">
-              <p className="text-xs uppercase tracking-wider font-bold text-primary/70">
-                Estimated Line Total
-              </p>
-              <p className="text-slate-500 text-xs">
-                Based on {values.quantity} units x $
-                {values.unitPrice.toFixed(2)}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-primary">
-                ${lineTotal.toFixed(2)}
-              </p>
-            </div>
+        <div className="flex items-center justify-between gap-4 rounded-card border border-line-soft bg-background-light px-4 py-3">
+          <div>
+            <p className="text-[13px] font-medium">Estimated line total</p>
+            <p className="text-xs text-subtle">
+              Based on {values.quantity} units x ${values.unitPrice.toFixed(2)}
+            </p>
           </div>
+          <p className="text-[20px] font-semibold tabular-nums">
+            {formatAmount(lineTotal)}
+          </p>
         </div>
       </div>
 
-      <div className="px-8 py-6 bg-slate-50 border-t border-slate-100 flex justify-end items-center gap-3">
-        <button
-          className="px-6 py-2.5 rounded-lg text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
+      <footer className="flex items-center justify-end gap-2 border-t border-line bg-background-light px-6 py-4">
+        <Button
+          variant="ghost"
+          size="md"
+          className="hover:bg-surface"
           onClick={onCancel}
           type="button"
         >
           Cancel
-        </button>
-        <button
-          className="px-6 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white font-semibold flex items-center gap-2 transition-all shadow-md shadow-primary/20 disabled:opacity-70"
+        </Button>
+        <Button
+          size="md"
+          className="px-4"
           disabled={isSubmitting}
           type="submit"
         >
-          <span className="material-symbols-outlined text-[20px]">add</span>
-          {isSubmitting ? "Adding..." : "Add Item"}
-        </button>
-      </div>
+          <span
+            aria-hidden="true"
+            className="material-symbols-outlined !text-[18px]"
+          >
+            add
+          </span>
+          {isSubmitting ? "Adding..." : "Add item"}
+        </Button>
+      </footer>
     </form>
   );
 }

@@ -1,76 +1,49 @@
+const FEATURES = [
+  {
+    term: "Purchase orders",
+    description: "Draft, send and track every order to delivery.",
+  },
+  {
+    term: "SKU receiving",
+    description: "Check each delivery line by line and record shortfalls.",
+  },
+  {
+    term: "Suppliers",
+    description: "See who delivers on time and who keeps you waiting.",
+  },
+];
+
+// Plain about panel on the right of the auth pages (lg and up).
 export default function LoginBranding() {
   return (
-    <div className="hidden lg:flex w-1/2 bg-background-dark relative overflow-hidden flex-col justify-center items-center p-12">
-      {/* Background Effects */}
-      <div className="absolute inset-0 watermark-pattern opacity-40" />
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-        <span className="text-[12rem] font-black text-white/[0.02] rotate-[-15deg] whitespace-nowrap">
-          SECURE ACCESS
-        </span>
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 text-center max-w-lg">
-        {/* Logo */}
-        <div className="mb-6 inline-flex items-center justify-center rounded-3xl border border-white/20 bg-white/10 p-4 backdrop-blur-md">
-          <div className="flex size-14 items-center justify-center rounded-2xl bg-white text-primary shadow-2xl">
-            <span
-              className="material-symbols-outlined text-4xl"
-              style={{ fontVariationSettings: '"FILL" 1' }}
-            >
-              inventory_2
-            </span>
-          </div>
-        </div>
-
-        {/* Title */}
-        <h2 className="mb-3 text-3xl font-bold tracking-tight text-white">
-          SupplyFlow
-        </h2>
-        <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-primary" />
-
-        {/* Description */}
-        <p className="mb-8 text-base font-medium leading-relaxed text-gray-400">
-          Integrated supply chain and warehouse management system for
-          streamlined internal operations.
+    <aside
+      aria-label="About SupplyFlow"
+      className="hidden flex-col justify-between rounded-sheet p-12 lg:flex"
+    >
+      <div />
+      <div className="max-w-md">
+        <p className="text-[28px] font-medium leading-9 tracking-[-0.01em]">
+          Purchasing, receiving and stock, in one place for the whole warehouse
+          team.
         </p>
-
-        {/* Features Grid */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white/5 border border-white/10 p-4 rounded-2xl text-left">
-            <span className="material-symbols-outlined text-primary mb-2">
-              monitoring
-            </span>
-            <h4 className="text-white text-sm font-bold mb-1">
-              Real-time Tracking
-            </h4>
-            <p className="text-gray-500 text-xs">
-              Monitor every movement in your supply chain.
-            </p>
-          </div>
-          <div className="bg-white/5 border border-white/10 p-4 rounded-2xl text-left">
-            <span className="material-symbols-outlined text-primary mb-2">
-              verified_user
-            </span>
-            <h4 className="text-white text-sm font-bold mb-1">
-              Secure Internal
-            </h4>
-            <p className="text-gray-500 text-xs">
-              Enterprise-grade security and audit trails.
-            </p>
-          </div>
-        </div>
+        <dl className="mt-10 space-y-5">
+          {FEATURES.map(({ term, description }) => (
+            <div key={term} className="flex gap-4">
+              <dt className="w-32 shrink-0 text-[13px] text-subtle">{term}</dt>
+              <dd className="text-[13px] text-muted">{description}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
-
-      {/* Bottom Badge */}
-      <div className="absolute bottom-8 flex items-center gap-2 text-white/40 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
-        <span className="material-symbols-outlined text-sm">
-          shield_with_heart
+      <p className="flex items-center gap-2 text-xs text-subtle">
+        <span
+          aria-hidden="true"
+          className="material-symbols-outlined !text-[16px]"
+        >
+          verified_user
         </span>
-        <span className="text-xs font-semibold tracking-wide uppercase">
-          Secure Internal Access Only
-        </span>
-      </div>
-    </div>
+        Internal system for authorised staff only.
+      </p>
+    </aside>
   );
 }

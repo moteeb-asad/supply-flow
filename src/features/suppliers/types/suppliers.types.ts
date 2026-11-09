@@ -102,7 +102,6 @@ export type GetSuppliersInput = {
 export type SupplierTermsSectionProps = {
   register: UseFormRegister<SupplierFormValues>;
   errors: FieldErrors<SupplierFormValues>;
-  leadTimeDays: number;
 };
 export type SupplierIdentitySectionProps = {
   register: UseFormRegister<SupplierFormValues>;

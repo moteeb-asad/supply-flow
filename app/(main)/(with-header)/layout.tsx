@@ -6,9 +6,9 @@ export default function WithHeaderLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex flex-1 flex-col">
+    <div className="relative flex min-w-0 flex-1 flex-col rounded-sheet border border-line bg-surface">
       <Header />
-      <main className="flex-1 bg-gray-50">{children}</main>
+      <main className="flex-1">{children}</main>
     </div>
   );
 }

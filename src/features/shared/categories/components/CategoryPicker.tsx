@@ -84,15 +84,17 @@ export default function CategoryPicker({
 
   return (
     <div className="space-y-1.5">
-      <label className="text-sm font-semibold text-ink">{label}</label>
+      {label ? (
+        <label className="text-[13px] font-medium text-muted">{label}</label>
+      ) : null}
       <div className="relative">
-        <span className="pointer-events-none absolute inset-y-0 left-3 z-10 flex items-center text-muted">
-          <span className="material-symbols-outlined text-[18px] leading-none">
+        <span className="pointer-events-none absolute inset-y-0 left-2.5 z-10 flex items-center text-subtle">
+          <span className="material-symbols-outlined !text-[16px] leading-none">
             search
           </span>
         </span>
         <input
-          className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-10 pr-10 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary"
+          className="h-9 w-full rounded-control border border-line bg-surface pl-8 pr-9 text-sm text-ink placeholder:text-subtle focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15"
           onChange={(event) => {
             setQuery(event.target.value);
             setSelectedCategory(null);
@@ -110,7 +112,7 @@ export default function CategoryPicker({
         {canClear ? (
           <button
             aria-label="Clear selected category"
-            className="absolute inset-y-0 right-3 flex items-center text-muted transition-colors hover:text-ink cursor-pointer"
+            className="absolute inset-y-0 right-2.5 flex cursor-pointer items-center text-subtle hover:text-ink"
             onClick={handleClearSelection}
             type="button"
           >
@@ -131,21 +133,21 @@ export default function CategoryPicker({
         />
         {open ? (
           <div
-            className="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg"
+            className="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-y-auto rounded-card border border-line bg-surface p-1 shadow-overlay"
             onScroll={handleDropdownScroll}
           >
             {isLoading ? (
-              <p className="px-4 py-3 text-sm text-muted">
+              <p className="px-2.5 py-2 text-[13px] text-muted">
                 Loading categories...
               </p>
             ) : options.length === 0 ? (
-              <p className="px-4 py-3 text-sm text-muted">
+              <p className="px-2.5 py-2 text-[13px] text-muted">
                 No categories found.
               </p>
             ) : (
               options.map((category) => (
                 <button
-                  className="w-full border-b border-gray-100 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-gray-50 cursor-pointer"
+                  className="w-full cursor-pointer rounded-[6px] px-2.5 py-2 text-left hover:bg-background-light"
                   key={category.id}
                   onMouseDown={(event) =>
                     handleOptionMouseDown(event, category)
@@ -155,22 +157,24 @@ export default function CategoryPicker({
                   }
                   type="button"
                 >
-                  <p className="text-sm font-semibold text-ink">
+                  <p className="text-[13px] font-medium text-ink">
                     {category.name}
                   </p>
                   {category.description ? (
-                    <p className="text-xs text-muted">{category.description}</p>
+                    <p className="text-xs text-subtle">
+                      {category.description}
+                    </p>
                   ) : null}
                 </button>
               ))
             )}
             {isFetchingNextPage ? (
-              <p className="px-4 py-3 text-sm text-muted">
+              <p className="px-2.5 py-2 text-[13px] text-muted">
                 Loading more categories...
               </p>
             ) : null}
             {!hasNextPage && options.length > 0 ? (
-              <p className="px-4 py-2 text-center text-xs text-muted">
+              <p className="px-2.5 py-1.5 text-center text-xs text-subtle">
                 End of category list
               </p>
             ) : null}
@@ -178,11 +182,11 @@ export default function CategoryPicker({
         ) : null}
       </div>
       {error ? (
-        <p className="text-xs text-red-600">{error}</p>
+        <p className="text-xs text-danger">{error}</p>
       ) : selectedCategory ? (
-        <p className="text-xs text-muted">Selected: {selectedCategory.name}</p>
+        <p className="text-xs text-subtle">Selected: {selectedCategory.name}</p>
       ) : (
-        <p className="text-xs text-muted">Select a category from results.</p>
+        <p className="text-xs text-subtle">Select a category from results.</p>
       )}
     </div>
   );

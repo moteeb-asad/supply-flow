@@ -52,9 +52,7 @@ export default function InventoryTableFilters({
     <>
       {/* Categories  */}
       <div>
-        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
-          Category
-        </h3>
+        <h3 className="mb-2 text-[13px] font-semibold">Category</h3>
         <CategoryPicker
           label=""
           initialCategoryId={values?.category}
@@ -64,16 +62,14 @@ export default function InventoryTableFilters({
       </div>
       {/* Unit Price Range  */}
       <div>
-        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
-          Unit Price Range
-        </h3>
+        <h3 className="mb-2 text-[13px] font-semibold">Unit Price Range</h3>
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xs">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-subtle text-xs">
               $
             </span>
             <input
-              className="w-full bg-surface-variant border-line rounded-lg py-2 pl-6 pr-2 text-sm focus:ring-2 focus:ring-primary/20"
+              className="h-9 w-full rounded-control border border-line bg-surface py-0 pl-6 pr-2 text-[13px] tabular-nums focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15"
               placeholder="Min"
               type="number"
               value={values?.unitPriceMin ?? ""}
@@ -82,13 +78,13 @@ export default function InventoryTableFilters({
               }
             />
           </div>
-          <span className="text-on-surface-variant text-xs font-bold">-</span>
+          <span className="text-subtle text-xs">–</span>
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xs">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-subtle text-xs">
               $
             </span>
             <input
-              className="w-full bg-surface-variant border-line rounded-lg py-2 pl-6 pr-2 text-sm focus:ring-2 focus:ring-primary/20"
+              className="h-9 w-full rounded-control border border-line bg-surface py-0 pl-6 pr-2 text-[13px] tabular-nums focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15"
               placeholder="Max"
               type="number"
               value={values?.unitPriceMax ?? ""}
@@ -101,11 +97,9 @@ export default function InventoryTableFilters({
       </div>
       {/* Stock Status  */}
       <div>
-        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
-          Stock Status
-        </h3>
+        <h3 className="mb-2 text-[13px] font-semibold">Stock Status</h3>
         <select
-          className="w-full bg-white border border-line rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+          className="h-9 w-full cursor-pointer rounded-control border border-line bg-surface px-3 text-[13px] focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15"
           value={values?.stockStatus || ""}
           onChange={handleStockStatusChange}
         >

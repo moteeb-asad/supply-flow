@@ -4,7 +4,9 @@ import { getReceivablePurchaseOrdersAction } from "../../actions/get-receivable-
 import { getPurchaseOrderWithItemsAction } from "../../actions/get-purchase-order-with-items.action";
 import { purchaseOrderKeys } from "@/src/features/purchase-orders/constants/query-keys";
 import { mapPurchaseOrderToLoadedPayload } from "../../mappers/purchase-order.mapper";
-import { formatDate } from "@/src/lib/utils";
+import { formatDate } from "@/src/lib/dates";
+import { Button } from "@/src/components/ui/Button";
+import { StatusPill } from "@/src/components/ui/StatusPill";
 import type { PoLookupSectionProps, PurchaseOrderOption } from "../../types";
 
 const PAGE_SIZE = 5;
@@ -121,148 +123,126 @@ export default function PoLookupSection({ onPoLoaded }: PoLookupSectionProps) {
   const canClear = Boolean(selectedPO || query);
 
   return (
-    <>
-      <section className="space-y-4">
-        <div className="mb-1 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-lg">
-            search
-          </span>
-          <h3 className="text-xs font-bold uppercase tracking-widest text-muted">
-            PO LOOKUP
-          </h3>
-        </div>
-        <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-12">
-          <div className="space-y-1.5 sm:col-span-8">
-            <label className="text-sm font-semibold text-ink">
-              PO Number <span className="text-red-600">*</span>
-            </label>
-            <div className="relative">
-              <input
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-ink outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-primary uppercase placeholder:capitalize"
-                placeholder="Enter PO reference..."
-                type="text"
-                value={query}
-                onChange={(event) => {
-                  setQuery(event.target.value);
-                  setSelectedPO(null);
-                  setLoadedPO(null);
-                  clearLoadedPo();
-                  setOpen(true);
-                }}
-                onBlur={() => {
-                  setTimeout(() => setOpen(false), 120);
-                }}
-                onFocus={() => setOpen(true)}
-              />
-              {canClear ? (
-                <button
-                  aria-label="Clear PO selection"
-                  className="absolute inset-y-0 right-3 flex items-center text-muted transition-colors hover:text-ink cursor-pointer"
-                  onClick={handleClearSelection}
-                  type="button"
-                >
-                  <span className="material-symbols-outlined text-[15px] leading-none">
-                    close
-                  </span>
-                </button>
-              ) : null}
-              {open ? (
-                <div
-                  className="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg"
-                  onScroll={handleDropdownScroll}
-                >
-                  {isLoading ? (
-                    <p className="px-4 py-3 text-sm text-muted">
-                      Loading purchase orders...
-                    </p>
-                  ) : options.length === 0 ? (
-                    <p className="px-4 py-3 text-sm text-muted">
-                      No purchase orders found.
-                    </p>
-                  ) : (
-                    options.map((purchaseOrder) => (
-                      <button
-                        className="w-full border-b border-gray-100 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-gray-50 cursor-pointer"
-                        key={purchaseOrder.id}
-                        type="button"
-                        onMouseDown={(event) =>
-                          handleOptionMouseDown(event, purchaseOrder)
-                        }
-                        onPointerDown={(event) =>
-                          handleOptionPointerDown(event, purchaseOrder)
-                        }
-                      >
-                        <p className="text-sm font-semibold text-ink">
-                          {purchaseOrder.po_number}
-                        </p>
-                        {purchaseOrder.status ? (
-                          <div className="flex justify-between items-center">
-                            <p className="text-xs text-muted">
-                              {purchaseOrder.expected_delivery_date}
-                            </p>
-                            <p className="text-xs text-muted capitalize">
-                              {purchaseOrder.status}
-                            </p>
-                          </div>
-                        ) : null}
-                      </button>
-                    ))
-                  )}
-                  {isFetchingNextPage ? (
-                    <p className="px-4 py-3 text-sm text-muted">
-                      Loading more purchase orders...
-                    </p>
-                  ) : null}
-                  {!hasNextPage && options.length > 0 ? (
-                    <p className="px-4 py-2 text-center text-xs text-muted">
-                      End of purchase order list
-                    </p>
-                  ) : null}
-                </div>
-              ) : null}
-            </div>
-          </div>
-          <div className="sm:col-span-4">
+    <section aria-labelledby="receiving-po" className="space-y-3">
+      <h3 id="receiving-po" className="text-[13px] font-semibold">
+        Purchase order
+      </h3>
+      <div className="flex gap-2">
+        <div className="relative min-w-0 flex-1">
+          <label htmlFor="receiving-po-number" className="sr-only">
+            PO number
+          </label>
+          <input
+            id="receiving-po-number"
+            className="h-9 w-full rounded-control border border-line bg-surface px-3 pr-9 font-mono text-[13px] uppercase text-ink placeholder:font-sans placeholder:normal-case placeholder:text-subtle focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15"
+            placeholder="Enter PO number"
+            type="text"
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setSelectedPO(null);
+              setLoadedPO(null);
+              clearLoadedPo();
+              setOpen(true);
+            }}
+            onBlur={() => {
+              setTimeout(() => setOpen(false), 120);
+            }}
+            onFocus={() => setOpen(true)}
+          />
+          {canClear ? (
             <button
-              className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-bold flex items-center justify-center gap-2 text-white shadow-md transition-colors hover:bg-blue-700 active:scale-[0.98] cursor-pointer disabled:bg-gray-500 disabled:opacity-50 disabled:text-gray-100 disabled:cursor-not-allowed"
-              onClick={handleSearchButtonClick}
+              aria-label="Clear PO selection"
+              className="absolute inset-y-0 right-2.5 flex cursor-pointer items-center text-subtle hover:text-ink"
+              onClick={handleClearSelection}
               type="button"
-              disabled={!selectedPO || isLoading || isLoadingDetails}
             >
-              <span className="material-symbols-outlined text-sm">sync</span>
-              Search/Load
-            </button>
-          </div>
-        </div>
-        {loadedPO ? (
-          <div className="grid grid-cols-1 gap-3 rounded-lg sm:grid-cols-3 border border-gray-200 bg-slate-50 p-4">
-            <div>
-              <p className="mb-1 text-[10px] font-bold uppercase text-muted">
-                Supplier
-              </p>
-              <p className="text-sm font-semibold text-ink">
-                {loadedPO.supplier_name ?? "Unknown Supplier"}
-              </p>
-            </div>
-            <div>
-              <p className="mb-1 text-[10px] font-bold uppercase text-muted">
-                Exp. Delivery
-              </p>
-              <p className="text-sm font-semibold text-ink">
-                {formatDate(loadedPO.expected_delivery_date)}
-              </p>
-            </div>
-            <div>
-              <p className="mb-1 text-[10px] font-bold uppercase text-muted">
-                PO Status
-              </p>
-              <span className="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700 capitalize">
-                {loadedPO.status ?? "unknown"}
+              <span className="material-symbols-outlined !text-[15px] leading-none">
+                close
               </span>
+            </button>
+          ) : null}
+          {open ? (
+            <div
+              className="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-y-auto rounded-card border border-line bg-surface p-1 shadow-overlay"
+              onScroll={handleDropdownScroll}
+            >
+              {isLoading ? (
+                <p className="px-2.5 py-2 text-[13px] text-muted">
+                  Loading purchase orders...
+                </p>
+              ) : options.length === 0 ? (
+                <p className="px-2.5 py-2 text-[13px] text-muted">
+                  No purchase orders found.
+                </p>
+              ) : (
+                options.map((purchaseOrder) => (
+                  <button
+                    className="w-full cursor-pointer rounded-[6px] px-2.5 py-2 text-left hover:bg-background-light"
+                    key={purchaseOrder.id}
+                    type="button"
+                    onMouseDown={(event) =>
+                      handleOptionMouseDown(event, purchaseOrder)
+                    }
+                    onPointerDown={(event) =>
+                      handleOptionPointerDown(event, purchaseOrder)
+                    }
+                  >
+                    <p className="font-mono text-[13px] font-medium text-ink">
+                      {purchaseOrder.po_number}
+                    </p>
+                    {purchaseOrder.status ? (
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-subtle">
+                          {purchaseOrder.expected_delivery_date}
+                        </p>
+                        <p className="text-xs capitalize text-subtle">
+                          {purchaseOrder.status}
+                        </p>
+                      </div>
+                    ) : null}
+                  </button>
+                ))
+              )}
+              {isFetchingNextPage ? (
+                <p className="px-2.5 py-2 text-[13px] text-muted">
+                  Loading more purchase orders...
+                </p>
+              ) : null}
+              {!hasNextPage && options.length > 0 ? (
+                <p className="px-2.5 py-1.5 text-center text-xs text-subtle">
+                  End of purchase order list
+                </p>
+              ) : null}
             </div>
+          ) : null}
+        </div>
+        <Button
+          variant="secondary"
+          size="md"
+          onClick={handleSearchButtonClick}
+          type="button"
+          disabled={!selectedPO || isLoading || isLoadingDetails}
+        >
+          Load
+        </Button>
+      </div>
+      {loadedPO ? (
+        <div className="flex items-center justify-between gap-4 rounded-card bg-background-light px-4 py-3">
+          <div className="min-w-0">
+            <p className="text-sm font-medium">
+              {loadedPO.supplier_name ?? "Unknown Supplier"}
+            </p>
+            <p className="mt-0.5 text-xs text-muted">
+              Expected {formatDate(loadedPO.expected_delivery_date)}.
+            </p>
           </div>
-        ) : null}
-      </section>
-    </>
+          <StatusPill
+            status={loadedPO.status ?? "unknown"}
+            className="shrink-0"
+          />
+        </div>
+      ) : null}
+    </section>
   );
 }

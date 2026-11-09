@@ -1,53 +1,68 @@
-import { Input } from "@/src/components/ui/Input";
 import type { SupplierContactSectionProps } from "@/src/features/suppliers/types/suppliers.types";
+import { cn } from "@/src/lib/utils";
+import {
+  FieldError,
+  SectionHeading,
+  fieldClassName,
+  labelClassName,
+} from "./fields";
 
 export function SupplierContactSection({
   register,
   errors,
 }: SupplierContactSectionProps) {
   return (
-    <section className="space-y-4">
-      <div className="flex items-center gap-2 mb-1">
-        <span className="material-symbols-outlined text-primary text-lg">
-          person_pin
-        </span>
-        <h4 className="text-xs font-bold text-muted uppercase tracking-widest">
-          Primary Contact Details
-        </h4>
+    <section
+      aria-labelledby="supplier-contact"
+      className="space-y-4 border-t border-line-soft pt-6"
+    >
+      <SectionHeading id="supplier-contact" optional>
+        Contact
+      </SectionHeading>
+
+      <div>
+        <label htmlFor="supplier-contact-name" className={labelClassName}>
+          Contact person
+        </label>
+        <input
+          id="supplier-contact-name"
+          type="text"
+          className={fieldClassName}
+          {...register("contactName")}
+        />
       </div>
-      <div className="grid grid-cols gap-4">
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold">Contact Name</label>
-          <Input
-            className="w-full bg-white border-gray-200 rounded-lg py-2 px-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
-            placeholder="John Doe"
-            type="text"
-            {...register("contactName")}
-          />
-        </div>
-      </div>
-      <div className="space-y-1.5">
-        <label className="text-sm font-semibold">Email Address</label>
-        <div className="relative group">
-          <Input
-            className="w-full pl-10 bg-white border-gray-200 rounded-lg py-2 px-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
-            placeholder="contact@supplier.com"
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="supplier-email" className={labelClassName}>
+            Email
+          </label>
+          <input
+            id="supplier-email"
             type="email"
+            placeholder="name@company.com"
+            aria-invalid={errors.email ? true : undefined}
+            aria-describedby={errors.email ? "supplier-email-error" : undefined}
+            className={fieldClassName}
             {...register("email")}
           />
+          <FieldError
+            id="supplier-email-error"
+            message={errors.email?.message}
+          />
         </div>
-        {errors.email && (
-          <p className="text-xs text-danger">{errors.email.message}</p>
-        )}
-      </div>
-      <div className="space-y-1.5">
-        <label className="text-sm font-semibold">Phone Number</label>
-        <Input
-          className="w-full bg-white border-gray-200 rounded-lg py-2 px-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
-          placeholder="+1 (555) 123-4567"
-          type="tel"
-          {...register("contactPhone")}
-        />
+        <div>
+          <label htmlFor="supplier-phone" className={labelClassName}>
+            Phone
+          </label>
+          <input
+            id="supplier-phone"
+            type="tel"
+            placeholder="+92 300 1234567"
+            className={cn(fieldClassName, "tabular-nums")}
+            {...register("contactPhone")}
+          />
+        </div>
       </div>
     </section>
   );

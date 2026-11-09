@@ -21,6 +21,11 @@ import PurchaseOrderForm, {
   PURCHASE_ORDER_FORM_ID,
 } from "../shared/PurchaseOrderForm";
 import type { UseFieldArrayAppend } from "react-hook-form";
+import TotalAmountSection from "../shared/TotalAmountSection";
+import {
+  calculatePurchaseOrderTotals,
+  type PurchaseOrderTotals,
+} from "../../utils/calculations";
 
 export default function CreatePurchaseOrderDrawer({
   onClose,
@@ -33,6 +38,9 @@ export default function CreatePurchaseOrderDrawer({
     undefined,
   );
   const [isPending, startTransition] = useTransition();
+  const [totals, setTotals] = useState<PurchaseOrderTotals>(() =>
+    calculatePurchaseOrderTotals([], "cod"),
+  );
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
   const [addItemSubmitError, setAddItemSubmitError] = useState<string | null>(
     null,
@@ -84,13 +92,14 @@ export default function CreatePurchaseOrderDrawer({
   return (
     <>
       <FormDrawer
-        title="Create New Purchase Order"
-        description="Drafting a new order for procurement"
+        title="New purchase order"
+        description="Draft a new order for procurement."
         onClose={onClose}
-        submitLabel="Create Purchase Order"
+        submitLabel="Create purchase order"
         submittingLabel="Creating..."
         isSubmitting={isPending}
         formId={PURCHASE_ORDER_FORM_ID}
+        footerContent={<TotalAmountSection {...totals} />}
       >
         <PurchaseOrderForm
           mode="create"
@@ -99,6 +108,7 @@ export default function CreatePurchaseOrderDrawer({
           isSubmitting={isPending}
           onSubmit={handleDrawerSubmit}
           onAddItemClick={handleAddItemClick}
+          onTotalsChange={setTotals}
           onFieldArrayReady={(methods) => {
             appendLineItemRef.current = methods.append;
           }}

@@ -8,22 +8,16 @@ type QuickTasksProps = {
   role: Role | null;
 };
 
-const tileClassName =
-  "group flex items-center gap-3 rounded-lg bg-background-light p-3 text-left";
+const tileClassName = "flex items-start gap-3 bg-surface px-5 py-4";
 
-function TaskContent({ task }: { task: QuickTask }) {
+function TaskIcon({ icon }: { icon: string }) {
   return (
-    <>
-      <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-white text-primary shadow-sm transition-colors group-hover:bg-primary group-hover:text-white">
-        <span className="material-symbols-outlined !text-[20px]">
-          {task.icon}
-        </span>
-      </div>
-      <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-ink">{task.label}</p>
-        <p className="truncate text-[11px] text-muted">{task.description}</p>
-      </div>
-    </>
+    <span
+      aria-hidden="true"
+      className="material-symbols-outlined mt-0.5 shrink-0 !text-[18px] text-subtle group-hover:text-ink"
+    >
+      {icon}
+    </span>
   );
 }
 
@@ -36,33 +30,58 @@ export default function QuickTasks({ role }: QuickTasksProps) {
   if (tasks.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-line-soft bg-white p-4">
-      <h4 className="mb-3 text-sm font-bold">Quick Tasks</h4>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {tasks.map((task) =>
+    <section
+      aria-labelledby="quick-tasks-title"
+      className="overflow-hidden rounded-card border border-line"
+    >
+      <h2
+        id="quick-tasks-title"
+        className="px-5 py-4 text-[15px] font-semibold"
+      >
+        Quick tasks
+      </h2>
+      {/* Hairline grid: the 1px gap shows the line colour between tiles. */}
+      <div className="grid gap-px border-t border-line bg-line-soft sm:grid-cols-2 lg:grid-cols-5">
+        {tasks.map((task: QuickTask) =>
           "disabled" in task ? (
             <div
               key={task.label}
               aria-disabled="true"
-              className={`${tileClassName} relative cursor-not-allowed opacity-50`}
+              className={tileClassName}
               title="Coming soon"
             >
-              <TaskContent task={task} />
-              <span className="absolute right-2 top-2 rounded bg-gray-200 px-1.5 py-0.5 text-[10px] font-bold text-muted">
-                Soon
+              <TaskIcon icon={task.icon} />
+              <span>
+                <span className="flex items-center gap-2 text-[13px] font-medium text-muted">
+                  {task.label}
+                  <span className="rounded-full border border-line px-1.5 text-[11px] font-normal leading-4 text-subtle">
+                    Soon
+                  </span>
+                </span>
+                <span className="block text-xs text-subtle">
+                  {task.description}
+                </span>
               </span>
             </div>
           ) : (
             <Link
               key={task.label}
-              className={`${tileClassName} transition-colors hover:bg-primary/5`}
+              className={`group ${tileClassName} hover:bg-background-light`}
               href={task.href}
             >
-              <TaskContent task={task} />
+              <TaskIcon icon={task.icon} />
+              <span>
+                <span className="block text-[13px] font-medium">
+                  {task.label}
+                </span>
+                <span className="block text-xs text-subtle">
+                  {task.description}
+                </span>
+              </span>
             </Link>
           ),
         )}
       </div>
-    </div>
+    </section>
   );
 }

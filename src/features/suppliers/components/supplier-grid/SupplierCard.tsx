@@ -1,67 +1,79 @@
-import type { SupplierCardProps } from "@/src/features/suppliers/types/suppliers.types";
-import {
-  formatCategory,
-  getCategoryIcon,
-} from "@/src/features/suppliers/utils/category";
 import Link from "next/link";
+import { StatusPill } from "@/src/components/ui/StatusPill";
+import { cn, getInitials } from "@/src/lib/utils";
+import type { SupplierCardProps } from "@/src/features/suppliers/types/suppliers.types";
+import { formatCategory } from "@/src/features/suppliers/utils/category";
 
 export default function SupplierCard({ supplier }: SupplierCardProps) {
   const status = supplier.status ?? "active";
-  const statusStyles =
-    status === "active"
-      ? "bg-green-100 text-green-700"
-      : "bg-amber-100 text-amber-700";
+  const inactive = status === "inactive";
 
   return (
-    <>
-      <Link href={`/suppliers/${supplier.id}`} className="block">
-        <div className="bg-white rounded-xl border border-line hover:shadow-md transition-shadow group cursor-pointer p-5">
-          <div className="flex justify-between items-start mb-4">
-            <div className="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
-              <span className="material-symbols-outlined text-2xl">
-                {getCategoryIcon(supplier.category)}
-              </span>
-            </div>
-            <span
-              className={`${statusStyles} text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter`}
-            >
-              {status}
-            </span>
-          </div>
-          <h3 className="text-lg font-bold text-ink group-hover:text-primary transition-colors">
-            {supplier.name}
-          </h3>
-          <p className="text-muted text-xs mb-6">
-            {formatCategory(supplier.category)}
-          </p>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-muted uppercase tracking-wider mb-1">
-                Lead Time
-              </span>
-              <span className="text-sm font-bold text-ink">
-                {supplier.lead_time_days ?? "-"} Days
-              </span>
-            </div>
-            <div className="flex flex-col items-end">
-              <span className="text-[10px] font-bold text-muted uppercase tracking-wider mb-1">
-                Min Order
-              </span>
-              <span className="text-sm font-bold text-ink">
-                {supplier.min_order_qty ?? "-"}
-              </span>
-            </div>
-          </div>
-          <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
-            <span className="text-xs font-medium text-muted">
-              {supplier.primary_contact_name ?? "No contact"}
-            </span>
-            <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">
-              arrow_forward
-            </span>
-          </div>
+    <Link
+      href={`/suppliers/${supplier.id}`}
+      className="group flex h-full flex-col rounded-card border border-line p-5 hover:bg-background-light/50"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <span
+          aria-hidden="true"
+          className={cn(
+            "inline-flex size-10 items-center justify-center rounded-control bg-neutral-soft text-[13px] font-semibold",
+            inactive ? "text-muted" : "text-ink",
+          )}
+        >
+          {getInitials(supplier.name)}
+        </span>
+        <StatusPill status={status} />
+      </div>
+      <p
+        className={cn(
+          "mt-4 text-[15px] font-semibold group-hover:underline",
+          inactive && "text-muted",
+        )}
+      >
+        {supplier.name}
+      </p>
+      <p className="text-[13px] text-subtle">
+        {formatCategory(supplier.category)}
+      </p>
+      {/* mb-auto keeps the contact row at the bottom when cards share a row height. */}
+      <dl className="mb-auto mt-5 grid grid-cols-2 gap-3 text-[13px]">
+        <div>
+          <dt className="text-subtle">Lead time</dt>
+          <dd
+            className={cn(
+              "mt-0.5 font-medium tabular-nums",
+              inactive && "text-muted",
+            )}
+          >
+            {supplier.lead_time_days != null
+              ? `${supplier.lead_time_days} days`
+              : "—"}
+          </dd>
         </div>
-      </Link>
-    </>
+        <div>
+          <dt className="text-subtle">Min order</dt>
+          <dd
+            className={cn(
+              "mt-0.5 font-medium tabular-nums",
+              inactive && "text-muted",
+            )}
+          >
+            {supplier.min_order_qty != null
+              ? `${supplier.min_order_qty} units`
+              : "—"}
+          </dd>
+        </div>
+      </dl>
+      <p className="mt-5 flex items-center justify-between border-t border-line-soft pt-3 text-[13px] text-muted">
+        {supplier.primary_contact_name ?? "No contact"}
+        <span
+          aria-hidden="true"
+          className="material-symbols-outlined !text-[16px] text-subtle group-hover:text-ink"
+        >
+          chevron_right
+        </span>
+      </p>
+    </Link>
   );
 }

@@ -34,7 +34,8 @@ export const usersTableConfig: DataTableConfig<
   fetcher: usersFetcher,
   columns: usersColumns,
   filters: UsersFilters,
-  searchPlaceholder: "Search users...",
+  searchPlaceholder: "Search by name or email",
+  itemLabel: "users",
   queryKey: (params: UsersTableQueryParams) => ["users-table", params],
 
   parseFiltersFromUrl: parseUsersFiltersFromUrl,

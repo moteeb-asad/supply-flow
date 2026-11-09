@@ -1,5 +1,10 @@
 import type { InvitationsFiltersProps } from "../types";
 import { ROLES } from "@/src/constants/roles";
+import {
+  filterCheckboxClassName,
+  filterHeadingClassName,
+  filterOptionClassName,
+} from "@/src/components/data-table/filters/filter-styles";
 
 export function InvitationsFilters({
   values,
@@ -18,19 +23,17 @@ export function InvitationsFilters({
 
   return (
     <div>
-      <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
-        Role Assigned
-      </h3>
+      <h3 className={filterHeadingClassName}>Role assigned</h3>
       <div className="space-y-2">
         {ROLES.map((role) => (
-          <label key={role.id} className="flex items-center gap-3">
+          <label key={role.id} className={filterOptionClassName}>
             <input
               type="checkbox"
               checked={roleIds.includes(role.id)}
               onChange={() => handleRoleChange(role.id)}
-              className="rounded border-gray-300 text-primary focus:ring-primary bg-transparent"
+              className={filterCheckboxClassName}
             />
-            <span className="text-sm">{role.label}</span>
+            <span>{role.label}</span>
           </label>
         ))}
       </div>

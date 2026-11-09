@@ -3,6 +3,10 @@
 import { DATE_RANGE_OPTIONS } from "@/src/constants/dateRangeOptions";
 import type { PurchaseOrdersFiltersValue } from "../../types";
 import type { FilterPeriod } from "@/src/lib/date-range-utils";
+import {
+  filterHeadingClassName,
+  filterSelectClassName,
+} from "@/src/components/data-table/filters/filter-styles";
 
 export default function PurchaseOrdersFilters({
   onChange,
@@ -19,11 +23,9 @@ export default function PurchaseOrdersFilters({
   return (
     <>
       <div>
-        <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-3">
-          Date Range
-        </h3>
+        <h3 className={filterHeadingClassName}>Date range</h3>
         <select
-          className="w-full bg-white border border-line rounded-lg text-sm py-2 px-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+          className={filterSelectClassName}
           value={values?.dateRange || ""}
           onChange={handleDateRangeChange}
         >

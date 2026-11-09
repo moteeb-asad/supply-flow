@@ -5,6 +5,7 @@ import { usersTableConfig } from "../users.table.config";
 import { User } from "../types/user.types";
 import { useState } from "react";
 import { UsersFiltersValue, UsersTableQueryParams } from "../types/filters";
+import UserManagementTabs from "../../shared/components/UserManagementTabs";
 
 export default function UsersTableView() {
   const [filters, setFilters] = useState<UsersFiltersValue>({});
@@ -15,6 +16,8 @@ export default function UsersTableView() {
       config={usersTableConfig}
       filters={filters}
       onFiltersChange={handleFiltersChange}
+      tabs={<UserManagementTabs />}
+      className="p-0"
     />
   );
 }

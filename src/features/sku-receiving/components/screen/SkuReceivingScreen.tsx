@@ -1,6 +1,8 @@
 "use client";
 
 import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
+import { Button } from "@/src/components/ui/Button";
+import AppIcon from "@/src/components/ui/AppIcon";
 import { useOpenFromQueryParam } from "@/src/hooks/useOpenFromQueryParam";
 import SkuReceivingMetrics from "../list/SkuReceivingMetrics";
 import SkuReceivingTable from "../list/SkuReceivingTable";
@@ -16,41 +18,32 @@ export default function SkuReceivingScreen() {
 
   return (
     <>
-      <div className="px-6 py-6">
-        <div className="flex flex-wrap justify-between items-center gap-4">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-ink text-3xl font-black leading-tight tracking-tight">
-              SKU Receiving
-            </h2>
-            <p className="text-muted text-sm">
-              Verify delivered SKUs and update inventory levels across
-              facilities.
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <button
-              disabled
-              className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-white border border-line text-ink text-sm font-bold cursor-not-allowed opacity-50 transition-colors"
-            >
-              <span className="material-symbols-outlined text-lg">
-                upload_file
-              </span>
-              <span>Bulk Receive Upload</span>
-            </button>
-            <button
-              className="flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-700 transition-colors cursor-pointer"
-              onClick={() => setIsCreateDrawerOpen(true)}
-            >
-              <span className="material-symbols-outlined">barcode_scanner</span>
-              <span role="button">Start Receiving</span>
-            </button>
-          </div>
+      <header className="flex flex-wrap items-end justify-between gap-4 px-8 pb-6 pt-8">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-semibold tracking-[-0.01em]">
+            SKU receiving
+          </h1>
+          <p className="mt-1 text-sm text-muted">
+            Check deliveries against their purchase order and update stock.
+          </p>
         </div>
-      </div>
-      <div className="px-6">
+        <div className="flex flex-wrap gap-2">
+          <Button variant="secondary" size="md" disabled>
+            <AppIcon name="upload" className="size-4" />
+            Bulk upload
+            <span className="rounded-full border border-line px-1.5 text-[11px] font-normal leading-4">
+              Soon
+            </span>
+          </Button>
+          <Button size="md" onClick={() => setIsCreateDrawerOpen(true)}>
+            <AppIcon name="scan" className="size-4" />
+            Start receiving
+          </Button>
+        </div>
+      </header>
+
+      <div className="space-y-6 px-8 pb-8">
         <SkuReceivingMetrics />
-      </div>
-      <div className="space-y-6">
         <ErrorBoundary>
           <SkuReceivingTable
             filters={filters}
