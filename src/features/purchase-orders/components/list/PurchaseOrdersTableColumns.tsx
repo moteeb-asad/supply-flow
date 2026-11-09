@@ -1,162 +1,108 @@
 import { DataTableColumn } from "@/src/components/data-table/types";
-import { PurchaseOrder, PurchaseOrderStatus } from "../../types";
+import { StatusPill } from "@/src/components/ui/StatusPill";
+import { PurchaseOrder } from "../../types";
 import { formatAmount } from "@/src/features/purchase-orders/utils/formatters";
 import { formatDate } from "@/src/lib/dates";
 
-const statusStyles: Record<
-  PurchaseOrderStatus,
-  { label: string; className: string; dotClass: string }
+const paymentMethodLabels: Record<
+  PurchaseOrder["payment_method"],
+  { label: string; gst: string }
 > = {
-  closed: {
-    label: "Closed",
-    className: "bg-green-100 text-green-700",
-    dotClass: "bg-green-600",
-  },
-  overdue: {
-    label: "Overdue",
-    className: "bg-red-100 text-red-700",
-    dotClass: "bg-red-600",
-  },
-  pending: {
-    label: "Pending",
-    className: "bg-amber-100 text-amber-700",
-    dotClass: "bg-amber-600",
-  },
-  partially_received: {
-    label: "Partially Received",
-    className: "bg-blue-100 text-blue-700",
-    dotClass: "bg-blue-600",
-  },
-  draft: {
-    label: "Draft",
-    className: "bg-slate-100 text-slate-700",
-    dotClass: "bg-slate-500",
-  },
-  cancelled: {
-    label: "Cancelled",
-    className: "bg-slate-100 text-slate-700",
-    dotClass: "bg-slate-500",
-  },
+  cod: { label: "COD", gst: "GST 16%" },
+  card: { label: "Card", gst: "GST 5%" },
 };
 
-const paymentMethodStyles: Record<
-  PurchaseOrder["payment_method"],
-  { label: string; gst: string; className: string }
-> = {
-  cod: {
-    label: "COD",
-    gst: "GST 16%",
-    className: "bg-orange-100 text-orange-700",
-  },
-  card: {
-    label: "Card",
-    gst: "GST 5%",
-    className: "bg-sky-100 text-sky-700",
-  },
-};
+const actionButtonClassName =
+  "inline-flex size-8 cursor-not-allowed items-center justify-center rounded-control text-subtle";
 
 export const purchaseOrdersTableColumns: DataTableColumn<PurchaseOrder>[] = [
   {
     key: "po_number",
     header: "PO Number",
-    className: "text-sm font-bold text-primary whitespace-wrap",
-    cell: (row) => `#${row.po_number}`,
+    className: "whitespace-nowrap",
+    cell: (row) => (
+      <span className="font-mono text-[12.5px] font-medium text-primary">
+        {row.po_number}
+      </span>
+    ),
   },
   {
     key: "supplier",
     header: "Supplier",
-    cell: (row) => (
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">{row.supplier_name}</span>
-      </div>
-    ),
+    className: "whitespace-nowrap",
+    cell: (row) => row.supplier_name,
   },
   {
     key: "order_date",
     header: "Order Date",
-    className: "text-sm text-muted",
+    className: "whitespace-nowrap text-muted",
     cell: (row) => formatDate(row.order_date),
   },
   {
     key: "expected_delivery_date",
     header: "Expected Delivery",
-    className: "text-sm text-muted",
-    cell: (row) => {
-      const isOverdue = row.status === "overdue";
-      return (
-        <span className={isOverdue ? "text-red-600 font-medium" : ""}>
-          {formatDate(row.expected_delivery_date)}
-        </span>
-      );
-    },
+    className: "whitespace-nowrap",
+    cell: (row) => (
+      <span
+        className={
+          row.status === "overdue" ? "font-medium text-danger" : "text-muted"
+        }
+      >
+        {formatDate(row.expected_delivery_date)}
+      </span>
+    ),
   },
   {
     key: "total_amount",
     header: "Total Amount",
-    className: "text-sm text-muted",
+    headerClassName: "text-right",
+    className: "text-right font-medium tabular-nums",
     cell: (row) => formatAmount(row.total_amount),
   },
   {
     key: "payment_method",
     header: "Payment",
-    className: "text-sm text-muted",
+    className: "whitespace-nowrap",
     cell: (row) => {
-      const payment = paymentMethodStyles[row.payment_method];
+      const payment = paymentMethodLabels[row.payment_method];
       return (
-        <div className="space-y-1">
-          <span
-            className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${payment.className}`}
-          >
-            {payment.label}
-          </span>
-          <p className="text-xs text-slate-500">{payment.gst}</p>
-        </div>
+        <>
+          <p>{payment.label}</p>
+          <p className="text-xs text-subtle">{payment.gst}</p>
+        </>
       );
     },
   },
   {
     key: "status",
     header: "Status",
-    className: "text-sm text-muted",
-    cell: (row) => {
-      const style = statusStyles[row.status] ?? statusStyles.draft;
-      return (
-        <span
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${style.className}`}
-        >
-          <span className={`w-1.5 h-1.5 rounded-full ${style.dotClass}`}></span>
-          {style.label}
-        </span>
-      );
-    },
+    className: "whitespace-nowrap",
+    cell: (row) => <StatusPill status={row.status} />,
   },
   {
     key: "actions",
     header: "Actions",
-    className: "text-sm text-muted text-right",
-    cell: () => (
-      <div className="flex justify-end gap-2">
-        <button
-          disabled
-          className="p-1.5 text-muted cursor-not-allowed opacity-50 rounded transition-all"
-          title="View PDF"
-          type="button"
+    headerClassName: "text-right",
+    className: "text-right",
+    // Placeholder menu button; no actions behind it yet.
+    cell: (row) => (
+      <button
+        disabled
+        className={actionButtonClassName}
+        aria-label={`More actions for ${row.po_number}`}
+        type="button"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="size-4"
+          aria-hidden="true"
         >
-          <span className="material-symbols-outlined text-xl">
-            picture_as_pdf
-          </span>
-        </button>
-        <button
-          disabled
-          className="p-1.5 text-muted cursor-not-allowed opacity-50 rounded transition-all"
-          title="Track Delivery"
-          type="button"
-        >
-          <span className="material-symbols-outlined text-xl">
-            local_shipping
-          </span>
-        </button>
-      </div>
+          <circle cx="12" cy="5.5" r="1.5" />
+          <circle cx="12" cy="12" r="1.5" />
+          <circle cx="12" cy="18.5" r="1.5" />
+        </svg>
+      </button>
     ),
   },
 ];

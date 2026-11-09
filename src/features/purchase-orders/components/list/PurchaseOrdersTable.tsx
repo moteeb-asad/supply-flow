@@ -11,10 +11,12 @@ export default function PurchaseOrdersTable({
   filters,
   onFiltersChange,
   resetPageKey,
+  tabs,
 }: {
   filters: PurchaseOrdersFiltersValue;
   onFiltersChange: (filters: PurchaseOrdersFiltersValue) => void;
   resetPageKey?: number;
+  tabs?: React.ReactNode;
 }) {
   const router = useRouter();
   return (
@@ -28,6 +30,8 @@ export default function PurchaseOrdersTable({
       filters={filters}
       onFiltersChange={onFiltersChange}
       resetPageKey={resetPageKey}
+      tabs={tabs}
+      className="p-0"
       onRowClick={(row) => {
         router.push(`/purchase-orders/${row.id}`);
       }}

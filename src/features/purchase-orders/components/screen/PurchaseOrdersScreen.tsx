@@ -47,28 +47,27 @@ export default function PurchaseOrdersScreen() {
           </Button>
         </div>
       </header>
-      <div className="px-8 pb-6">
+      <div className="space-y-6 px-8 pb-8">
         <PurchaseOrdersMetrics />
-      </div>
-      <div className="px-6">
-        <PurchaseOrdersStatusTabs
-          status={filters.status}
-          onStatusChange={(status) => {
-            if (filters.status !== status) {
-              setFilters((prev) => ({
-                ...prev,
-                status,
-              }));
-            }
-          }}
-        />
-      </div>
-      <div className="space-y-6">
+
         <ErrorBoundary>
           <PurchaseOrdersTable
             filters={filters}
             onFiltersChange={setFilters}
             resetPageKey={createdCount}
+            tabs={
+              <PurchaseOrdersStatusTabs
+                status={filters.status}
+                onStatusChange={(status) => {
+                  if (filters.status !== status) {
+                    setFilters((prev) => ({
+                      ...prev,
+                      status,
+                    }));
+                  }
+                }}
+              />
+            }
           />
         </ErrorBoundary>
       </div>
