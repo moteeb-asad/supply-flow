@@ -1,16 +1,19 @@
 import { DataTableColumn } from "@/src/components/data-table/types";
+import { StatusPill } from "@/src/components/ui/StatusPill";
 import { formatRole } from "@/src/lib/utils";
 import { formatDate } from "@/src/lib/dates";
 import { Invitation } from "../types";
 import { getRoleBadgeClassName } from "../../shared/constants/role-badge";
 
+const textButtonClassName =
+  "h-8 cursor-pointer rounded-control px-2.5 text-[13px] font-medium";
+
 export const invitationsColumns: DataTableColumn<Invitation>[] = [
   {
     key: "email",
     header: "Email",
-    cell: (invite) => (
-      <span className="text-sm font-medium text-ink">{invite.email}</span>
-    ),
+    className: "font-medium",
+    cell: (invite) => invite.email,
   },
   {
     key: "role",
@@ -24,31 +27,22 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
   {
     key: "invited_by",
     header: "Invited By",
-    cell: (invite) => (
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted">
-          {invite.inviter_profile?.full_name ?? "—"}
-        </span>
-      </div>
-    ),
+    className: "text-muted",
+    cell: (invite) => invite.inviter_profile?.full_name ?? "—",
   },
   {
     key: "sent_at",
     header: "Sent Date",
-    cell: (invite) => (
-      <span className="text-sm text-muted">{formatDate(invite.sent_at)}</span>
-    ),
+    className: "whitespace-nowrap text-muted",
+    cell: (invite) => formatDate(invite.sent_at),
   },
   {
     key: "expiry",
     header: "Expiry",
+    className: "whitespace-nowrap",
     cell: (invite) => (
       <span
-        className={
-          invite.status === "Expired"
-            ? "text-sm text-danger font-medium"
-            : "text-sm text-muted"
-        }
+        className={invite.status === "Expired" ? "text-danger" : "text-muted"}
       >
         {formatDate(invite.expires_at)}
       </span>
@@ -57,38 +51,31 @@ export const invitationsColumns: DataTableColumn<Invitation>[] = [
   {
     key: "status",
     header: "Status",
-    cell: (invite) => (
-      <span
-        className={
-          invite.status === "pending"
-            ? "inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-medium bg-blue-50 text-blue-600"
-            : "inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-medium bg-green-50 text-green-600"
-        }
-      >
-        <span
-          className={
-            invite.status === "pending"
-              ? "size-1.5 rounded-full bg-blue-600"
-              : "size-1.5 rounded-full bg-green-600 text-green-600"
-          }
-        ></span>
-        {invite.status}
-      </span>
-    ),
+    className: "whitespace-nowrap",
+    // Label and tone come from StatusPill (pending, accepted, expired, revoked).
+    cell: (invite) => <StatusPill status={invite.status} />,
   },
   {
     key: "actions",
     header: "Actions",
-    cell: () => (
-      <div className="flex justify-end gap-2">
-        <button className="px-3 py-1 text-xs font-bold text-primary hover:bg-primary/10 rounded transition-colors">
+    headerClassName: "text-right",
+    className: "text-right",
+    cell: (invite) => (
+      <div className="flex justify-end gap-1">
+        <button
+          type="button"
+          className={`${textButtonClassName} text-primary hover:bg-primary-soft`}
+          aria-label={`Resend invitation to ${invite.email}`}
+        >
           Resend
         </button>
         <button
-          className="p-1.5 hover:bg-red-50 rounded-lg text-muted hover:text-danger transition-colors"
+          type="button"
+          className={`${textButtonClassName} text-muted hover:bg-danger-soft hover:text-danger`}
           title="Revoke Invitation"
+          aria-label={`Revoke invitation to ${invite.email}`}
         >
-          <span className="material-symbols-outlined text-xl">cancel</span>
+          Revoke
         </button>
       </div>
     ),
