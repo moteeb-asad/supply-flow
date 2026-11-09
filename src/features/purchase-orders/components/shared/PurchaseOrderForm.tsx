@@ -15,7 +15,6 @@ import FormErrorBanner, {
 } from "@/src/components/ui/FormErrorBanner";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import TotalAmountSection from "./TotalAmountSection";
 import { calculatePurchaseOrderTotals } from "../../utils/calculations";
 
 export const PURCHASE_ORDER_FORM_ID = "inventory-form";
@@ -42,6 +41,7 @@ export default function PurchaseOrderForm({
   onAddItemClick,
   onLineItemsChange,
   onFieldArrayReady,
+  onTotalsChange,
   serverError,
   isSubmitting,
 }: PurchaseOrderFormProps) {
@@ -81,18 +81,23 @@ export default function PurchaseOrderForm({
     onLineItemsChange?.();
   };
 
-  const { subtotal, taxLabel, taxAmount, totalAmount } =
-    calculatePurchaseOrderTotals(fields, selectedPaymentMethod);
+  const totals = calculatePurchaseOrderTotals(fields, selectedPaymentMethod);
+  const { subtotal, taxRate, taxLabel, taxAmount, totalAmount } = totals;
+
+  // The drawer shows the totals in its footer, outside this form.
+  useEffect(() => {
+    onTotalsChange?.({ subtotal, taxRate, taxLabel, taxAmount, totalAmount });
+  }, [onTotalsChange, subtotal, taxRate, taxLabel, taxAmount, totalAmount]);
 
   return (
     <form
-      className="flex-1 overflow-y-auto p-5 space-y-6"
+      className="flex-1 overflow-y-auto px-6 py-6"
       id={formId}
       noValidate
       onSubmit={handleSubmit((values) => onSubmit?.(values))}
     >
       <div
-        className={`flex-1 min-h-0 space-y-6 transition-opacity ${
+        className={`min-h-0 flex-1 space-y-7 transition-opacity ${
           isSubmitting ? "opacity-60" : "opacity-100"
         }`}
       >
@@ -120,14 +125,6 @@ export default function PurchaseOrderForm({
           onAddItemClick={isSubmitting ? undefined : onAddItemClick}
         />
         <AdditionalNotesSection register={register} errors={errors} />
-        <TotalAmountSection
-          subtotal={subtotal}
-          taxAmount={taxAmount}
-          taxLabel={taxLabel}
-          totalAmount={totalAmount}
-          submitLabel="Create Purchase Order"
-          isSubmitting={isSubmitting}
-        />
       </div>
     </form>
   );
