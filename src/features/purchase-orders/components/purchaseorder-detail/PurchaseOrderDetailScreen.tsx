@@ -23,17 +23,15 @@ export default function PurchaseOrderDetailScreen({
         onEditClick={() => setIsEditDrawerOpen(true)}
         purchaseOrder={purchaseOrder}
       />
-      <div className="flex-1 px-6 pb-6">
-        <div className="mx-auto max-w-7xl space-y-5">
-          <QuickStatsCards purchaseOrder={purchaseOrder} />
+      <div className="space-y-6 px-8 pb-8">
+        <QuickStatsCards purchaseOrder={purchaseOrder} />
 
-          <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-            <LineItemsTable lineItems={purchaseOrder.lineItems ?? []} />
-            <div className="grid content-start gap-5 md:grid-cols-2 xl:grid-cols-1">
-              <OrderActivityTimeline purchaseOrder={purchaseOrder} />
-              <SupplierInformationCard purchaseOrder={purchaseOrder} />
-              <PurchaseOrderNotesCard notes={purchaseOrder.notes} />
-            </div>
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+          <LineItemsTable lineItems={purchaseOrder.lineItems ?? []} />
+          <div className="grid content-start gap-6 md:grid-cols-2 xl:grid-cols-1">
+            <OrderActivityTimeline purchaseOrder={purchaseOrder} />
+            <SupplierInformationCard purchaseOrder={purchaseOrder} />
+            <PurchaseOrderNotesCard notes={purchaseOrder.notes} />
           </div>
         </div>
       </div>

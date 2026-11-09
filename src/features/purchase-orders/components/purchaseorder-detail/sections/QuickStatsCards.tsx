@@ -1,4 +1,3 @@
-import { StatCard } from "@/src/components/ui/StatCard";
 import type { PurchaseOrder } from "../../../types";
 import { formatPurchaseOrderAmount } from "@/src/features/purchase-orders/utils/formatters";
 import { formatDate } from "@/src/lib/dates";
@@ -17,54 +16,48 @@ const gstLabel: Record<PurchaseOrder["payment_method"], string> = {
   card: "GST 5%",
 };
 
-const cardProps = {
-  className: "border-slate-200 shadow-sm",
-  labelClassName: "text-slate-500",
-  valueClassName: "max-w-full truncate text-base text-slate-900",
-};
-
+// One summary strip with hairline dividers (the gap shows the line colour).
 export default function QuickStatsCards({
   purchaseOrder,
 }: QuickStatsCardsProps) {
-  return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-      <StatCard
-        {...cardProps}
-        label="Supplier"
-        icon="store"
-        value={purchaseOrder.supplier_name}
-      />
-      <StatCard
-        {...cardProps}
-        label="Order Date"
-        icon="calendar_today"
-        value={formatDate(purchaseOrder.order_date)}
-      />
-      <StatCard
-        {...cardProps}
-        label="Expected Delivery"
-        icon="event_upcoming"
-        value={formatDate(purchaseOrder.expected_delivery_date)}
-      />
-      <StatCard
-        {...cardProps}
-        className="border-l-4 border-slate-200 border-l-primary shadow-sm"
-        valueClassName="max-w-full truncate text-base font-black text-slate-900"
-        label="Total Amount"
-        icon="payments"
-        value={formatPurchaseOrderAmount(purchaseOrder.total_amount)}
-      />
-      <StatCard
-        {...cardProps}
-        label="Payment Method"
-        icon="credit_card"
-        value={paymentMethodLabel[purchaseOrder.payment_method]}
-        hint={
-          <span className="text-xs font-semibold text-slate-500">
+  const stats: Array<{ label: string; value: React.ReactNode }> = [
+    { label: "Supplier", value: purchaseOrder.supplier_name },
+    { label: "Order date", value: formatDate(purchaseOrder.order_date) },
+    {
+      label: "Expected delivery",
+      value: formatDate(purchaseOrder.expected_delivery_date),
+    },
+    {
+      label: "Total amount",
+      value: (
+        <span className="tabular-nums">
+          {formatPurchaseOrderAmount(purchaseOrder.total_amount)}
+        </span>
+      ),
+    },
+    {
+      label: "Payment",
+      value: (
+        <>
+          {paymentMethodLabel[purchaseOrder.payment_method]}{" "}
+          <span className="text-[13px] font-normal text-subtle">
             {gstLabel[purchaseOrder.payment_method]}
           </span>
-        }
-      />
-    </div>
+        </>
+      ),
+    },
+  ];
+
+  return (
+    <dl className="grid gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-2 lg:grid-cols-5 sm:[&>*:last-child]:col-span-2 lg:[&>*:last-child]:col-span-1">
+      {stats.map((stat) => (
+        <div key={stat.label} className="min-w-0 bg-surface p-4">
+          <dt className="text-[13px] text-muted">{stat.label}</dt>
+          <dd className="mt-1 truncate text-[15px] font-medium">
+            {stat.value}
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }

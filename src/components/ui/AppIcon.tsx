@@ -11,6 +11,11 @@ import SearchIcon from "@/src/assets/icons/search.svg";
 import FilterIcon from "@/src/assets/icons/filter.svg";
 import ChevronLeftIcon from "@/src/assets/icons/chevron-left.svg";
 import ChevronRightIcon from "@/src/assets/icons/chevron-right.svg";
+import DownloadIcon from "@/src/assets/icons/download.svg";
+import EditIcon from "@/src/assets/icons/edit.svg";
+import PersonIcon from "@/src/assets/icons/person.svg";
+import MailIcon from "@/src/assets/icons/mail.svg";
+import PhoneIcon from "@/src/assets/icons/phone.svg";
 
 const iconMap = {
   dashboard: DashboardIcon,
@@ -26,6 +31,11 @@ const iconMap = {
   filter: FilterIcon,
   chevronLeft: ChevronLeftIcon,
   chevronRight: ChevronRightIcon,
+  download: DownloadIcon,
+  edit: EditIcon,
+  person: PersonIcon,
+  mail: MailIcon,
+  phone: PhoneIcon,
 };
 
 export type AppIconName = keyof typeof iconMap;

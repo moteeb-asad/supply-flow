@@ -1,60 +1,56 @@
 import type { PurchaseOrder } from "@/src/features/purchase-orders/types";
 import { formatDateTime } from "@/src/lib/dates";
 import type { TimelineEvent } from "@/src/features/purchase-orders/types";
+import { getStatus, type StatusTone } from "@/src/components/ui/StatusPill";
+import { cn } from "@/src/lib/utils";
+import { getReceiptProgress } from "@/src/features/purchase-orders/utils/calculations";
 
-const statusLabels: Record<PurchaseOrder["status"], string> = {
-  draft: "Draft",
-  pending: "Pending",
-  partially_received: "Partially Received",
-  closed: "Closed",
-  cancelled: "Cancelled",
-  overdue: "Overdue",
+const dotClassName: Record<StatusTone, { ring: string; dot: string }> = {
+  success: { ring: "bg-success-soft", dot: "bg-success" },
+  primary: { ring: "bg-primary-soft", dot: "bg-primary" },
+  warning: { ring: "bg-warning-soft", dot: "bg-warning" },
+  danger: { ring: "bg-danger-soft", dot: "bg-danger" },
+  neutral: { ring: "bg-neutral-soft", dot: "bg-neutral" },
 };
 
 function getReceiptProgressDetails(
   purchaseOrder: PurchaseOrder,
 ): string | null {
-  if (!purchaseOrder.lineItems?.length) {
-    return null;
-  }
-
-  const totals = purchaseOrder.lineItems.reduce(
-    (acc, item) => {
-      acc.received += item.received_qty;
-      acc.ordered += item.ordered_qty;
-      return acc;
-    },
-    { received: 0, ordered: 0 },
-  );
+  const totals = getReceiptProgress(purchaseOrder.lineItems);
 
   if (totals.ordered === 0) {
     return null;
   }
 
-  return `${totals.received}/${totals.ordered} units received`;
+  return `${totals.received} of ${totals.ordered} units received`;
 }
 
-function buildTimelineEvents(purchaseOrder: PurchaseOrder): TimelineEvent[] {
-  const statusLabel = statusLabels[purchaseOrder.status];
+function buildTimelineEvents(
+  purchaseOrder: PurchaseOrder,
+): Array<TimelineEvent & { tone: StatusTone }> {
+  const status = getStatus(purchaseOrder.status);
   const receiptDetails = getReceiptProgressDetails(purchaseOrder);
 
-  const events: TimelineEvent[] = [
+  const events: Array<TimelineEvent & { tone: StatusTone }> = [
     {
       id: "status",
-      label: statusLabel,
+      label: status.label,
+      tone: status.tone,
       timestamp: formatDateTime(purchaseOrder.expected_delivery_date),
       details: receiptDetails ?? undefined,
     },
     {
       id: "sent-to-supplier",
-      label: "Sent to Supplier",
+      label: "Sent to supplier",
+      tone: "neutral",
       timestamp: formatDateTime(purchaseOrder.order_date),
     },
     {
       id: "created",
       label: "Created",
+      tone: "neutral",
       timestamp: formatDateTime(purchaseOrder.order_date),
-      details: `PO #${purchaseOrder.po_number} created for ${purchaseOrder.supplier_name}`,
+      details: `Created for ${purchaseOrder.supplier_name}`,
     },
   ];
 
@@ -62,6 +58,7 @@ function buildTimelineEvents(purchaseOrder: PurchaseOrder): TimelineEvent[] {
     events.push({
       id: "closed",
       label: "Closed",
+      tone: "neutral",
       timestamp: "Pending full receipt",
       isPending: true,
     });
@@ -78,32 +75,47 @@ export default function OrderActivityTimeline({
   const events = buildTimelineEvents(purchaseOrder);
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-      <h3 className="mb-3 text-sm font-bold">Order Activity Timeline</h3>
+    <section
+      aria-labelledby="po-activity-title"
+      className="rounded-card border border-line p-5"
+    >
+      <h2 id="po-activity-title" className="text-[15px] font-semibold">
+        Activity
+      </h2>
 
-      <div className="relative space-y-4 before:absolute before:bottom-2 before:left-[11px] before:top-2 before:w-[2px] before:bg-slate-200 before:content-['']">
+      <ol className="mt-4 space-y-4">
         {events.map((event) => (
-          <div
+          <li
             key={event.id}
-            className={`relative pl-8 ${event.isPending ? "opacity-40" : ""}`}
+            className={cn(
+              "relative flex gap-3",
+              event.isPending && "opacity-50",
+            )}
           >
-            <div
-              className={`absolute left-0 top-1 z-10 flex h-6 w-6 items-center justify-center rounded-full border-4 ${
-                event.isPending
-                  ? "border-background-light bg-slate-200"
-                  : "border-background-light bg-primary"
-              }`}
-            ></div>
+            <span
+              aria-hidden="true"
+              className={cn(
+                "mt-1 inline-flex size-4 shrink-0 items-center justify-center rounded-full",
+                dotClassName[event.tone].ring,
+              )}
+            >
+              <span
+                className={cn(
+                  "size-1.5 rounded-full",
+                  dotClassName[event.tone].dot,
+                )}
+              />
+            </span>
             <div>
-              <p className="text-sm font-bold text-slate-900">{event.label}</p>
-              <p className="text-xs text-slate-500">{event.timestamp}</p>
+              <p className="text-[13px] font-medium">{event.label}</p>
+              <p className="text-xs text-subtle">{event.timestamp}</p>
               {event.details ? (
-                <p className="mt-1 text-xs text-slate-600">{event.details}</p>
+                <p className="mt-1 text-[13px] text-muted">{event.details}</p>
               ) : null}
             </div>
-          </div>
+          </li>
         ))}
-      </div>
-    </div>
+      </ol>
+    </section>
   );
 }

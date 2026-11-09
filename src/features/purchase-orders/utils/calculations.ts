@@ -11,6 +11,20 @@ export type PurchaseOrderTotals = {
   totalAmount: number;
 };
 
+// Units received against units ordered, across all line items.
+export function getReceiptProgress(
+  lineItems: Array<{ received_qty: number; ordered_qty: number }> = [],
+): { received: number; ordered: number } {
+  return lineItems.reduce(
+    (acc, item) => {
+      acc.received += item.received_qty;
+      acc.ordered += item.ordered_qty;
+      return acc;
+    },
+    { received: 0, ordered: 0 },
+  );
+}
+
 export function calculatePurchaseOrderTotals(
   lineItems: PurchaseOrderLineItemFormValue[],
   paymentMethod: PaymentMethod,
