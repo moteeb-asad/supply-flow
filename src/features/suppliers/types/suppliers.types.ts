@@ -111,3 +111,14 @@ export type SupplierContactSectionProps = {
   register: UseFormRegister<SupplierFormValues>;
   errors: FieldErrors<SupplierFormValues>;
 };
+
+// Row returned by get_supplier_overview_metrics (migration 050). numeric comes
+// back from PostgREST as a string or number, so callers wrap it in Number().
+export type SupplierOverviewMetrics = {
+  active_supplier_count: number;
+  deliveries_this_year: number;
+  on_time_deliveries_this_year: number;
+  // Null when nothing was delivered this year.
+  on_time_rate: number | string | null;
+  spend_this_year: number | string;
+};
