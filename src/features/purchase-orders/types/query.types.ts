@@ -44,3 +44,11 @@ export type GetPurchaseOrderSkusInput = {
   search?: string;
   limit?: number;
 };
+
+// Row returned by get_purchase_order_metrics (migration 048). numeric comes
+// back from PostgREST as a string or number, so callers wrap it in Number().
+export type PurchaseOrderMetrics = {
+  open_commitment: number | string;
+  overdue_count: number;
+  completed_this_month: number;
+};
