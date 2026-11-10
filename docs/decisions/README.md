@@ -11,6 +11,7 @@ Add a record when a choice is hard to reverse or would surprise someone reading 
 | [0001](0001-po-closed-at-column.md)       | Store when a purchase order was closed              | Database           | 2026-11-10 |
 | [0002](0002-auto-overdue-with-pg-cron.md) | Mark purchase orders overdue automatically          | Database           | 2026-11-10 |
 | [0003](0003-metrics-computed-on-read.md)  | Screen metrics are computed in the database on read | Database, frontend | 2026-11-10 |
+| [0004](0004-inventory-metrics.md)         | Inventory metrics: what each card counts            | Database, frontend | 2026-11-10 |
 
 ## Template
 
