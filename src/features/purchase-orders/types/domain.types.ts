@@ -50,6 +50,8 @@ export type PurchaseOrder = {
   supplier_contact_phone?: string | null;
   order_date: string | null;
   expected_delivery_date: string | null;
+  // Set by a database trigger when status becomes closed (migration 046).
+  closed_at?: string | null;
   total_amount: number;
   status: PurchaseOrderStatus;
   notes?: string | null;

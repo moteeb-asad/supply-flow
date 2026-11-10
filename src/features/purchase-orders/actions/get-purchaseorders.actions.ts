@@ -29,6 +29,7 @@ function mapPurchaseOrderDTO(row: PurchaseOrderRow): PurchaseOrder {
     supplier_name: mapSupplierName(row.suppliers),
     order_date: row.order_date,
     expected_delivery_date: row.expected_delivery_date,
+    closed_at: row.closed_at,
     total_amount: Number(row.total_amount ?? 0),
     status: row.status,
   };
@@ -56,6 +57,7 @@ export async function getPurchaseOrdersAction(
       payment_method,
       order_date,
       expected_delivery_date,
+      closed_at,
       total_amount,
       status,
       suppliers:supplier_id (name)
