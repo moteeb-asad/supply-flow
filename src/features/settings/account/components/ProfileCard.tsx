@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
+import { getCurrentUserName } from "@/src/features/auth/server/get-current-user-name";
 import { formatRole, getInitials } from "@/src/lib/utils";
 import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
 import AppIcon from "@/src/components/ui/AppIcon";
@@ -10,9 +11,8 @@ const readOnlyFieldClassName =
 export default async function ProfileCard() {
   const user = await getCurrentUser();
 
-  // Extract name from user metadata
-  const userName =
-    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
+  // From profiles.full_name, so name edits show without signing in again.
+  const userName = await getCurrentUserName();
   const readableRole = formatRole(getRoleFromAppMetadata(user?.app_metadata));
 
   return (

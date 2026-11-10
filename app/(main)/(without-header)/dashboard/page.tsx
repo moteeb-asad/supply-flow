@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { getCurrentUser } from "@/src/features/auth/actions/auth.actions";
+import { getCurrentUserName } from "@/src/features/auth/server/get-current-user-name";
 import {
   getRoleFromAppMetadata,
   hasPermission,
@@ -15,9 +16,9 @@ import SupplierPerformanceSkeleton from "@/src/features/dashboard/components/sup
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  const displayName =
-    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
-  const firstName = String(displayName).split(" ")[0];
+  // From profiles.full_name, the same name the sidebar shows.
+  const displayName = await getCurrentUserName();
+  const firstName = displayName.split(" ")[0];
   const role = getRoleFromAppMetadata(user?.app_metadata);
 
   // Receiving table 7/12 and chart 5/12; one of them takes the full row when
