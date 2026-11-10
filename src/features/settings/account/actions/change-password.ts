@@ -2,6 +2,10 @@
 
 import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { changePasswordSchema } from "../validators/password.schema";
+import {
+  DEMO_ACCOUNT_DISABLED_MESSAGE,
+  isDemoAccount,
+} from "@/src/features/auth/utils/demo-account";
 
 export async function changePassword(formData: FormData) {
   const supabase = await createServerSupabaseClient();
@@ -17,6 +21,11 @@ export async function changePassword(formData: FormData) {
       success: false,
       error: "You must be logged in to change your password",
     };
+  }
+
+  // Server-side guard: the UI disables the button, this stops direct calls.
+  if (isDemoAccount(user.email)) {
+    return { success: false, error: DEMO_ACCOUNT_DISABLED_MESSAGE };
   }
 
   // Parse and validate form data

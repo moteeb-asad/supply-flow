@@ -6,6 +6,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import InviteUserModal from "@/src/features/settings/user-management/shared/components/InviteUserModal";
 import AppIcon from "@/src/components/ui/AppIcon";
 import { Button } from "@/src/components/ui/Button";
+import { useUser } from "@/src/providers/UserProvider";
+import {
+  DEMO_ACCOUNT_DISABLED_MESSAGE,
+  isDemoAccount,
+} from "@/src/features/auth/utils/demo-account";
 
 export default function UsersLayoutClient({
   children,
@@ -17,6 +22,8 @@ export default function UsersLayoutClient({
   const searchParams = useSearchParams();
 
   const isInviteModalOpen = searchParams.get("modal") === "invite-user";
+  const { user } = useUser();
+  const isDemo = isDemoAccount(user?.email);
 
   const handleCloseModal = () => {
     router.push(pathname);
@@ -49,6 +56,8 @@ export default function UsersLayoutClient({
           {/* Opens the modal through the URL, as the old header action did. */}
           <Button
             size="md"
+            disabled={isDemo}
+            title={isDemo ? DEMO_ACCOUNT_DISABLED_MESSAGE : undefined}
             onClick={() => router.push(`${pathname}?modal=invite-user`)}
           >
             <AppIcon name="userPlus" className="size-4" />

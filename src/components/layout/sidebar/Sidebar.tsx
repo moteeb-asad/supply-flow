@@ -5,6 +5,7 @@ import {
   getCurrentUser,
   logoutAction,
 } from "@/src/features/auth/actions/auth.actions";
+import { getCurrentUserName } from "@/src/features/auth/server/get-current-user-name";
 import { getMenuForRole } from "@/src/lib/navigation";
 import { formatRole, getInitials } from "@/src/lib/utils";
 import { getRoleFromAppMetadata } from "@/src/features/auth/utils/rbac";
@@ -16,9 +17,8 @@ export default async function Sidebar() {
   const user = await getCurrentUser();
   const role = getRoleFromAppMetadata(user?.app_metadata);
   const filteredMenuItems = getMenuForRole(role, sidebarMenu);
-  // Extract name from user metadata
-  const userName =
-    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
+  // From profiles.full_name, so name edits show without signing in again.
+  const userName = await getCurrentUserName();
   return (
     // Sits on the grey frame (see app/(main)/layout.tsx), no border or fill.
     <aside className="sticky top-2 flex h-[calc(100vh-16px)] w-60 shrink-0 flex-col px-2 py-2">

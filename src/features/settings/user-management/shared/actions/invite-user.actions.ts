@@ -4,6 +4,10 @@ import { createAdminSupabaseClient } from "@/src/db/supabaseAdmin";
 import { inviteUserSchema } from "../../users/validators/invite-user.schema";
 import { createServerSupabaseClient } from "@/src/db/supabaseServer";
 import { requireSuperAdmin } from "@/src/features/auth/server/require-super-admin";
+import {
+  DEMO_ACCOUNT_DISABLED_MESSAGE,
+  isDemoAccount,
+} from "@/src/features/auth/utils/demo-account";
 
 type InviteUserResult =
   { success: true; message: string } | { success: false; error: string };
@@ -14,7 +18,11 @@ export async function inviteUserAction(
   email: string,
   roleName: string,
 ): Promise<InviteUserResult> {
-  await requireSuperAdmin();
+  const currentUser = await requireSuperAdmin();
+  // Server-side guard: the UI disables the button, this stops direct calls.
+  if (isDemoAccount(currentUser.email)) {
+    return { success: false, error: DEMO_ACCOUNT_DISABLED_MESSAGE };
+  }
   try {
     // Validate input
     const validation = inviteUserSchema.safeParse({
