@@ -29,6 +29,7 @@ export function StatCard({
 }: StatCardProps) {
   return (
     <div
+      data-testid="stat-card"
       className={cn(
         "min-w-0 rounded-card border border-line bg-surface p-5",
         className,
