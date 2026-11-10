@@ -11,6 +11,15 @@ data or older Next.js documentation when the installed docs are available.
 
 <!-- END:nextjs-agent-rules -->
 
+# Keep it simple: never over-engineer
+
+Build the smallest change that solves the problem in front of you.
+
+- Do only what was asked. No extra features, options, layers or abstractions "for later".
+- Prefer the existing pattern, file and helper over a new one.
+- No new tables, columns, triggers, jobs, libraries or config unless the task truly needs them.
+- When a sturdier option exists, mention it (or note it under "Alternatives considered" in a decision record) instead of building it.
+
 # Decision records: keep `docs/decisions/` up to date
 
 Record every bigger decision in `docs/decisions/`, both before building it (when the choice is being made) and after it is done (update the record with what was actually built).

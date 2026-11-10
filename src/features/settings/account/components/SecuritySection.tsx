@@ -6,11 +6,18 @@ import AppIcon from "@/src/components/ui/AppIcon";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { formatRelative } from "@/src/lib/dates";
 import { SecuritySectionProps } from "../types";
+import { useUser } from "@/src/providers/UserProvider";
+import {
+  DEMO_ACCOUNT_DISABLED_MESSAGE,
+  isDemoAccount,
+} from "@/src/features/auth/utils/demo-account";
 
 export default function SecuritySection({
   passwordChangedAt,
 }: SecuritySectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user } = useUser();
+  const isDemo = isDemoAccount(user?.email);
 
   const passwordChangedText = passwordChangedAt
     ? `Last changed ${formatRelative(passwordChangedAt)}`
@@ -41,13 +48,16 @@ export default function SecuritySection({
             </span>
             <div>
               <p className="text-sm font-medium">Password</p>
-              <p className="text-[13px] text-subtle">{passwordChangedText}</p>
+              <p className="text-[13px] text-subtle">
+                {isDemo ? DEMO_ACCOUNT_DISABLED_MESSAGE : passwordChangedText}
+              </p>
             </div>
           </div>
           <Button
             type="button"
             variant="secondary"
             size="md"
+            disabled={isDemo}
             onClick={() => setIsModalOpen(true)}
           >
             Change password

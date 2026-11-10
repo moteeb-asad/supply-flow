@@ -7,6 +7,11 @@ import { Input } from "@/src/components/ui/Input";
 import { Button } from "@/src/components/ui/Button";
 import AppIcon from "@/src/components/ui/AppIcon";
 import FormErrorBanner from "@/src/components/ui/FormErrorBanner";
+import { useUser } from "@/src/providers/UserProvider";
+import {
+  DEMO_ACCOUNT_DISABLED_MESSAGE,
+  isDemoAccount,
+} from "@/src/features/auth/utils/demo-account";
 import { cn } from "@/src/lib/utils";
 import {
   inviteUserSchema,
@@ -26,6 +31,8 @@ export default function InviteUserModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const { user } = useUser();
+  const isDemo = isDemoAccount(user?.email);
   const {
     register,
     handleSubmit,
@@ -130,7 +137,10 @@ export default function InviteUserModal({
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="space-y-5 px-6 pb-6 pt-4">
-            <FormErrorBanner message={error} />
+            {/* Also reachable through ?modal=invite-user, so guard here too. */}
+            <FormErrorBanner
+              message={isDemo ? DEMO_ACCOUNT_DISABLED_MESSAGE : error}
+            />
 
             {success && (
               <div
@@ -247,7 +257,7 @@ export default function InviteUserModal({
               type="submit"
               size="md"
               className="px-4"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isDemo}
             >
               {isSubmitting ? "Sending..." : "Send invite"}
             </Button>
