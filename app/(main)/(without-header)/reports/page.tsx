@@ -100,10 +100,7 @@ export default function ReportsPage() {
             </ul>
             <p className="mt-6 text-[13px] text-muted">
               Until then, supplier on-time rates are on the{" "}
-              <a
-                href="01-dashboard.html"
-                className="font-medium text-primary hover:underline"
-              >
+              <a href="/" className="font-medium text-primary hover:underline">
                 dashboard
               </a>
               .
