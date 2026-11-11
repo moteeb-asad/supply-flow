@@ -39,6 +39,19 @@ export default async function globalTeardown() {
     auth: { persistSession: false },
   });
 
+  // SKUs first: their stock and supplier links are deleted with them
+  // (ON DELETE CASCADE), so test suppliers are no longer referenced.
+  const skus = await supabase
+    .from("skus")
+    .delete({ count: "exact" })
+    .like("name", `${TEST_PREFIX}%`);
+
+  if (skus.error) {
+    console.warn(`[e2e cleanup] skus: ${skus.error.message}`);
+  } else {
+    console.warn(`[e2e cleanup] deleted ${skus.count ?? 0} test SKUs`);
+  }
+
   const { count, error } = await supabase
     .from("suppliers")
     .delete({ count: "exact" })
