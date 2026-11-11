@@ -14,6 +14,7 @@ Add a record when a choice is hard to reverse or would surprise someone reading 
 | [0004](0004-inventory-metrics.md)         | Inventory metrics: what each card counts                        | Database, frontend       | 2026-11-10 |
 | [0005](0005-supplier-overview-metrics.md) | Supplier list metrics: performance means on-time delivery       | Database, frontend       | 2026-11-10 |
 | [0006](0006-demo-account-guard.md)        | Shared demo account: password change and invites are turned off | Frontend, server actions | 2026-11-10 |
+| [0007](0007-rls-checks-once-per-query.md) | RLS role and user checks run once per query                     | Database                 | 2026-11-11 |
 
 ## Template
 
