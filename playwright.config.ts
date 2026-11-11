@@ -5,9 +5,13 @@ dotenv.config({ path: ".env" });
 
 export default defineConfig({
   testDir: "./e2e",
+  // Deletes the "E2E ..." records the tests created (local database only).
+  globalTeardown: "./e2e/setup/global-teardown.ts",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+  // The dev server compiles pages on first visit, so allow longer than 5 s.
+  expect: { timeout: 10_000 },
   reporter: "html",
   use: {
     baseURL: process.env.BASE_URL ?? "http://localhost:3000",
